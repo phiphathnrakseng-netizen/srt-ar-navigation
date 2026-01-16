@@ -13,7 +13,8 @@
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         }
         .floor-section { display: none; }
-        .back-btn { display: none; } /* ซ่อนปุ่มย้อนกลับถ้าอยู่ที่หน้าหลัก */
+        /* ปรับให้ปุ่มย้อนกลับซ่อนไว้ก่อน */
+        #back-home { display: none; } 
     </style>
 </head>
 <body class="bg-gray-50">
@@ -22,15 +23,15 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-3">
-                    <img src="data:image/jpeg;base64,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" alt="โลโก้วิทยาลัย" class="h-12 w-auto object-contain">
+                    <img src="https://www.vec.go.th/Portals/0/logo_vec.png" alt="โลโก้วิทยาลัย" class="h-10 w-auto object-contain">
                     <div>
-                        <h1 class="text-blue-900 font-bold text-lg leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
-                        <p class="text-xs text-gray-500">แผนกเทคโนโลยีสารสนเทศ</p>
+                        <h1 class="text-blue-900 font-bold text-sm md:text-lg leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
+                        <p class="text-[10px] md:text-xs text-gray-500">แผนกเทคโนโลยีสารสนเทศ</p>
                     </div>
                 </div>
-                <a href="index.html" id="back-home" class="back-btn items-center gap-1 text-gray-500 hover:text-blue-600 transition">
+                <a href="Suratthanitechnic.html" id="back-home" class="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition">
                     <i class="fa-solid fa-house"></i>
-                    <span class="text-sm font-medium">หน้าแรก</span>
+                    <span class="text-sm font-medium">หน้าหลัก</span>
                 </a>
             </div>
         </div>
@@ -52,14 +53,14 @@
                     <p class="opacity-80">ห้องเรียนทฤษฎีและปฏิบัติการ</p>
                 </div>
                 <div class="p-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <button onclick="navigate('room-standard')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">631</button>
-                    <button onclick="navigate('room-standard')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">632</button>
-                    <button onclick="navigate('room-standard')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">633</button>
-                    <button onclick="navigate('room-standard')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">634</button>
-                    <button onclick="navigate('room-standard')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">635</button>
+                    <button onclick="navigate('631')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">631</button>
+                    <button onclick="navigate('632')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">632</button>
+                    <button onclick="navigate('633')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">633</button>
+                    <button onclick="navigate('634')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">634</button>
+                    <button onclick="navigate('635')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">635</button>
                 </div>
                 <div class="px-8 pb-8 text-center">
-                    <button onclick="location.href='index.html'" class="text-gray-400 hover:text-gray-600 text-sm underline">ไม่ใช่ชั้น 3? คลิกเพื่อเลือกชั้นใหม่</button>
+                    <a href="Suratthanitechnic.html" class="text-gray-400 hover:text-gray-600 text-sm underline">ไม่ใช่ชั้น 3? คลิกเพื่อเลือกชั้นใหม่</a>
                 </div>
             </div>
 
@@ -69,14 +70,14 @@
                     <p class="opacity-80">ห้องปฏิบัติการคอมพิวเตอร์และสำนักงาน</p>
                 </div>
                 <div class="p-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button onclick="navigate('staff-room')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">ห้องพักครู</button>
-                    <button onclick="navigate('lecture-room')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lecture Room</button>
-                    <button onclick="navigate('lab1')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 1</button>
-                    <button onclick="navigate('lab2')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 2</button>
-                    <button onclick="navigate('lab3')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 3</button>
+                    <button onclick="navigate('ห้องพักครู')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">ห้องพักครู</button>
+                    <button onclick="navigate('Lecture Room')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lecture Room</button>
+                    <button onclick="navigate('Lab 1')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 1</button>
+                    <button onclick="navigate('Lab 2')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 2</button>
+                    <button onclick="navigate('Lab 3')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 3</button>
                 </div>
                 <div class="px-8 pb-8 text-center">
-                    <button onclick="location.href='index.html'" class="text-gray-400 hover:text-gray-600 text-sm underline">ไม่ใช่ชั้น 4? คลิกเพื่อเลือกชั้นใหม่</button>
+                    <a href="Suratthanitechnic.html" class="text-gray-400 hover:text-gray-600 text-sm underline">ไม่ใช่ชั้น 4? คลิกเพื่อเลือกชั้นใหม่</a>
                 </div>
             </div>
 
@@ -115,26 +116,28 @@
             if (floor === '3') {
                 section3.style.display = 'block';
                 emptyState.style.display = 'none';
-                backBtn.style.display = 'flex';
+                backBtn.style.display = 'flex'; // บังคับแสดงปุ่ม
                 mainTitle.innerText = "เมนูนำทางชั้น 3";
                 subTitle.innerText = "เลือกห้องปลายทางที่คุณต้องการเดินทางไป (ตึกไอที)";
             } else if (floor === '4') {
                 section4.style.display = 'block';
                 emptyState.style.display = 'none';
-                backBtn.style.display = 'flex';
+                backBtn.style.display = 'flex'; // บังคับแสดงปุ่ม
                 mainTitle.innerText = "เมนูนำทางชั้น 4";
                 subTitle.innerText = "เลือกห้องปลายทางที่คุณต้องการเดินทางไป (ตึกไอที)";
+            } else {
+                // ถ้าไม่มีพารามิเตอร์ floor ให้แสดงหน้าเลือกชั้นปกติ
+                emptyState.style.display = 'block';
+                backBtn.style.display = 'none';
             }
         }
 
         function navigate(roomId) {
-            // แจ้งเตือน และเตรียมลิ้งค์ไปหน้า AR จริง
             alert("ระบบกำลังเปิดกล้องนำทางไปที่: " + roomId);
             // window.location.href = "ar-view.html?target=" + roomId;
         }
 
         window.onload = initApp;
     </script>
-
 </body>
 </html>
