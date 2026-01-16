@@ -5,132 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบ AR Navigation - วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; }
-        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-        .mode-tab.active { background-color: #1e3a8a; color: white; border-color: #1e3a8a; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2); }
-        .hidden-content { display: none; }
-        .animate-fade { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Sarabun', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+        .floor-section { display: none; }
+        /* ตกแต่งปุ่มบน Navbar ให้ดูเด่น */
+        .nav-btn-active { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
 
-    <nav class="bg-white shadow-md border-b sticky top-0 z-50 px-4 py-3">
-        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <img src="https://scontent.fbkk22-8.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&oh=00_Afpw1u7ZhrnF2KIGgBQhTON7DsNei3Ae5u4QubzdxAYItg&oe=696FEC3A" class="h-10 w-auto rounded-full shadow-sm">
-                <div>
-                    <h1 class="text-blue-900 font-bold text-sm leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">AR Indoor Navigation</p>
+    <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-3 md:h-20 gap-4">
+                
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-full overflow-hidden">
+                        <img src="https://scontent.fbkk22-8.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&oh=00_Afpw1u7ZhrnF2KIGgBQhTON7DsNei3Ae5u4QubzdxAYItg&oe=696FEC3A" 
+                             alt="Logo" class="h-10 w-auto object-contain">
+                    </div>
+                    <div>
+                        <h1 class="text-blue-900 font-bold text-sm md:text-lg leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
+                        <p class="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-tighter">Information Technology</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="flex bg-gray-100 p-1 rounded-2xl border border-gray-200">
-                <button onclick="changeMode('scan')" id="tab-scan" class="mode-tab active px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-2">
-                    <i class="fa-solid fa-qrcode text-lg"></i> สแกนป้าย
-                </button>
-                <button onclick="changeMode('manual')" id="tab-manual" class="mode-tab px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-2">
-                    <i class="fa-solid fa-list-check text-lg"></i> เลือกเอง
-                </button>
+                <div class="flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200">
+                    <a href="index.html" id="nav-scan" class="px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 text-gray-500 hover:bg-gray-100">
+                        <i class="fa-solid fa-qrcode"></i> สแกนป้าย
+                    </a>
+                    <div class="w-[1px] h-4 bg-gray-300 mx-1"></div>
+                    <a href="?floor=3" id="nav-f3" class="px-4 py-2 rounded-lg text-sm font-bold transition text-gray-500 hover:bg-gray-100">ชั้น 3</a>
+                    <a href="?floor=4" id="nav-f4" class="px-4 py-2 rounded-lg text-sm font-bold transition text-gray-500 hover:bg-gray-100">ชั้น 4</a>
+                </div>
+
             </div>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-4 py-10">
-
-        <div id="content-scan" class="animate-fade">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">เข้าสู่ระบบด้วยการสแกน</h2>
-                <p class="text-gray-500">สแกน QR Code ที่ประตูทางเข้าอาคารเพื่อระบุตำแหน่งทันที</p>
-            </div>
-            
-            <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-10 text-center max-w-lg mx-auto overflow-hidden relative">
-                <div class="mb-6 relative inline-block">
-                    <div class="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto text-blue-600">
-                        <i class="fa-solid fa-camera text-4xl"></i>
-                    </div>
-                    <div class="absolute -top-1 -right-1 w-6 h-6 bg-green-500 border-4 border-white rounded-full animate-pulse"></div>
-                </div>
-                <h3 class="text-xl font-bold mb-4">พร้อมสำหรับการสแกน?</h3>
-                <p class="text-sm text-gray-400 mb-8 px-6">หันกล้องไปทางป้าย QR Code เมื่อกล้องเปิด ระบบจะนำทางท่านอัตโนมัติ</p>
-                <button onclick="alert('เปิดระบบสแกนกล้อง...')" class="w-full gradient-bg text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-105 transition-transform">
-                    เปิดกล้องสแกนทันที
-                </button>
-            </div>
+    <header class="bg-white py-10 border-b">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 id="main-title" class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">ระบบ AR Navigation</h2>
+            <p id="sub-title" class="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">กรุณาเลือกโหมดจากแถบเมนูด้านบนเพื่อเริ่มต้น</p>
         </div>
+    </header>
 
-        <div id="content-manual" class="hidden-content animate-fade">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">เลือกจุดหมายปลายทาง</h2>
-                <p class="text-gray-500">เลือกตำแหน่งที่ท่านอยู่ปัจจุบัน เพื่อเริ่มการนำทางแบบเมนวล</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden group hover:shadow-2xl transition-all duration-300">
-                    <div class="gradient-bg p-6 text-white text-center">
-                        <span class="text-xs font-bold uppercase tracking-widest opacity-70">IT Department</span>
-                        <h3 class="text-3xl font-bold">ชั้น 3</h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="grid grid-cols-2 gap-3 mb-6">
-                            <button onclick="navigate('631')" class="bg-blue-50 text-blue-800 py-3 rounded-xl font-bold hover:bg-blue-600 hover:text-white transition">631</button>
-                            <button onclick="navigate('632')" class="bg-blue-50 text-blue-800 py-3 rounded-xl font-bold hover:bg-blue-600 hover:text-white transition">632</button>
-                            <button onclick="navigate('633')" class="bg-blue-50 text-blue-800 py-3 rounded-xl font-bold hover:bg-blue-600 hover:text-white transition">633</button>
-                            <button onclick="navigate('634')" class="bg-blue-50 text-blue-800 py-3 rounded-xl font-bold hover:bg-blue-600 hover:text-white transition">634</button>
-                        </div>
-                        <button onclick="navigate('Lab ชั้น 3')" class="w-full py-3 border-2 border-dashed border-blue-200 text-blue-400 rounded-xl font-medium hover:border-blue-400 hover:text-blue-600 transition">เลือกปลายทางอื่นในชั้น 3</button>
-                    </div>
+    <main class="max-w-7xl mx-auto px-4 py-10">
+        <div class="max-w-3xl mx-auto">
+            
+            <div id="floor-3" class="floor-section bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                <div class="gradient-bg p-6 text-white text-center">
+                    <h3 class="text-2xl font-bold">เมนูนำทางชั้น 3</h3>
+                    <p class="opacity-80">ห้องเรียนทฤษฎีและปฏิบัติการ (ตึกไอที)</p>
                 </div>
-
-                <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden group hover:shadow-2xl transition-all duration-300">
-                    <div class="bg-gray-800 p-6 text-white text-center">
-                        <span class="text-xs font-bold uppercase tracking-widest opacity-70">Lab & Office</span>
-                        <h3 class="text-3xl font-bold">ชั้น 4</h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-3 mb-6">
-                            <button onclick="navigate('ห้องพักครู')" class="w-full flex justify-between items-center bg-gray-50 p-4 rounded-xl font-bold hover:bg-gray-800 hover:text-white transition">
-                                <span>ห้องพักครู IT</span> <i class="fa-solid fa-chevron-right text-xs"></i>
-                            </button>
-                            <button onclick="navigate('Lecture Room')" class="w-full flex justify-between items-center bg-gray-50 p-4 rounded-xl font-bold hover:bg-gray-800 hover:text-white transition">
-                                <span>Lecture Room</span> <i class="fa-solid fa-chevron-right text-xs"></i>
-                            </button>
-                            <div class="grid grid-cols-2 gap-3">
-                                <button onclick="navigate('Lab 1')" class="bg-gray-50 py-3 rounded-xl font-bold hover:bg-gray-800 hover:text-white transition">Lab 1</button>
-                                <button onclick="navigate('Lab 2')" class="bg-gray-50 py-3 rounded-xl font-bold hover:bg-gray-800 hover:text-white transition">Lab 2</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="p-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <button onclick="navigate('631')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">631</button>
+                    <button onclick="navigate('632')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">632</button>
+                    <button onclick="navigate('633')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">633</button>
+                    <button onclick="navigate('634')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">634</button>
+                    <button onclick="navigate('635')" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 py-4 rounded-xl font-bold transition border border-blue-100 shadow-sm">635</button>
                 </div>
             </div>
+
+            <div id="floor-4" class="floor-section bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                <div class="bg-gray-800 p-6 text-white text-center">
+                    <h3 class="text-2xl font-bold">เมนูนำทางชั้น 4</h3>
+                    <p class="opacity-80">ห้องปฏิบัติการคอมพิวเตอร์และสำนักงาน</p>
+                </div>
+                <div class="p-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button onclick="navigate('ห้องพักครู')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">ห้องพักครู</button>
+                    <button onclick="navigate('Lecture Room')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lecture Room</button>
+                    <button onclick="navigate('Lab 1')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 1</button>
+                    <button onclick="navigate('Lab 2')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 2</button>
+                    <button onclick="navigate('Lab 3')" class="bg-gray-50 hover:bg-gray-800 hover:text-white text-gray-700 py-4 rounded-xl font-bold transition border border-gray-200">Lab 3</button>
+                </div>
+            </div>
+
+            <div id="empty-state" class="text-center p-12 bg-white rounded-2xl border-2 border-dashed border-gray-200">
+                <div class="text-5xl mb-4">📸</div>
+                <h3 class="text-xl font-bold text-gray-600">สแกน QR Code ประจำชั้น</h3>
+                <p class="text-gray-400 mt-2">หรือเลือกชั้นที่ท่านอยู่จากแถบเมนูด้านบนเพื่อเริ่มต้น</p>
+                <div class="mt-8">
+                    <button onclick="alert('กรุณาหันกล้องไปที่ป้าย QR Code')" class="gradient-bg text-white px-8 py-3 rounded-full font-bold shadow-lg hover:opacity-90 transition">
+                        เปิดกล้องสแกนทันที
+                    </button>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <footer class="text-center py-10 text-gray-400">
-        <p class="text-sm">วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
-        <p class="text-[10px] mt-1 tracking-widest">© 2026 INFORMATION TECHNOLOGY</p>
+    <footer class="bg-zinc-900 text-white py-8 mt-12 text-center">
+        <p class="text-sm text-gray-400">© 2026 แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
     </footer>
 
     <script>
-        function changeMode(mode) {
-            const scanContent = document.getElementById('content-scan');
-            const manualContent = document.getElementById('content-manual');
-            const tabScan = document.getElementById('tab-scan');
-            const tabManual = document.getElementById('tab-manual');
+        function initApp() {
+            const params = new URLSearchParams(window.location.search);
+            const floor = params.get('floor');
+            
+            const section3 = document.getElementById('floor-3');
+            const section4 = document.getElementById('floor-4');
+            const emptyState = document.getElementById('empty-state');
+            
+            const navScan = document.getElementById('nav-scan');
+            const navF3 = document.getElementById('nav-f3');
+            const navF4 = document.getElementById('nav-f4');
 
-            if (mode === 'scan') {
-                scanContent.classList.remove('hidden-content');
-                manualContent.classList.add('hidden-content');
-                tabScan.classList.add('active');
-                tabManual.classList.remove('active');
+            // ล้างสถานะ
+            [section3, section4, emptyState].forEach(s => s.style.display = 'none');
+
+            if (floor === '3') {
+                section3.style.display = 'block';
+                navF3.classList.add('nav-btn-active');
+            } else if (floor === '4') {
+                section4.style.display = 'block';
+                navF4.classList.add('nav-btn-active');
             } else {
-                scanContent.classList.add('hidden-content');
-                manualContent.classList.remove('hidden-content');
-                tabScan.classList.remove('active');
-                tabManual.classList.add('active');
+                emptyState.style.display = 'block';
+                navScan.classList.add('nav-btn-active');
             }
         }
 
@@ -138,11 +135,7 @@
             window.location.href = "ar-view.html?target=" + encodeURIComponent(roomId);
         }
 
-        // เช็กเบื้องต้นถ้ามี floor ใน URL ให้แสดง manual ทันที
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            if(params.get('floor')) changeMode('manual');
-        }
+        window.onload = initApp;
     </script>
 </body>
 </html>
