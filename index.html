@@ -2,134 +2,68 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Navigation - Zero Overlap</title>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบนำทาง AR - วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Sarabun', sans-serif; background: #000; }
-
-        /* ส่วนหัว: พื้นหลังดำทึบ 100% อ่านง่ายแน่นอน */
-        #ui-header {
-            position: fixed; top: 0; left: 0; width: 100%;
-            background: #000; padding: 15px 0;
-            text-align: center; z-index: 2000;
-            border-bottom: 3px solid #3b82f6;
-            display: none;
+        .ar-ui {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: sans-serif;
+            text-align: center;
+            width: 80%;
         }
-
-        /* ส่วนล่าง: รวมข้อความนำทางและคำเตือน พื้นหลังดำทึบ */
-        #ui-footer {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #000; z-index: 2000;
-            display: none; flex-direction: column;
-            border-top: 3px solid #3b82f6;
-        }
-
-        #guidance-panel {
-            padding: 20px; text-align: center; color: #fff;
-        }
-
-        #sensor-warning {
-            background: #ffcc00; color: #000; padding: 10px;
-            text-align: center; font-weight: 700; font-size: 0.9rem;
-        }
-
-        .label { font-size: 0.75rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
-        .target { font-size: 1.4rem; font-weight: 700; color: #fff; }
-        .step-text { font-size: 1.6rem; font-weight: 700; }
-
-        #entry-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; color: white;
-        }
-        .start-btn {
-            background: #3b82f6; color: white; padding: 25px 50px;
-            border-radius: 10px; font-size: 1.4rem; font-weight: 700; border: none;
+        .back-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #1e3a8a;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
     </style>
 </head>
-<body>
+<body style="margin: 0; overflow: hidden;">
 
-    <div id="entry-screen">
-        <button class="start-btn" onclick="initPrecisionAR()">เริ่มนำทาง (START)</button>
-        <p style="margin-top:20px; opacity:0.8;">ถือเครื่องตั้งตรงเพื่อความแม่นยำ</p>
+    <div class="ar-ui">
+        <div id="target-name" style="font-size: 1.2rem; font-weight: bold;">กำลังโหลด...</div>
+        <div style="font-size: 0.8rem; opacity: 0.8;">ส่องกล้องไปรอบๆ เพื่อดูเส้นทาง</div>
     </div>
 
-    <div id="ui-header">
-        <div class="label">จุดหมาย</div>
-        <div id="room-id" class="target">...</div>
-    </div>
+    <a href="index.html" class="back-btn">กลับหน้าหลัก</a>
 
-    <div id="ui-footer">
-        <div id="guidance-panel">
-            <div class="label" style="color: #aaa;">คำแนะนำ</div>
-            <span class="step-text">🚶 ตรงไปอีก 10 เมตร</span>
-        </div>
-        <div id="sensor-warning">
-            ⚠️ หากลูกศรหมุนรวน ให้เดินตาม "ข้อความ" เป็นหลัก
-        </div>
-    </div>
-
-    <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-entity camera id="fixed-camera"></a-entity>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
         
-        <a-entity id="arrow-pivot" position="0 -1.5 -4" visible="false">
-            <a-entity id="arrow-visual">
-                <a-cone radius-bottom="0.3" height="0.6" material="color: #3b82f6; emissive: #3b82f6; emissiveIntensity: 0.5;" rotation="90 0 0"></a-cone>
-                <a-box position="0 -0.4 0" width="0.15" height="0.5" depth="0.1" material="color: #1e3a8a;"></a-box>
-            </a-entity>
+        <a-entity id="arrow" position="0 0 -5">
+            <a-cone rotation="90 0 0" radius-bottom="0.5" height="1.5" color="#3b82f6"></a-cone>
+            <a-box position="0 -0.75 0" width="0.4" height="1" depth="0.4" color="#1e3a8a"></a-box>
         </a-entity>
+
+        <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('room-id').innerText = urlParams.get('target') || 'เป้าหมายของคุณ';
-
-        let initialAlpha = null;
-        let targetRotY = 0;
-        let lerpedRotY = 0;
-        const smoothSpeed = 0.15;
-
-        async function initPrecisionAR() {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                const res = await DeviceOrientationEvent.requestPermission();
-                if (res === 'granted') window.addEventListener('deviceorientation', onDeviceMove);
-            } else {
-                window.addEventListener('deviceorientation', onDeviceMove);
-            }
-            showUI();
+        // ดึงค่า target จาก URL (ที่ส่งมาจากหน้า index.html)
+        const params = new URLSearchParams(window.location.search);
+        const target = params.get('target');
+        
+        if (target) {
+            document.getElementById('target-name').innerText = "กำลังนำทางไป: " + target;
         }
-
-        function onDeviceMove(event) {
-            if (event.alpha === null) return;
-            if (initialAlpha === null) initialAlpha = event.alpha;
-            targetRotY = event.alpha - initialAlpha; 
-        }
-
-        function showUI() {
-            document.getElementById('entry-screen').style.display = 'none';
-            document.getElementById('ui-header').style.display = 'block';
-            document.getElementById('ui-footer').style.display = 'flex';
-            document.getElementById('arrow-pivot').setAttribute('visible', 'true');
-        }
-
-        function animate() {
-            let diff = targetRotY - lerpedRotY;
-            while (diff < -180) diff += 360;
-            while (diff > 180) diff -= 360;
-            lerpedRotY += diff * smoothSpeed;
-
-            const pivot = document.getElementById('arrow-pivot');
-            if (pivot && pivot.getAttribute('visible')) {
-                // หมุนตามการหันของมือถือ
-                pivot.object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
     </script>
 </body>
 </html>
