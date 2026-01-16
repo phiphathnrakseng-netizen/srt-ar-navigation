@@ -15,9 +15,71 @@
         .floor-section { display: none; }
         /* ตกแต่งปุ่มบน Navbar ให้ดูเด่น */
         .nav-btn-active { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        
+        /* สไตล์เพิ่มเติมสำหรับ Modal */
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-open .modal-content {
+            transform: scale(1);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+
+    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
+        <div class="modal-overlay absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="modal-content relative bg-white w-full max-w-lg mx-4 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div class="gradient-bg p-6 text-white relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-white/80 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center border border-white/30">
+                        <i class="fa-solid fa-circle-exclamation text-2xl animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold">คำแนะนำการใช้งาน</h3>
+                        <p class="text-sm text-blue-100">โปรดอ่านก่อนเริ่มต้นใช้งานระบบ</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 space-y-6">
+                <div class="space-y-4 text-gray-700">
+                    <div class="flex gap-4">
+                        <div class="flex-none w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">1</div>
+                        <p class="text-sm md:text-base leading-relaxed">
+                            <span class="font-semibold text-blue-900">กรณีสแกนป้าย:</span> หากท่านอยู่ที่ชั้น 3 หรือ 4 ให้กดปุ่ม <span class="text-blue-600 font-bold">(เปิดกล้องสแกนทันที)</span> ระบบจะเปิดกล้องเพื่อสแกน QR Code ณ จุดติดตั้ง
+                        </p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-none w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">2</div>
+                        <p class="text-sm md:text-base leading-relaxed">
+                            <span class="font-semibold text-blue-900">กรณีเลือกห้องเอง:</span> สังเกต <span class="font-semibold">แถบเมนูสีขาวด้านบน</span> เพื่อเลือกชั้น เมื่อเลือกแล้วจะพบรายชื่อห้อง ให้กดห้องที่ต้องการเพื่อเริ่มนำทาง
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-1"></i>
+                        <p class="text-[12px] md:text-xs text-amber-800 leading-relaxed">
+                            หากลูกศร AR คลาดเคลื่อน ให้ยึดตามคำนำทางด้านล่างหน้าจอ เนื่องจากอุปกรณ์บางรุ่นไม่มีระบบ <span class="font-bold">Gyroscope</span> ผู้พัฒนาจะนำข้อมูลไปปรับปรุงในอนาคต โปรดให้คำแนะนำผ่านแบบสอบถาม
+                        </p>
+                    </div>
+                </div>
+
+                <button onclick="closeModal()" class="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-900/20 hover:bg-blue-800 transition-all">
+                    เข้าใจแล้ว เริ่มใช้งานเลย
+                </button>
+            </div>
+        </div>
+    </div>
 
     <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +87,7 @@
                 
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-full overflow-hidden">
-                        <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=vDbuSKyG08kQ7kNvwFqkTaO&_nc_oc=AdmGXxxhxwSQuILW15tfpVjAKs1chozgXrgNE-DwEQs37c2iMchKUxfLn-XSAia2AdkVjez_DD7Cbv2gouIOs0I9&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=0-X_AYskt3PKv80HnSo0RQ&oh=00_AfpLl-LoXfQjDwEJ6Nyyu2qXJx3o5U-69cM9_oJQM7spWQ&oe=6970247A" 
+                        <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&oh=00_AfpLl-LoXfQjDwEJ6Nyyu2qXJx3o5U-69cM9_oJQM7spWQ&oe=6970247A" 
                              alt="Logo" class="h-10 w-auto object-contain">
                     </div>
                     <div>
@@ -104,10 +166,34 @@
     </footer>
 
     <script>
+        function openModal() {
+            const modal = document.getElementById('guide-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                modal.classList.add('modal-open');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('guide-modal');
+            modal.classList.remove('modal-open');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
         function initApp() {
+            // เช็คว่าเป็นการโหลดหน้าแรก (ไม่มี query floor) หรือไม่ เพื่อแสดงป๊อปอัพ
             const params = new URLSearchParams(window.location.search);
             const floor = params.get('floor');
             
+            // แสดงป๊อปอัพทุกครั้งที่เข้าหน้าหลัก (สามารถปรับให้โชว์ครั้งเดียวได้ด้วย localStorage)
+            if (!floor) {
+                openModal();
+            }
+
             const section3 = document.getElementById('floor-3');
             const section4 = document.getElementById('floor-4');
             const emptyState = document.getElementById('empty-state');
@@ -116,7 +202,6 @@
             const navF3 = document.getElementById('nav-f3');
             const navF4 = document.getElementById('nav-f4');
 
-            // ล้างสถานะ
             [section3, section4, emptyState].forEach(s => s.style.display = 'none');
 
             if (floor === '3') {
@@ -139,4 +224,3 @@
     </script>
 </body>
 </html>
-
