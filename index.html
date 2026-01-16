@@ -3,117 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hybrid AR Navigation</title>
+    <title>AR Navigation - Fix Visibility</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; overflow: hidden; font-family: sans-serif; background: #000; }
+        body { margin: 0; overflow: hidden; font-family: 'Sarabun', sans-serif; background: #000; }
 
-        /* UI ทึบแสง 100% แยกโซนชัดเจนไม่บังลูกศร */
-        #ui-header { position: fixed; top: 0; left: 0; width: 100%; height: 90px; background: #000; color: #fff; z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; border-bottom: 2px solid #3b82f6; }
-        #ui-footer { position: fixed; bottom: 0; left: 0; width: 100%; height: 140px; background: #000; color: #fff; z-index: 10; display: none; flex-direction: column; border-top: 2px solid #3b82f6; }
-        
-        .label { font-size: 0.7rem; color: #3b82f6; font-weight: bold; margin-bottom: 5px; }
-        .target-name { font-size: 1.3rem; font-weight: bold; }
-        .instruction { font-size: 1.5rem; font-weight: bold; text-align: center; padding: 0 15px; }
-        #warning { background: #ff4444; font-size: 0.75rem; padding: 4px; width: 100%; text-align: center; }
+        /* แถบด้านบน: ดำทึบ แต่กำหนดความสูงชัดเจน ไม่ให้คลุมทั้งจอ */
+        #ui-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+            background: #000; color: #fff; z-index: 10;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            border-bottom: 2px solid #3b82f6;
+        }
 
-        /* หน้าแรก Hybrid */
-        #entry-screen { position: fixed; inset: 0; background: #000; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; text-align: center; }
-        .btn-group { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #333; width: 85%; max-width: 320px; margin-bottom: 20px; }
-        .main-btn { width: 100%; padding: 18px; border-radius: 12px; font-size: 1.2rem; font-weight: bold; border: none; cursor: pointer; margin-top: 10px; color: white; }
-        .scan-color { background: #3b82f6; }
-        .manual-color { background: #444; }
+        /* แถบด้านล่าง: ดำทึบ แยกโซนคำแนะนำกับคำเตือน */
+        #ui-footer {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 120px;
+            background: #000; color: #fff; z-index: 10;
+            display: none; flex-direction: column;
+            border-top: 2px solid #3b82f6;
+        }
+
+        #guidance-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #sensor-warning { background: #ffcc00; color: #000; padding: 5px; text-align: center; font-weight: 700; font-size: 0.85rem; }
+
+        .label { font-size: 0.65rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 1.5px; }
+        .target { font-size: 1.2rem; font-weight: 700; }
+        .step-text { font-size: 1.5rem; font-weight: 700; }
+
+        /* ปรับแต่ง A-Scene ให้แสดงผลเต็มจอหลังเลเยอร์ UI */
+        a-scene { position: absolute; top: 0; left: 0; z-index: 1; }
+
+        #entry-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 100; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: white;
+        }
+        .start-btn {
+            background: #3b82f6; color: white; padding: 20px 40px;
+            border-radius: 8px; font-size: 1.3rem; font-weight: 700; border: none;
+        }
     </style>
 </head>
 <body>
 
     <div id="entry-screen">
-        <h1 style="color: #3b82f6; margin-bottom: 40px;">AR NAVIGATOR</h1>
-        
-        <div class="btn-group">
-            <div class="label">โหมด 1: ใช้ป้าย (ติดที่ชั้น 1)</div>
-            <button class="main-btn scan-color" onclick="startAR('scan')">📷 สแกน QR Code</button>
-        </div>
-
-        <div class="btn-group">
-            <div class="label">โหมด 2: ไม่มีป้าย (เลือกจุดยืน)</div>
-            <button class="main-btn manual-color" onclick="startAR('manual', '3')">📍 อยู่ชั้น 3 (หน้าลิฟต์)</button>
-            <button class="main-btn manual-color" onclick="startAR('manual', '4')" style="margin-top: 15px;">📍 อยู่ชั้น 4 (หน้าลิฟต์)</button>
-        </div>
+        <button class="start-btn" onclick="initPrecisionAR()">เริ่มนำทาง (START)</button>
+        <p style="margin-top:20px; opacity:0.7;">ลูกศรจะปรากฏบริเวณกลางจอ</p>
     </div>
 
     <div id="ui-header">
-        <div class="label">จุดหมายปลายทาง</div>
-        <div id="target-display" class="target-name">-</div>
+        <div class="label">จุดหมาย</div>
+        <div id="room-id" class="target">...</div>
     </div>
 
     <div id="ui-footer">
-        <div id="warning">⚠️ เดินอย่างระมัดระวัง และมองรอบข้างเสมอ</div>
-        <div style="flex:1; display:flex; align-items:center; justify-content:center;">
-            <div id="guide-text" class="instruction">กำลังโหลด...</div>
+        <div id="guidance-content">
+            <div class="label">คำแนะนำ</div>
+            <span id="instruction-text" class="step-text">🚶 ตรงไปอีก 10 เมตร</span>
+        </div>
+        <div id="sensor-warning">
+            ⚠️ หากลูกศรรวน ให้เดินตาม "ข้อความ" เป็นหลัก
         </div>
     </div>
 
     <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-entity camera></a-entity>
-        <a-entity id="arrow-pivot" position="0 -0.4 -2.5" visible="false">
-            <a-cone radius-bottom="0.2" height="0.45" material="color: #3b82f6; emissive: #3b82f6; emissiveIntensity: 0.8;" rotation="90 0 0"></a-cone>
-            <a-box position="0 -0.25 0" width="0.1" height="0.3" depth="0.1" material="color: #1e3a8a;"></a-box>
-        </a-scene>
+        <a-entity camera id="fixed-camera"></a-entity>
+        
+        <a-entity id="arrow-pivot" position="0 -0.5 -3" visible="false">
+            <a-entity id="arrow-visual">
+                <a-cone radius-bottom="0.25" height="0.5" material="color: #3b82f6; emissive: #3b82f6; emissiveIntensity: 1;" rotation="90 0 0"></a-cone>
+                <a-box position="0 -0.3 0" width="0.12" height="0.4" depth="0.1" material="color: #1e3a8a;"></a-box>
+            </a-entity>
+        </a-entity>
     </a-scene>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('room-id').innerText = urlParams.get('target') || 'เป้าหมาย';
+
         let initialAlpha = null;
         let targetRotY = 0;
         let lerpedRotY = 0;
+        const smoothSpeed = 0.15;
 
-        // ฐานข้อมูลเส้นทาง (ใส่เพิ่มได้เลย)
-        const db = {
-            "floor3": { name: "ห้องประชุม 301", text: "🚶 ออกจากลิฟต์แล้วเลี้ยวขวา", angle: 90 },
-            "floor4": { name: "ห้องแล็บ 405", text: "🚶 ออกจากลิฟต์แล้วเดินตรงไป", angle: 0 }
-        };
-
-        async function startAR(mode, floorChoice) {
-            // ขอสิทธิ์เซนเซอร์ (สำหรับ iOS/Android)
+        async function initPrecisionAR() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                try { await DeviceOrientationEvent.requestPermission(); } catch (e) { console.error(e); }
-            }
-
-            window.addEventListener('deviceorientation', (e) => {
-                if (initialAlpha === null) initialAlpha = e.alpha;
-                targetRotY = e.alpha - initialAlpha;
-            });
-
-            if (mode === 'manual') {
-                const data = db["floor" + floorChoice];
-                document.getElementById('target-display').innerText = data.name;
-                document.getElementById('guide-text').innerText = data.text;
+                const res = await DeviceOrientationEvent.requestPermission();
+                if (res === 'granted') window.addEventListener('deviceorientation', onDeviceMove);
             } else {
-                // โหมดสแกน: ดึงค่าจาก URL
-                const t = urlParams.get('target') || "จุดหมายของคุณ";
-                document.getElementById('target-display').innerText = t;
-                document.getElementById('guide-text').innerText = "🚶 เดินตามลูกศรไปยัง " + t;
+                window.addEventListener('deviceorientation', onDeviceMove);
             }
+            showUI();
+        }
 
-            // เปิดหน้าจอ AR
+        function onDeviceMove(event) {
+            if (event.alpha === null) return;
+            if (initialAlpha === null) initialAlpha = event.alpha;
+            targetRotY = event.alpha - initialAlpha; 
+        }
+
+        function showUI() {
             document.getElementById('entry-screen').style.display = 'none';
             document.getElementById('ui-header').style.display = 'flex';
             document.getElementById('ui-footer').style.display = 'flex';
             document.getElementById('arrow-pivot').setAttribute('visible', 'true');
-            
-            updateArrow();
         }
 
-        function updateArrow() {
+        function animate() {
             let diff = targetRotY - lerpedRotY;
             while (diff < -180) diff += 360;
             while (diff > 180) diff -= 360;
-            lerpedRotY += diff * 0.1; // ความสมูทของลูกศร
-            document.getElementById('arrow-pivot').object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
-            requestAnimationFrame(updateArrow);
+            lerpedRotY += diff * smoothSpeed;
+
+            const pivot = document.getElementById('arrow-pivot');
+            if (pivot && pivot.getAttribute('visible')) {
+                pivot.object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
+            }
+            requestAnimationFrame(animate);
         }
+        animate();
     </script>
 </body>
 </html>
