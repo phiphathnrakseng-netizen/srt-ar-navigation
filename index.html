@@ -24,15 +24,15 @@
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-full overflow-hidden">
                         <img src="https://scontent.fbkk22-8.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=vDbuSKyG08kQ7kNvwFvK7HE&_nc_oc=Admi9kkL8s-CZwLWtkM6Z7OICtHk9CzkzSiSEnTO0uvU_YGFsuhXCgITRbq92O7BKsM&_nc_zt=23&_nc_ht=scontent.fbkk22-8.fna&_nc_gid=p8of10MBluLtdi5pj3Rciw&oh=00_Afpw1u7ZhrnF2KIGgBQhTON7DsNei3Ae5u4QubzdxAYItg&oe=696FEC3A" 
-     alt="https://scontent.fbkk22-8.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=vDbuSKyG08kQ7kNvwFvK7HE&_nc_oc=Admi9kkL8s-CZwLWtkM6Z7OICtHk9CzkzSiSEnTO0uvU_YGFsuhXCgITRbq92O7BKsM&_nc_zt=23&_nc_ht=scontent.fbkk22-8.fna&_nc_gid=p8of10MBluLtdi5pj3Rciw&oh=00_Afpw1u7ZhrnF2KIGgBQhTON7DsNei3Ae5u4QubzdxAYItg&oe=696FEC3A" 
-     class="h-10 w-auto object-contain">
+                             alt="Logo" 
+                             class="h-10 w-auto object-contain">
                     </div>
                     <div>
                         <h1 class="text-blue-900 font-bold text-sm md:text-lg leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
                         <p class="text-[10px] md:text-xs text-gray-500">แผนกเทคโนโลยีสารสนเทศ</p>
                     </div>
                 </div>
-                <a href="index.html" id="back-home" class="items-center gap-1 text-gray-500 hover:text-blue-600 transition">
+                <a href="index.html" id="back-home" class="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition">
                     <i class="fa-solid fa-house"></i>
                     <span class="text-sm font-medium">หน้าหลัก</span>
                 </a>
@@ -100,7 +100,7 @@
 
     <footer class="bg-zinc-900 text-white py-10 mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-sm text-gray-400">© 2024 แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
+            <p class="text-sm text-gray-400">© 2026 แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
         </div>
     </footer>
 
@@ -116,34 +116,34 @@
             const subTitle = document.getElementById('sub-title');
             const backBtn = document.getElementById('back-home');
 
+            // ซ่อนทุกอย่างก่อนเพื่อ Reset
+            section3.style.display = 'none';
+            section4.style.display = 'none';
+            emptyState.style.display = 'none';
+
             if (floor === '3') {
                 section3.style.display = 'block';
-                section4.style.display = 'none';
-                emptyState.style.display = 'none';
                 backBtn.style.display = 'flex'; 
                 mainTitle.innerText = "เมนูนำทางชั้น 3";
                 subTitle.innerText = "เลือกห้องปลายทางที่คุณต้องการเดินทางไป (ตึกไอที)";
             } else if (floor === '4') {
                 section4.style.display = 'block';
-                section3.style.display = 'none';
-                emptyState.style.display = 'none';
                 backBtn.style.display = 'flex'; 
                 mainTitle.innerText = "เมนูนำทางชั้น 4";
                 subTitle.innerText = "เลือกห้องปลายทางที่คุณต้องการเดินทางไป (ตึกไอที)";
             } else {
                 emptyState.style.display = 'block';
-                section3.style.display = 'none';
-                section4.style.display = 'none';
                 backBtn.style.display = 'none';
             }
         }
 
+        // ฟังก์ชันนำทางเพื่อส่งค่าไปยังหน้า AR
         function navigate(roomId) {
-            alert("ระบบกำลังเปิดกล้องนำทางไปที่: " + roomId);
+            // เมื่อกด จะไปที่หน้า ar-view.html พร้อมส่งชื่อห้องไปด้วย
+            window.location.href = "ar-view.html?target=" + encodeURIComponent(roomId);
         }
 
         window.onload = initApp;
     </script>
 </body>
 </html>
-
