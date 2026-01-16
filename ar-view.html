@@ -3,13 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Navigation - High Precision</title>
+    <title>AR Navigation - High Precision with Plan B</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --glass: rgba(255, 255, 255, 0.1); --blur: blur(25px); }
+        :root { 
+            --glass: rgba(255, 255, 255, 0.1); 
+            --blur: blur(25px); 
+            --warning: rgba(255, 165, 0, 0.15);
+        }
         body { margin: 0; overflow: hidden; font-family: 'Sarabun', sans-serif; background: #000; }
+
+        /* UI ส่วนหัว */
+        #ui-header {
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            z-index: 1000; width: 88%; max-width: 400px;
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 15px;
+            text-align: center; opacity: 0; transition: all 0.8s ease-out; color: white;
+        }
+        #ui-header.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* แผน 2: ข้อความนำทางหลัก (ตรงไป...) */
+        #guidance-panel {
+            position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; width: 85%; max-width: 350px;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
+            border-radius: 15px; padding: 15px; color: white; text-align: center;
+            border-left: 4px solid #3b82f6; opacity: 0; transition: opacity 1s 1s;
+        }
+
+        /* ข้อความเตือนเรื่องเซนเซอร์ */
+        #sensor-warning {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; width: 85%; max-width: 350px;
+            background: var(--warning); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 165, 0, 0.3); border-radius: 12px;
+            padding: 10px; color: #ffcc00; font-size: 0.75rem; text-align: center;
+            opacity: 0; transition: opacity 1s 1.5s;
+        }
+
+        .label { font-size: 0.65rem; letter-spacing: 3px; color: #3b82f6; text-transform: uppercase; font-weight: 600; }
+        .target { font-size: 1.4rem; font-weight: 600; margin-top: 5px; }
+        .step-text { font-size: 1.2rem; font-weight: 600; color: #fff; }
+        .warning-icon { font-size: 1rem; margin-bottom: 4px; display: block; }
 
         #entry-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -19,37 +57,36 @@
         }
 
         .liquid-btn {
-            background: var(--glass); backdrop-filter: var(--blur);
-            -webkit-backdrop-filter: var(--blur); border: 1px solid rgba(255,255,255,0.2);
-            padding: 20px 60px; border-radius: 50px; font-size: 1.1rem;
-            font-weight: 600; color: white; cursor: pointer; letter-spacing: 2px;
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid rgba(255,255,255,0.2); padding: 18px 50px;
+            border-radius: 50px; font-size: 1.1rem; font-weight: 600; color: white;
+            cursor: pointer; letter-spacing: 2px;
         }
-
-        #ui-header {
-            position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-20px);
-            z-index: 1000; width: 85%; max-width: 400px;
-            background: var(--glass); backdrop-filter: var(--blur);
-            -webkit-backdrop-filter: var(--blur); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 25px; padding: 20px; text-align: center;
-            opacity: 0; transition: all 0.8s ease-out; color: white;
-        }
-        #ui-header.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .label { font-size: 0.65rem; letter-spacing: 3px; color: #3b82f6; text-transform: uppercase; font-weight: 600; }
-        .target { font-size: 1.6rem; font-weight: 600; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="entry-screen">
-        <div class="liquid-btn" onclick="initPrecisionAR()">ACTIVATE AR</div>
-        <p style="margin-top:20px; font-size:0.8rem; opacity:0.5; text-align:center; padding: 0 20px;">
-            After permission, hold phone steady<br>facing your destination.
+        <div class="liquid-btn" onclick="initPrecisionAR()">START NAVIGATION</div>
+        <p style="margin-top:20px; font-size:0.8rem; opacity:0.5; text-align:center; padding: 0 30px; line-height: 1.5;">
+            เพื่อความแม่นยำสูงสุด กรุณาถือเครื่องให้นิ่ง<br>และเดินตามข้อความนำทางประกอบกับลูกศร
         </p>
     </div>
 
     <div id="ui-header">
-        <div class="label">Navigating to</div>
+        <div class="label">Target Destination</div>
         <div id="room-id" class="target">...</div>
+    </div>
+
+    <div id="guidance-panel">
+        <div class="label" style="color: #fff; opacity: 0.7; margin-bottom: 5px;">Instructions</div>
+        <div class="step-text">🚶 ตรงไปอีกประมาณ 10 เมตร</div>
+    </div>
+
+    <div id="sensor-warning">
+        <span class="warning-icon">⚠️ หมายเหตุ</span>
+        ลูกศรอาจมีความคลาดเคลื่อนจากสัญญาณแม่เหล็กภายในอาคาร<br>
+        กรุณาอ่านข้อความนำทางด้านบนประกอบเพื่อความแม่นยำ
     </div>
 
     <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
@@ -66,13 +103,12 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('room-id').innerText = urlParams.get('target') || 'Location';
+        document.getElementById('room-id').innerText = urlParams.get('target') || 'Selected Area';
 
         let initialAlpha = null;
-        let currentAlpha = 0;
         let targetRotY = 0;
         let lerpedRotY = 0;
-        const smoothSpeed = 0.15; // ปรับเพิ่มเพื่อให้ขยับตามไวขึ้น (0.1 - 0.3)
+        const smoothSpeed = 0.15;
 
         async function initPrecisionAR() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -85,16 +121,11 @@
         }
 
         function onDeviceMove(event) {
-            // มิติความแม่นยำ: ใช้ alpha (Gyro) แทน Compass เพื่อกันรวน
             if (event.alpha === null) return;
-
-            if (initialAlpha === null) {
-                initialAlpha = event.alpha; // Calibrate จุดแรกที่กดเริ่มให้เป็น 0
-            }
-
-            // คำนวณความแตกต่างจากการหันจริง
-            let relativeAlpha = event.alpha - initialAlpha;
-            targetRotY = relativeAlpha; 
+            if (initialAlpha === null) initialAlpha = event.alpha;
+            
+            // คำนวณการหันแบบ Relative (หันตามมือจริง)
+            targetRotY = event.alpha - initialAlpha; 
         }
 
         function showUI() {
@@ -102,32 +133,28 @@
             setTimeout(() => {
                 document.getElementById('entry-screen').style.display = 'none';
                 document.getElementById('ui-header').classList.add('show');
+                document.getElementById('guidance-panel').style.opacity = '1';
+                document.getElementById('sensor-warning').style.opacity = '1';
                 document.getElementById('arrow-pivot').setAttribute('visible', 'true');
             }, 600);
         }
 
         function animate() {
-            // มิติการเคลื่อนที่: แก้ปัญหาหันซ้ายไปขวา
             let diff = targetRotY - lerpedRotY;
-            
-            // ปรับทิศทางให้เป็นธรรมชาติ (Shortest path rotation)
             while (diff < -180) diff += 360;
             while (diff > 180) diff -= 360;
 
-            // ระบบต้านแรงเฉื่อย (Damping)
             lerpedRotY += diff * smoothSpeed;
 
             const pivot = document.getElementById('arrow-pivot');
             const visual = document.getElementById('arrow-visual');
 
-            if (pivot) {
-                // อัพเดทตำแหน่งตามเข็มนาฬิกาที่ถูกต้อง
+            if (pivot && pivot.getAttribute('visible')) {
+                // อัปเดตการหันลูกศรตามมือถือ
                 pivot.object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
-                
-                // อนิเมชั่นลอยตัว (Floating)
+                // อนิเมชั่นลอยตัว
                 visual.object3D.position.y = Math.sin(Date.now() * 0.0025) * 0.08;
             }
-
             requestAnimationFrame(animate);
         }
         animate();
