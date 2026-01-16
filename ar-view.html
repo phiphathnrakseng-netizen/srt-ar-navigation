@@ -3,24 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Navigation - Universal Smooth</title>
+    <title>AR Navigation - High Precision</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --blur: blur(25px);
-        }
+        :root { --glass: rgba(255, 255, 255, 0.1); --blur: blur(25px); }
         body { margin: 0; overflow: hidden; font-family: 'Sarabun', sans-serif; background: #000; }
 
-        /* Overlay - ออกแบบให้ Minimal และเรียกสิทธิ์ */
         #entry-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
-            z-index: 9999; display: flex; flex-direction: column;
+            background: #000; z-index: 9999; display: flex; flex-direction: column;
             justify-content: center; align-items: center; color: white;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.6s ease-in-out;
         }
 
         .liquid-btn {
@@ -28,115 +23,109 @@
             -webkit-backdrop-filter: var(--blur); border: 1px solid rgba(255,255,255,0.2);
             padding: 20px 60px; border-radius: 50px; font-size: 1.1rem;
             font-weight: 600; color: white; cursor: pointer; letter-spacing: 2px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
 
-        /* Glass UI Header */
         #ui-header {
             position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-20px);
             z-index: 1000; width: 85%; max-width: 400px;
             background: var(--glass); backdrop-filter: var(--blur);
             -webkit-backdrop-filter: var(--blur); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 25px; padding: 20px; text-align: center;
-            opacity: 0; transition: all 1s ease-out; color: white;
+            opacity: 0; transition: all 0.8s ease-out; color: white;
         }
-
         #ui-header.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .label { font-size: 0.6rem; letter-spacing: 4px; color: #3b82f6; text-transform: uppercase; }
-        .target { font-size: 1.8rem; font-weight: 600; margin-top: 5px; }
+        .label { font-size: 0.65rem; letter-spacing: 3px; color: #3b82f6; text-transform: uppercase; font-weight: 600; }
+        .target { font-size: 1.6rem; font-weight: 600; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="entry-screen">
-        <div class="liquid-btn" onclick="requestAccess()">ACTIVATE AR</div>
-        <p style="margin-top:25px; font-size:0.8rem; opacity:0.4; letter-spacing:1px;">Optimizing sensors for your device...</p>
+        <div class="liquid-btn" onclick="initPrecisionAR()">ACTIVATE AR</div>
+        <p style="margin-top:20px; font-size:0.8rem; opacity:0.5; text-align:center; padding: 0 20px;">
+            After permission, hold phone steady<br>facing your destination.
+        </p>
     </div>
 
     <div id="ui-header">
-        <div class="label">Destination</div>
+        <div class="label">Navigating to</div>
         <div id="room-id" class="target">...</div>
     </div>
 
     <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-entity id="rig" position="0 0 0">
-            <a-entity camera id="main-camera"></a-entity>
-        </a-entity>
+        <a-entity camera id="fixed-camera"></a-entity>
 
         <a-entity id="arrow-pivot" position="0 -1.2 -5" visible="false">
             <a-entity id="arrow-visual">
-                <a-cone radius-bottom="0.3" height="0.6" material="color: #3b82f6; emissive: #1d4ed8; emissiveIntensity: 0.5;" rotation="90 0 0"></a-cone>
-                <a-box position="0 -0.4 0" width="0.12" height="0.4" depth="0.12" material="color: #1e3a8a;"></a-box>
-                <a-ring color="#3b82f6" radius-inner="0.2" radius-outer="0.25" rotation="-90 0 0" position="0 -0.8 0" material="opacity: 0.3; transparent: true"></a-ring>
+                <a-cone radius-bottom="0.25" height="0.5" material="color: #3b82f6; emissive: #1d4ed8; emissiveIntensity: 0.6;" rotation="90 0 0"></a-cone>
+                <a-box position="0 -0.35 0" width="0.1" height="0.35" depth="0.1" material="color: #1e3a8a;"></a-box>
+                <a-ring color="#3b82f6" radius-inner="0.15" radius-outer="0.2" rotation="-90 0 0" position="0 -0.7 0" material="opacity: 0.4; transparent: true"></a-ring>
             </a-entity>
         </a-entity>
     </a-scene>
 
     <script>
-        // รับค่าเป้าหมาย
         const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('room-id').innerText = urlParams.get('target') || 'Selected Area';
+        document.getElementById('room-id').innerText = urlParams.get('target') || 'Location';
 
+        let initialAlpha = null;
+        let currentAlpha = 0;
         let targetRotY = 0;
-        let currentRotY = 0;
-        const lerpFactor = 0.08; // ความหน่วงของลูกศร (0.1 = นุ่มนวลมาก)
+        let lerpedRotY = 0;
+        const smoothSpeed = 0.15; // ปรับเพิ่มเพื่อให้ขยับตามไวขึ้น (0.1 - 0.3)
 
-        async function requestAccess() {
-            // มิติที่ 2: จัดการเรื่อง Permissions ของ iOS (iPhone 8 และรุ่นอื่นๆ)
+        async function initPrecisionAR() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                try {
-                    const permission = await DeviceOrientationEvent.requestPermission();
-                    if (permission === 'granted') {
-                        window.addEventListener('deviceorientation', handleRotation);
-                    }
-                } catch (error) {
-                    console.error("Sensor access denied");
-                }
+                const res = await DeviceOrientationEvent.requestPermission();
+                if (res === 'granted') window.addEventListener('deviceorientation', onDeviceMove);
             } else {
-                // สำหรับ Android หรือ Browser ที่ไม่ต้องขอสิทธิ์
-                window.addEventListener('deviceorientation', handleRotation);
+                window.addEventListener('deviceorientation', onDeviceMove);
             }
-            startUI();
+            showUI();
         }
 
-        function handleRotation(event) {
-            // มิติที่ 1: Fallback Logic
-            // ถ้าเครื่องมี Compass (webkitCompassHeading) ให้ใช้ค่าจากเข็มทิศ
-            // ถ้าไม่มี ให้ใช้ค่า alpha (Gyroscope ทั่วไป)
-            let heading = event.webkitCompassHeading || event.alpha;
-            if (heading) {
-                targetRotY = -heading; 
+        function onDeviceMove(event) {
+            // มิติความแม่นยำ: ใช้ alpha (Gyro) แทน Compass เพื่อกันรวน
+            if (event.alpha === null) return;
+
+            if (initialAlpha === null) {
+                initialAlpha = event.alpha; // Calibrate จุดแรกที่กดเริ่มให้เป็น 0
             }
+
+            // คำนวณความแตกต่างจากการหันจริง
+            let relativeAlpha = event.alpha - initialAlpha;
+            targetRotY = relativeAlpha; 
         }
 
-        function startUI() {
+        function showUI() {
             document.getElementById('entry-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('entry-screen').style.display = 'none';
                 document.getElementById('ui-header').classList.add('show');
                 document.getElementById('arrow-pivot').setAttribute('visible', 'true');
-            }, 800);
+            }, 600);
         }
 
         function animate() {
-            // มิติที่ 3: Visual Smoothness (Lerp Calculation)
-            // ทำให้ลูกศรไม่สั่นแม้เซนเซอร์ iPhone 8 จะแกว่ง
-            let diff = targetRotY - currentRotY;
+            // มิติการเคลื่อนที่: แก้ปัญหาหันซ้ายไปขวา
+            let diff = targetRotY - lerpedRotY;
+            
+            // ปรับทิศทางให้เป็นธรรมชาติ (Shortest path rotation)
             while (diff < -180) diff += 360;
             while (diff > 180) diff -= 360;
-            
-            currentRotY += diff * lerpFactor;
 
-            const arrowPivot = document.getElementById('arrow-pivot');
-            const arrowVisual = document.getElementById('arrow-visual');
+            // ระบบต้านแรงเฉื่อย (Damping)
+            lerpedRotY += diff * smoothSpeed;
 
-            if (arrowPivot) {
-                // หันตามทิศที่มือถือหันจริงอย่างนุ่มนวล
-                arrowPivot.object3D.rotation.y = THREE.MathUtils.degToRad(currentRotY);
+            const pivot = document.getElementById('arrow-pivot');
+            const visual = document.getElementById('arrow-visual');
+
+            if (pivot) {
+                // อัพเดทตำแหน่งตามเข็มนาฬิกาที่ถูกต้อง
+                pivot.object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
                 
-                // อนิเมชั่นลอย (Floating)
-                const time = Date.now() * 0.002;
-                arrowVisual.object3D.position.y = Math.sin(time) * 0.12;
+                // อนิเมชั่นลอยตัว (Floating)
+                visual.object3D.position.y = Math.sin(Date.now() * 0.0025) * 0.08;
             }
 
             requestAnimationFrame(animate);
