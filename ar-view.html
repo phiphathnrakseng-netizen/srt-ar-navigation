@@ -3,67 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบนำทาง AR - วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
+    <title>AR Navigation - Minimal</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        .ar-ui {
+        body { font-family: 'Sarabun', sans-serif; }
+        
+        /* สไตล์หน้าจอแบบกระจก Glassmorphism */
+        .glass-panel {
             position: fixed;
-            top: 20px;
+            top: 25px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-family: sans-serif;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 20px;
+            width: 85%;
+            max-width: 400px;
             text-align: center;
-            width: 80%;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
+
+        .target-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+
+        #target-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
         .back-btn {
             position: fixed;
-            bottom: 30px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: #fff;
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
+            background: white;
             color: #1e3a8a;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        /* ตกแต่งจุดกลางจอ (Crosshair) */
+        .center-dot {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 500;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
     </style>
 </head>
 <body style="margin: 0; overflow: hidden;">
 
-    <div class="ar-ui">
-        <div id="target-name" style="font-size: 1.2rem; font-weight: bold;">กำลังโหลด...</div>
-        <div style="font-size: 0.8rem; opacity: 0.8;">ส่องกล้องไปรอบๆ เพื่อดูเส้นทาง</div>
+    <div class="glass-panel">
+        <span class="target-label">จุดหมายปลายทาง</span>
+        <h1 id="target-name">กำลังโหลด...</h1>
     </div>
 
-    <a href="index.html" class="back-btn">กลับหน้าหลัก</a>
+    <div class="center-dot"></div>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a href="index.html" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> ออกจากการนำทาง
+    </a>
+
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;">
         
-        <a-entity id="arrow" position="0 0 -5">
-            <a-cone rotation="90 0 0" radius-bottom="0.5" height="1.5" color="#3b82f6"></a-cone>
-            <a-box position="0 -0.75 0" width="0.4" height="1" depth="0.4" color="#1e3a8a"></a-box>
+        <a-entity id="navigation-arrow" position="0 0 -4">
+            <a-cone 
+                rotation="90 0 0" 
+                radius-bottom="0.4" 
+                radius-top="0" 
+                height="0.8" 
+                material="color: #3b82f6; opacity: 0.9; emissive: #1e3a8a;">
+            </a-cone>
+            <a-box 
+                position="0 -0.5 0" 
+                width="0.2" 
+                height="0.5" 
+                depth="0.2" 
+                material="color: #1e3a8a; opacity: 0.9;">
+            </a-box>
+            
+            <a-animation attribute="position"
+                dur="1500"
+                from="0 0 -4"
+                to="0 0.2 -4"
+                direction="alternate"
+                repeat="indefinite">
+            </a-animation>
         </a-entity>
 
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        // ดึงค่า target จาก URL (ที่ส่งมาจากหน้า index.html)
         const params = new URLSearchParams(window.location.search);
         const target = params.get('target');
         
         if (target) {
-            document.getElementById('target-name').innerText = "กำลังนำทางไป: " + target;
+            document.getElementById('target-name').innerText = target;
         }
+
+        // เพิ่มลูกเล่นให้ลูกศรหมุนไปมาเล็กน้อยเพื่อให้ดูมีชีวิตชีวา
+        const arrow = document.querySelector('#navigation-arrow');
+        let frame = 0;
+        function animate() {
+            frame += 0.02;
+            arrow.object3D.rotation.y = Math.sin(frame) * 0.2;
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
