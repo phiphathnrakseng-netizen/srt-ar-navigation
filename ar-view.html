@@ -3,112 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Navigation - High Precision with Plan B</title>
+    <title>AR Navigation - High Readability</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --glass: rgba(255, 255, 255, 0.1); 
-            --blur: blur(25px); 
-            --warning: rgba(255, 165, 0, 0.15);
+            --bg-dark: rgba(0, 0, 0, 0.85);
+            --accent-blue: #3b82f6;
+            --warning-gold: #ffcc00;
         }
         body { margin: 0; overflow: hidden; font-family: 'Sarabun', sans-serif; background: #000; }
 
-        /* UI ส่วนหัว */
+        /* ส่วนหัว: จุดหมายปลายทาง */
         #ui-header {
-            position: fixed; top: 25px; left: 50%; transform: translateX(-50%) translateY(-20px);
-            z-index: 1000; width: 88%; max-width: 400px;
-            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-            border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 15px;
-            text-align: center; opacity: 0; transition: all 0.8s ease-out; color: white;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            z-index: 1000; width: 90%; max-width: 400px;
+            background: var(--bg-dark); border-radius: 16px; padding: 12px;
+            text-align: center; opacity: 0; transition: all 0.6s ease-out; color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
         #ui-header.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* แผน 2: ข้อความนำทางหลัก (ตรงไป...) */
+        /* แผน 2: กล่องนำทาง (เน้นอ่านง่ายที่สุด) */
         #guidance-panel {
-            position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%);
             z-index: 1000; width: 85%; max-width: 350px;
-            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
-            border-radius: 15px; padding: 15px; color: white; text-align: center;
-            border-left: 4px solid #3b82f6; opacity: 0; transition: opacity 1s 1s;
+            background: var(--bg-dark); border-radius: 12px; padding: 18px; 
+            color: white; text-align: center;
+            border-bottom: 5px solid var(--accent-blue);
+            opacity: 0; transition: opacity 0.8s 0.5s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        /* ข้อความเตือนเรื่องเซนเซอร์ */
+        /* กล่องเตือน: สีทองตัดดำ */
         #sensor-warning {
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             z-index: 1000; width: 85%; max-width: 350px;
-            background: var(--warning); backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 165, 0, 0.3); border-radius: 12px;
-            padding: 10px; color: #ffcc00; font-size: 0.75rem; text-align: center;
-            opacity: 0; transition: opacity 1s 1.5s;
+            background: rgba(255, 204, 0, 0.95); border-radius: 10px;
+            padding: 10px; color: #000; font-size: 0.85rem; font-weight: 600;
+            text-align: center; opacity: 0; transition: opacity 0.8s 1s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
         }
 
-        .label { font-size: 0.65rem; letter-spacing: 3px; color: #3b82f6; text-transform: uppercase; font-weight: 600; }
-        .target { font-size: 1.4rem; font-weight: 600; margin-top: 5px; }
-        .step-text { font-size: 1.2rem; font-weight: 600; color: #fff; }
-        .warning-icon { font-size: 1rem; margin-bottom: 4px; display: block; }
+        .label { font-size: 0.7rem; letter-spacing: 2px; color: var(--accent-blue); text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+        .target { font-size: 1.5rem; font-weight: 700; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .step-text { font-size: 1.4rem; font-weight: 700; color: #fff; display: block; margin-top: 5px; }
+        .warning-title { font-weight: 700; display: block; text-decoration: underline; margin-bottom: 2px; }
 
+        /* หน้าแรกก่อนเริ่ม */
         #entry-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999; display: flex; flex-direction: column;
             justify-content: center; align-items: center; color: white;
-            transition: opacity 0.6s ease-in-out;
+            transition: opacity 0.5s;
         }
-
-        .liquid-btn {
-            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-            border: 1px solid rgba(255,255,255,0.2); padding: 18px 50px;
-            border-radius: 50px; font-size: 1.1rem; font-weight: 600; color: white;
-            cursor: pointer; letter-spacing: 2px;
+        .start-btn {
+            background: #3b82f6; color: white; padding: 20px 40px;
+            border-radius: 50px; font-size: 1.2rem; font-weight: 700; border: none;
+            cursor: pointer; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
     </style>
 </head>
 <body>
 
     <div id="entry-screen">
-        <div class="liquid-btn" onclick="initPrecisionAR()">START NAVIGATION</div>
-        <p style="margin-top:20px; font-size:0.8rem; opacity:0.5; text-align:center; padding: 0 30px; line-height: 1.5;">
-            เพื่อความแม่นยำสูงสุด กรุณาถือเครื่องให้นิ่ง<br>และเดินตามข้อความนำทางประกอบกับลูกศร
+        <button class="start-btn" onclick="initPrecisionAR()">เริ่มการนำทาง (START)</button>
+        <p style="margin-top:20px; font-size:0.9rem; opacity:0.7; text-align:center; padding: 0 40px;">
+            กรุณาถือเครื่องให้นิ่งและเดินตามข้อความนำทาง
         </p>
     </div>
 
     <div id="ui-header">
-        <div class="label">Target Destination</div>
+        <div class="label">จุดหมายของคุณ</div>
         <div id="room-id" class="target">...</div>
     </div>
 
     <div id="guidance-panel">
-        <div class="label" style="color: #fff; opacity: 0.7; margin-bottom: 5px;">Instructions</div>
-        <div class="step-text">🚶 ตรงไปอีกประมาณ 10 เมตร</div>
+        <div class="label" style="color: #ccc;">คำแนะนำปัจจุบัน</div>
+        <span class="step-text">🚶 ตรงไปอีก 10 เมตร</span>
     </div>
 
     <div id="sensor-warning">
-        <span class="warning-icon">⚠️ หมายเหตุ</span>
-        ลูกศรอาจมีความคลาดเคลื่อนจากสัญญาณแม่เหล็กภายในอาคาร<br>
-        กรุณาอ่านข้อความนำทางด้านบนประกอบเพื่อความแม่นยำ
+        <span class="warning-title">⚠️ ข้อควรระวัง</span>
+        หากลูกศรหมุนรวน ให้ยึดตามคำแนะนำ "ข้อความ" เป็นหลัก
     </div>
 
     <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
         <a-entity camera id="fixed-camera"></a-entity>
-
-        <a-entity id="arrow-pivot" position="0 -1.2 -5" visible="false">
+        <a-entity id="arrow-pivot" position="0 -1 -4" visible="false">
             <a-entity id="arrow-visual">
-                <a-cone radius-bottom="0.25" height="0.5" material="color: #3b82f6; emissive: #1d4ed8; emissiveIntensity: 0.6;" rotation="90 0 0"></a-cone>
-                <a-box position="0 -0.35 0" width="0.1" height="0.35" depth="0.1" material="color: #1e3a8a;"></a-box>
-                <a-ring color="#3b82f6" radius-inner="0.15" radius-outer="0.2" rotation="-90 0 0" position="0 -0.7 0" material="opacity: 0.4; transparent: true"></a-ring>
+                <a-cone radius-bottom="0.25" height="0.5" material="color: #3b82f6; emissive: #1d4ed8; emissiveIntensity: 0.8;" rotation="90 0 0"></a-cone>
+                <a-box position="0 -0.3 0" width="0.1" height="0.4" depth="0.1" material="color: #1e3a8a;"></a-box>
             </a-entity>
         </a-entity>
     </a-scene>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('room-id').innerText = urlParams.get('target') || 'Selected Area';
+        document.getElementById('room-id').innerText = urlParams.get('target') || 'จุดหมายปลายทาง';
 
         let initialAlpha = null;
         let targetRotY = 0;
         let lerpedRotY = 0;
-        const smoothSpeed = 0.15;
+        const smoothSpeed = 0.12;
 
         async function initPrecisionAR() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -123,8 +121,6 @@
         function onDeviceMove(event) {
             if (event.alpha === null) return;
             if (initialAlpha === null) initialAlpha = event.alpha;
-            
-            // คำนวณการหันแบบ Relative (หันตามมือจริง)
             targetRotY = event.alpha - initialAlpha; 
         }
 
@@ -136,24 +132,18 @@
                 document.getElementById('guidance-panel').style.opacity = '1';
                 document.getElementById('sensor-warning').style.opacity = '1';
                 document.getElementById('arrow-pivot').setAttribute('visible', 'true');
-            }, 600);
+            }, 500);
         }
 
         function animate() {
             let diff = targetRotY - lerpedRotY;
             while (diff < -180) diff += 360;
             while (diff > 180) diff -= 360;
-
             lerpedRotY += diff * smoothSpeed;
 
             const pivot = document.getElementById('arrow-pivot');
-            const visual = document.getElementById('arrow-visual');
-
             if (pivot && pivot.getAttribute('visible')) {
-                // อัปเดตการหันลูกศรตามมือถือ
                 pivot.object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
-                // อนิเมชั่นลอยตัว
-                visual.object3D.position.y = Math.sin(Date.now() * 0.0025) * 0.08;
             }
             requestAnimationFrame(animate);
         }
