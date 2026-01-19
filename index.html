@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบ AR Navigation - วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
     
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="icon" type="image/jpeg" href="favicon.jpg">
+    <link rel="apple-touch-icon" href="favicon.jpg">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { font-family: 'Sarabun', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        /* ปรับสี Gradient ให้เข้ากับสีน้ำเงิน-ทองของตราวิทยาลัย */
+        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%); }
         .floor-section { display: none; }
         .nav-btn-active { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; font-weight: 700; }
         
-        /* Animation สำหรับการเปลี่ยนหน้าจอ */
         .fade-in-bottom {
             animation: fadeInBottom 0.5s ease-out;
         }
@@ -33,6 +33,7 @@
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
         <div class="relative bg-white w-full max-w-lg mx-4 rounded-3xl shadow-2xl overflow-hidden">
             <div class="gradient-bg p-6 text-white text-center">
+                <img src="favicon.png.jpg" alt="Logo" class="h-16 mx-auto mb-2 drop-shadow-lg">
                 <h3 class="text-xl font-bold italic">IT SURAT AR GUIDE</h3>
             </div>
             <div class="p-6 space-y-4">
@@ -56,7 +57,7 @@
     <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <img src="https://upload.wikimedia.org/wikipedia/th/1/1a/Surat_Thani_Technical_College_Logo.png" alt="Logo" class="h-12 w-auto">
+                <img src="favicon.png.jpg" alt="Logo" class="h-12 w-auto">
                 <div class="border-l pl-3 border-gray-200">
                     <h1 class="text-blue-900 font-bold text-sm md:text-lg leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
                     <p class="text-[10px] text-gray-500 font-medium tracking-widest uppercase">Information Technology</p>
@@ -126,6 +127,7 @@
 
     <footer class="bg-white border-t py-12 mt-20">
         <div class="max-w-7xl mx-auto px-4 text-center">
+            <img src="favicon.png.jpg" alt="Logo" class="h-8 mx-auto mb-3 opacity-50 grayscale hover:grayscale-0 transition-all">
             <p class="text-gray-400 text-sm italic">พัฒนาโดย แผนกเทคโนโลยีสารสนเทศ</p>
             <p class="text-gray-400 text-sm mt-1">© 2026 วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
         </div>
@@ -156,7 +158,6 @@
             const s4 = document.getElementById('floor-4');
             const empty = document.getElementById('empty-state');
             
-            // ซ่อนทุกส่วนก่อน
             [s3, s4, empty].forEach(s => s.style.display = 'none');
 
             if (floor === '3') {
@@ -168,7 +169,7 @@
             } else {
                 empty.style.display = 'block';
                 document.getElementById('nav-scan').classList.add('nav-btn-active');
-                openModal(); // เปิดคำแนะนำเฉพาะครั้งแรกที่เข้าหน้าแรก
+                openModal();
             }
         }
 
