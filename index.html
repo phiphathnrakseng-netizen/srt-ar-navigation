@@ -2,13 +2,18 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ระบบ AR Navigation - วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: #f8fafc; 
+            color: #1e293b; 
+            -webkit-font-smoothing: antialiased;
+        }
         .navy-bg { background-color: #1e3a8a; }
         .navy-border { border-color: #1e3a8a; }
         .floor-section { display: none; }
@@ -55,7 +60,7 @@
     <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center h-auto md:h-20 py-4 md:py-0">
             <div class="flex items-center gap-4 mb-4 md:mb-0">
-                <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=OI2Hv9vbsRMQ7kNvwGkNg1Y&_nc_oc=AdlK0TNH5yslytyOlQ-X01Ao6UEk-0K9H24KIBTI8WgLJf7ax1WWkm5M8uqFJQ7WN6E&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=fplwJS8V3QUEGPUk-6aStQ&oh=00_AfrMRI0cBIXKOWd4S7-y9qThj4wryU0y1vZpYZOeyDZqKw&oe=6973703A" alt="Logo" class="h-12 w-auto">
+                <img src="img/logo-stc.jpg" alt="Logo STC" class="h-12 w-auto">
                 <div class="border-l border-slate-200 pl-4">
                     <h1 class="text-blue-900 font-bold text-base md:text-lg leading-tight uppercase tracking-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
                     <p class="text-[11px] text-slate-500 font-bold uppercase tracking-[0.2em]">IT DEPARTMENT AR SYSTEM</p>
@@ -93,6 +98,11 @@
                     <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ค้นหาชื่อห้องหรือเลขห้อง..." 
                            class="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 formal-btn focus:outline-none border-b-2 focus:border-blue-600 transition-all">
                 </div>
+            </div>
+
+            <div id="no-results" class="hidden text-center py-10 bg-white formal-card mb-6">
+                <i class="fa-solid fa-face-frown text-3xl text-slate-300 mb-2"></i>
+                <p class="text-slate-500">ไม่พบห้องที่คุณต้องการค้นหา</p>
             </div>
 
             <div id="floor-3" class="floor-section bg-white formal-card shadow-sm overflow-hidden">
@@ -199,11 +209,30 @@
 
         function searchRoom() {
             const input = document.getElementById('searchInput').value.toLowerCase();
-            const rooms = document.querySelectorAll('.room-item');
+            // ค้นหาเฉพาะในชั้นที่กำลังแสดงผลอยู่
+            const activeFloor = document.querySelector('.floor-section[style*="display: block"]');
+            if (!activeFloor) return;
+
+            const rooms = activeFloor.querySelectorAll('.room-item');
+            let hasResults = false;
+
             rooms.forEach(room => {
                 const text = room.innerText.toLowerCase();
-                room.style.display = text.includes(input) ? "" : "none";
+                if (text.includes(input)) {
+                    room.style.display = "flex";
+                    hasResults = true;
+                } else {
+                    room.style.display = "none";
+                }
             });
+
+            // แสดง Error State ถ้าค้นหาไม่เจอ
+            const noRes = document.getElementById('no-results');
+            if (input !== "" && !hasResults) {
+                noRes.classList.remove('hidden');
+            } else {
+                noRes.classList.add('hidden');
+            }
         }
 
         function openModal() { document.getElementById('guide-modal').classList.remove('hidden'); }
@@ -219,7 +248,9 @@
             const searchBar = document.getElementById('search-container');
             const badge = document.getElementById('location-badge');
             
+            // รีเซ็ตสถานะการแสดงผล
             [s3, s4, empty, searchBar].forEach(s => s.style.display = 'none');
+            document.getElementById('no-results').classList.add('hidden');
 
             if (floor === '3') {
                 s3.style.display = 'block';
@@ -240,6 +271,7 @@
 
         function navigate(roomId) {
             const data = navigationData[roomId];
+            if (!data) return;
             const url = `ar-view.html?target=${encodeURIComponent(roomId)}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
             window.location.href = url;
         }
@@ -248,4 +280,3 @@
     </script>
 </body>
 </html>
-
