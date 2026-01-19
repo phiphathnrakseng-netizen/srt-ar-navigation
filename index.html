@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ระบบนำทาง AR | วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,7 +30,11 @@
 
         /* Reset border radius for modern sharp look */
         * { border-radius: 0 !important; }
-        .logo-circle { border-radius: 9999px !important; }
+        .logo-circle { 
+            border-radius: 9999px !important; 
+            /* 2. เพิ่มเอฟเฟกต์เรืองแสงให้โลโก้ */
+            filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.4));
+        }
 
         .navy-gradient { background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-primary) 100%); }
         
@@ -117,7 +124,8 @@
             <div class="flex items-center gap-5 py-4 md:py-0">
                 <div class="relative group">
                     <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-amber-500 logo-circle opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                    <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=OI2Hv9vbsRMQ7kNvwGkNg1Y&_nc_oc=AdlK0TNH5yslytyOlQ-X01Ao6UEk-0K9H24KIBTI8WgLJf7ax1WWkm5M8uqFJQ7WN6E&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=mtlkpzy5lfxCKtetUJD_PA&oh=00_AfoDC7gOEBbnv3gxbJw_P6ClFXznzI_bvHJVYcwhFOB5aw&oe=6973A87A" 
+                    
+                    <img src="favicon.png" 
                          alt="โลโก้เทคนิคสุราษฎร์ฯ" 
                          class="relative h-16 w-16 object-cover logo-circle border-2 border-white shadow-md transform group-hover:scale-105 transition-transform duration-500">
                 </div>
@@ -267,15 +275,11 @@
     <script>
         AOS.init({ duration: 800, once: true });
 
-        // รวมข้อมูลการนำทางทั้งชั้น 3 และ ชั้น 4
         const navigationData = {
-            // ข้อมูลชั้น 3 เดิม
             "631": { angle: 90, dist: 8, guide: "หันขวาเดินตรงไปประมาณ 8 เมตร" },
             "632": { angle: -90, dist: 5, guide: "หันซ้ายเดินตรงไปประมาณ 5 เมตร" },
             "633": { angle: -90, dist: 12, guide: "หันซ้ายเดินตรงไปประมาณ 12 เมตร" },
             "634": { angle: -90, dist: 20, guide: "หันซ้ายเดินตรงไปประมาณ 20 เมตร" },
-            
-            // ข้อมูลชั้น 4 ใหม่ (คำนวณจากบันไดเป็นจุดเริ่ม)
             "LECTURE1": { angle: 280, dist: 5, guide: "ออกจากบันไดแล้วเลี้ยวซ้าย ห้องจะอยู่ซ้ายมือแรก" },
             "LAB1": { angle: 280, dist: 12, guide: "เดินตรงผ่านห้อง Lecture 1 ต่อไปอีกนิด" },
             "LAB2": { angle: 280, dist: 20, guide: "เดินตรงไปผ่านม้านั่งยาว จนถึงหน้าป้าย Cyber Security" },
@@ -303,23 +307,24 @@
             const searchBar = document.getElementById('search-container');
             const badge = document.getElementById('location-badge');
             
-            // ซ่อนทุกอย่างก่อน
-            [s3, s4, empty, searchBar].forEach(s => { if(s) s.style.display = 'none'; });
+            if(s3) s3.style.display = 'none';
+            if(s4) s4.style.display = 'none';
+            if(empty) empty.style.display = 'none';
+            if(searchBar) searchBar.style.display = 'none';
 
             if (floor === '3') {
-                s3.style.display = 'block';
-                searchBar.style.display = 'block';
+                if(s3) s3.style.display = 'block';
+                if(searchBar) searchBar.style.display = 'block';
                 badge.innerText = "ชั้น 3 แผนกเทคโนโลยีสารสนเทศ";
                 document.getElementById('nav-f3').classList.add('nav-btn-active');
             } else if (floor === '4') {
-                s4.style.display = 'block';
-                searchBar.style.display = 'block';
+                if(s4) s4.style.display = 'block';
+                if(searchBar) searchBar.style.display = 'block';
                 badge.innerText = "ชั้น 4 แผนกเทคโนโลยีสารสนเทศ";
                 document.getElementById('nav-f4').classList.add('nav-btn-active');
-                // ปรับแต่งสี Badge นิดหน่อยสำหรับชั้น 4
                 badge.classList.replace('text-blue-700', 'text-purple-700');
             } else {
-                empty.style.display = 'block';
+                if(empty) empty.style.display = 'block';
                 document.getElementById('nav-scan').classList.add('nav-btn-active');
                 setTimeout(openModal, 1000); 
             }
@@ -328,7 +333,6 @@
         function navigate(roomId) {
             const data = navigationData[roomId];
             if(!data) return;
-            // ส่งค่าไปยังหน้า AR View
             window.location.href = `ar-view.html?target=${encodeURIComponent(roomId)}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
         }
 
