@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Navigation View</title>
+    <title>AR Navigation View | วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,7 +14,15 @@
             object-fit: cover;
         }
         .arrow-indicator {
-            transition: transform 0.2s ease-out;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
@@ -24,34 +32,34 @@
 
     <div class="relative h-screen flex flex-col justify-between p-6">
         
-        <div class="bg-white/90 backdrop-blur-md p-4 rounded-3xl shadow-2xl flex justify-between items-center">
+        <div class="bg-white/90 backdrop-blur-md p-5 rounded-3xl shadow-2xl flex justify-between items-center border-b-4 border-purple-600">
             <div>
-                <p class="text-xs text-gray-500 uppercase tracking-widest">กำลังนำทางไป</p>
-                <h2 id="target-name" class="text-2xl font-bold text-purple-900">...</h2>
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-black">กำลังนำทางไป</p>
+                <h2 id="target-name" class="text-2xl font-black text-purple-900 leading-tight">...</h2>
             </div>
-            <button onclick="history.back()" class="bg-gray-100 w-10 h-10 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-xmark"></i>
+            <button onclick="history.back()" class="bg-red-50 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner">
+                <i class="fa-solid fa-xmark fa-lg"></i>
             </button>
         </div>
 
         <div class="flex flex-col items-center justify-center">
             <div id="arrow-container" class="arrow-indicator">
-                <i class="fa-solid fa-circle-up text-8xl text-purple-500 drop-shadow-[0_0_15px_rgba(168,85,247,0.8)]"></i>
+                <i class="fa-solid fa-location-arrow text-8xl text-purple-500 drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]"></i>
             </div>
-            <div class="mt-8 bg-purple-900/80 text-white px-6 py-3 rounded-full backdrop-blur-md">
-                <p id="guide-text" class="text-lg font-bold">รอการปรับทิศทาง...</p>
+            <div class="mt-10 bg-purple-900/90 text-white px-8 py-4 rounded-2xl backdrop-blur-md shadow-2xl border border-white/20 text-center">
+                <p id="guide-text" class="text-lg font-bold">กรุณาแตะหน้าจอเพื่อเริ่มระบบ</p>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div class="bg-white/90 backdrop-blur-md p-4 rounded-3xl text-center shadow-xl">
-                <p class="text-xs text-gray-500">ระยะทางที่เหลือ</p>
-                <p class="text-3xl font-black text-purple-600"><span id="dist-remain">0</span> <span class="text-sm">ม.</span></p>
+            <div class="bg-white/90 backdrop-blur-md p-5 rounded-3xl text-center shadow-2xl">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">ระยะคงเหลือ</p>
+                <p class="text-4xl font-black text-purple-600"><span id="dist-remain">0</span><span class="text-lg ml-1">ม.</span></p>
             </div>
-            <div class="bg-white/90 backdrop-blur-md p-4 rounded-3xl text-center shadow-xl">
-                <p class="text-xs text-gray-500">สถานะ</p>
-                <div id="status-icon" class="text-green-500 mt-1">
-                    <i class="fa-solid fa-circle-check"></i> พร้อมใช้งาน
+            <div id="status-card" class="bg-white/90 backdrop-blur-md p-5 rounded-3xl text-center shadow-2xl transition-colors">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">เซนเซอร์เดิน</p>
+                <div id="status-text" class="text-amber-500 font-black text-lg">
+                    <i class="fa-solid fa-pause-circle"></i> รอเริ่ม
                 </div>
             </div>
         </div>
@@ -61,75 +69,104 @@
         const params = new URLSearchParams(window.location.search);
         const targetRoom = params.get('target');
         const targetAngle = parseFloat(params.get('angle')) || 0;
-        let distance = parseFloat(params.get('dist')) || 0;
+        const initialGuide = params.get('guide');
+        
+        let currentDistance = parseFloat(params.get('dist')) || 0;
+        let isMoving = false;
+        let stepCount = 0;
+        const stepLength = 0.65; // ความยาวก้าวเดินเฉลี่ย 0.65 เมตร
 
-        document.getElementById('target-name').innerText = targetRoom;
-        document.getElementById('dist-remain').innerText = distance;
-        document.getElementById('guide-text').innerText = params.get('guide');
+        // อัปเดต UI เริ่มต้น
+        document.getElementById('target-name').innerText = "ห้อง " + targetRoom;
+        document.getElementById('dist-remain').innerText = currentDistance.toFixed(1);
 
-        // 1. เริ่มใช้งานกล้อง
+        // 1. ระบบกล้อง
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' }, 
+                    video: { facingMode: 'environment', focusMode: 'continuous' }, 
                     audio: false 
                 });
                 document.getElementById('video-preview').srcObject = stream;
             } catch (err) {
-                alert("ไม่สามารถเข้าถึงกล้องได้: " + err);
+                console.error("Camera Error:", err);
             }
         }
 
-        // 2. ระบบเข็มทิศและการหมุนลูกศร
-        function initCompass() {
+        // 2. ระบบเข็มทิศ
+        function initSensors() {
+            document.getElementById('guide-text').innerText = initialGuide;
+            document.getElementById('status-text').innerHTML = '<i class="fa-solid fa-person-walking"></i> พร้อมตรวจจับ';
+            document.getElementById('status-text').className = "text-green-500 font-black text-lg";
+
+            // ขอสิทธิ์ Device Orientation (สำหรับ iOS)
             if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                // สำหรับ iOS
-                DeviceOrientationEvent.requestPermission()
-                    .then(state => {
-                        if (state === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
-                        }
-                    });
+                DeviceOrientationEvent.requestPermission().then(state => {
+                    if (state === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                    }
+                });
             } else {
-                // สำหรับ Android / Browser อื่นๆ
                 window.addEventListener('deviceorientationabsolute', handleOrientation);
             }
+
+            // เริ่มระบบตรวจจับการเดิน
+            window.addEventListener('devicemotion', handleMotion);
         }
 
         function handleOrientation(event) {
             let heading = event.webkitCompassHeading || (360 - event.alpha);
             if (heading) {
-                // คำนวณมุมที่ลูกศรต้องชี้
-                // เป้าหมายคือมุมสัมพัทธ์ (targetAngle) ลบด้วยมุมที่เครื่องหันอยู่
+                // คำนวณมุม: เป้าหมาย - ทิศเครื่องปัจจุบัน
                 let arrowRotation = targetAngle - heading;
                 document.getElementById('arrow-container').style.transform = `rotate(${arrowRotation}deg)`;
             }
         }
 
-        // 3. ระบบจำลองการนับก้าว (ใช้ทดสอบ)
-        // ในหน้างานจริงใช้การตรวจจับแรงสั่นสะเทือน (Devicemotion) ได้
-        window.addEventListener('devicemotion', (event) => {
-            let acceleration = event.accelerationIncludingGravity;
-            let magnitude = Math.sqrt(acceleration.x**2 + acceleration.y**2 + acceleration.z**2);
-            
-            // ถ้ามีการขยับแรงพอ (ก้าวเดิน) ให้ลดระยะทาง
-            if (magnitude > 15 && distance > 0) {
-                distance -= 0.1; // ลดลงก้าวละ 10 ซม. (โดยประมาณ)
-                document.getElementById('dist-remain').innerText = Math.max(0, distance).toFixed(1);
-                
-                if (distance <= 0.5) {
-                    document.getElementById('guide-text').innerText = "ถึงจุดหมายแล้ว!";
-                    document.getElementById('guide-text').classList.add('bg-green-500');
-                    if (window.navigator.vibrate) window.navigator.vibrate(200);
+        // 3. ระบบตรวจจับการเดิน (Step Detection)
+        let lastStepTime = 0;
+        function handleMotion(event) {
+            let acc = event.accelerationIncludingGravity;
+            if (!acc) return;
+
+            // คำนวณความแรงของการเคลื่อนที่ (Magnitude)
+            let magnitude = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+
+            // ตรวจสอบแรงกระแทกที่สอดคล้องกับการก้าวเดิน (ค่าปกติประมาณ 12-14)
+            // และเว้นระยะห่างระหว่างก้าวอย่างน้อย 400ms เพื่อไม่ให้นับซ้ำ
+            const now = Date.now();
+            if (magnitude > 13.5 && (now - lastStepTime) > 450) {
+                if (currentDistance > 0) {
+                    processStep();
+                    lastStepTime = now;
                 }
             }
-        });
+        }
 
-        window.onload = () => {
-            startCamera();
-            // ต้องให้ผู้ใช้คลิกก่อนถึงจะขอสิทธิ์ Sensor ได้ (นโยบายความปลอดภัย)
-            document.body.addEventListener('click', initCompass, { once: true });
-        };
+        function processStep() {
+            // ลดระยะทาง
+            currentDistance -= stepLength;
+            if (currentDistance < 0) currentDistance = 0;
+
+            // อัปเดตหน้าจอ
+            const distElement = document.getElementById('dist-remain');
+            distElement.innerText = currentDistance.toFixed(1);
+            
+            // เอฟเฟกต์เมื่อก้าวเดิน
+            distElement.parentElement.classList.add('scale-110', 'text-purple-800');
+            setTimeout(() => distElement.parentElement.classList.remove('scale-110', 'text-purple-800'), 200);
+
+            // เมื่อถึงจุดหมาย
+            if (currentDistance <= 0.8) {
+                document.getElementById('guide-text').innerText = "คุณมาถึง " + targetRoom + " แล้ว";
+                document.getElementById('guide-text').parentElement.className = "mt-10 bg-green-500 text-white px-8 py-4 rounded-2xl shadow-2xl pulse-animation";
+                if (window.navigator.vibrate) window.navigator.vibrate([200, 100, 200]);
+            }
+        }
+
+        window.onload = startCamera;
+        // บังคับให้ user แตะก่อนเพื่อเปิดใช้งาน Sensor ตามกฎ Browser
+        document.body.addEventListener('click', initSensors, { once: true });
     </script>
 </body>
 </html>
