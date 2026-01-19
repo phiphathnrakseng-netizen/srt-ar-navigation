@@ -20,12 +20,11 @@
             position: fixed; right: 0; bottom: 0;
             min-width: 100%; min-height: 100%;
             z-index: -100; object-fit: cover;
-            filter: brightness(0.7) contrast(1.1);
+            filter: brightness(0.6) contrast(1.2);
         }
 
-        /* Glassmorphism Effect */
         .glass-panel {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -41,14 +40,13 @@
             filter: drop-shadow(0 0 15px var(--neon-blue));
         }
 
-        /* HUD Scanning Lines */
         .scan-line {
             width: 100%;
             height: 2px;
             background: linear-gradient(to right, transparent, var(--neon-blue), transparent);
             position: absolute;
-            opacity: 0.3;
-            animation: scanning 3s linear infinite;
+            opacity: 0.2;
+            animation: scanning 4s linear infinite;
         }
 
         @keyframes scanning {
@@ -69,6 +67,44 @@
             50% { opacity: 1; }
             100% { opacity: 0.6; }
         }
+
+        /* ปุ่มสำรอง Manual Step */
+        .manual-trigger {
+            position: absolute;
+            bottom: 120px;
+            right: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 242, 255, 0.1);
+            border: 2px solid rgba(0, 242, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+            transition: all 0.2s;
+            z-index: 50;
+        }
+
+        .manual-trigger:active {
+            transform: scale(0.9);
+            background: rgba(0, 242, 255, 0.3);
+        }
+
+        .radar-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: radar-ping 2s ease-out infinite;
+        }
+
+        @keyframes radar-ping {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
     </style>
 </head>
 <body class="overflow-hidden text-white">
@@ -83,21 +119,27 @@
                 <div>
                     <div class="flex items-center gap-2 mb-1">
                         <div class="w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
-                        <span class="font-modern text-[10px] tracking-[0.3em] text-cyan-400">AR NAVIGATION SYSTEM</span>
+                        <span class="font-modern text-[10px] tracking-[0.3em] text-cyan-400 uppercase">Mission Status: Active</span>
                     </div>
                     <h2 id="target-name" class="text-3xl font-black tracking-tight text-white uppercase italic">...</h2>
                 </div>
-                <button onclick="history.back()" class="text-white/40 hover:text-white transition-colors">
+                <button onclick="history.back()" class="text-white/30 hover:text-white transition-colors">
                     <i class="fa-solid fa-circle-xmark fa-2xl"></i>
                 </button>
             </div>
         </div>
 
         <div class="flex flex-col items-center justify-center relative">
-            <div class="absolute w-64 h-64 border-2 border-dashed border-white/10 rounded-full animate-[spin_10s_linear_infinite]"></div>
+            <div class="absolute w-64 h-64 border-2 border-dashed border-white/5 rounded-full animate-[spin_15s_linear_infinite]"></div>
             
+            <button onclick="processStep();" class="manual-trigger">
+                <div class="radar-circle"></div>
+                <i class="fa-solid fa-shoe-prints text-cyan-400 text-xl"></i>
+                <span class="text-[8px] font-bold text-cyan-200 mt-1 uppercase">Step</span>
+            </button>
+
             <div id="arrow-container" class="arrow-indicator relative">
-                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="url(#paint0_linear)" />
                     <defs>
                         <linearGradient id="paint0_linear" x1="12" y1="2" x2="12" y2="21" gradientUnits="userSpaceOnUse">
@@ -108,33 +150,30 @@
                 </svg>
             </div>
 
-            <div class="mt-12 group">
-                <div class="glass-panel px-8 py-3 rounded-full border border-cyan-500/30 pulse-soft">
-                    <p id="guide-text" class="text-sm font-bold tracking-widest text-cyan-200 uppercase">INITIALIZING SENSORS...</p>
+            <div class="mt-14">
+                <div class="glass-panel px-10 py-3 rounded-full border border-cyan-500/20 pulse-soft">
+                    <p id="guide-text" class="text-xs font-bold tracking-[0.2em] text-cyan-200 uppercase">Calibrating Environment...</p>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div class="glass-panel p-6 rounded-bl-3xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-2 opacity-10">
-                    <i class="fa-solid fa-route fa-2xl"></i>
-                </div>
-                <p class="font-modern text-[9px] tracking-widest text-gray-400 mb-2">DISTANCE REMAINING</p>
+            <div class="glass-panel p-6 rounded-bl-3xl relative overflow-hidden border-t-2 border-cyan-500/30">
+                <p class="font-modern text-[9px] tracking-widest text-cyan-500/50 mb-2 font-bold">RANGE TO TARGET</p>
                 <div class="flex items-baseline gap-1">
-                    <span id="dist-remain" class="font-modern text-5xl font-black text-cyan-400 dist-glow">0</span>
-                    <span class="font-modern text-xs text-cyan-700">METERS</span>
+                    <span id="dist-remain" class="font-modern text-5xl font-black text-white dist-glow">0</span>
+                    <span class="font-modern text-[10px] text-cyan-400">M.</span>
                 </div>
             </div>
 
-            <div class="glass-panel p-6 rounded-br-3xl relative">
-                <p class="font-modern text-[9px] tracking-widest text-gray-400 mb-2">SYSTEM STATUS</p>
+            <div class="glass-panel p-6 rounded-br-3xl border-t-2 border-cyan-500/30">
+                <p class="font-modern text-[9px] tracking-widest text-cyan-500/50 mb-2 font-bold">ENGINE STATUS</p>
                 <div id="status-card" class="flex flex-col gap-1">
-                    <div id="status-text" class="font-black text-sm flex items-center gap-2 text-amber-500 uppercase tracking-tighter">
-                        <i class="fa-solid fa-satellite-dish animate-pulse"></i> STANDBY
+                    <div id="status-text" class="font-black text-[11px] flex items-center gap-2 text-amber-500 tracking-widest uppercase">
+                        <i class="fa-solid fa-circle-notch animate-spin"></i> Offline
                     </div>
-                    <div class="w-full bg-white/10 h-1 mt-2">
-                        <div id="status-bar" class="bg-cyan-500 h-full w-1/3 transition-all duration-500"></div>
+                    <div class="w-full bg-white/5 h-[2px] mt-3">
+                        <div id="status-bar" class="bg-cyan-500 h-full w-0 transition-all duration-1000"></div>
                     </div>
                 </div>
             </div>
@@ -166,8 +205,8 @@
 
         function initSensors() {
             document.getElementById('guide-text').innerText = initialGuide;
-            document.getElementById('status-text').innerHTML = '<i class="fa-solid fa-bolt-lightning"></i> ACTIVE TRACKING';
-            document.getElementById('status-text').className = "text-cyan-400 font-black text-sm tracking-widest";
+            document.getElementById('status-text').innerHTML = '<i class="fa-solid fa-check-double"></i> Link Established';
+            document.getElementById('status-text').className = "text-cyan-400 font-black text-[11px] tracking-widest uppercase";
             document.getElementById('status-bar').style.width = "100%";
 
             if (typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -193,6 +232,7 @@
             if (!acc) return;
             let magnitude = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
             const now = Date.now();
+            // 13.5 คือค่าความแรงก้าวเดินมาตรฐาน
             if (magnitude > 13.5 && (now - lastStepTime) > 450) {
                 if (currentDistance > 0) {
                     processStep();
@@ -202,21 +242,22 @@
         }
 
         function processStep() {
+            if (currentDistance <= 0) return;
+
             currentDistance -= stepLength;
             if (currentDistance < 0) currentDistance = 0;
 
             const distElement = document.getElementById('dist-remain');
             distElement.innerText = currentDistance.toFixed(1);
             
-            // UI Feedback
-            distElement.classList.add('scale-110');
-            setTimeout(() => distElement.classList.remove('scale-110'), 150);
+            // Visual feedback เมื่อมีการก้าวเดิน
+            distElement.classList.add('scale-110', 'text-cyan-300');
+            setTimeout(() => distElement.classList.remove('scale-110', 'text-cyan-300'), 150);
 
             if (currentDistance <= 0.8) {
-                document.getElementById('guide-text').innerText = "DESTINATION REACHED";
-                document.getElementById('guide-text').parentElement.classList.add('bg-cyan-500', 'text-black');
-                document.getElementById('guide-text').classList.remove('text-cyan-200');
-                document.getElementById('guide-text').classList.add('text-black');
+                document.getElementById('guide-text').innerText = "ARRIVAL AT DESTINATION";
+                document.getElementById('guide-text').parentElement.classList.replace('border-cyan-500/20', 'bg-cyan-500');
+                document.getElementById('guide-text').classList.replace('text-cyan-200', 'text-black');
                 if (window.navigator.vibrate) window.navigator.vibrate([200, 100, 200]);
             }
         }
