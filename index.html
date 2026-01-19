@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #1e293b; overflow: hidden; } /* ล็อก scroll ตอนโหลด */
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .navy-bg { background-color: #1e3a8a; }
         .navy-border { border-color: #1e3a8a; }
         .floor-section { display: none; }
@@ -21,64 +21,9 @@
         .formal-btn { border-radius: 2px; transition: all 0.3s ease; }
         header { background: linear-gradient(to right, #1e3a8a, #2563eb); }
         .search-focus:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-        /* --- ฟีเจอร์ใหม่: Loader Styles --- */
-        #loader-wrapper {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.6s ease-out, visibility 0.6s;
-        }
-        .loader-logo {
-            width: 120px;
-            height: auto;
-            margin-bottom: 2rem;
-            animation: pulse 2s infinite ease-in-out;
-        }
-        .progress-container {
-            width: 250px;
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-        #progress-bar {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #1e3a8a, #f59e0b);
-            transition: width 0.3s ease-out;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        .loader-text {
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #64748b;
-            letter-spacing: 0.05em;
-        }
     </style>
 </head>
 <body>
-
-    <div id="loader-wrapper">
-        <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=OI2Hv9vbsRMQ7kNvwGkNg1Y&_nc_oc=AdlK0TNH5yslytyOlQ-X01Ao6UEk-0K9H24KIBTI8WgLJf7ax1WWkm5M8uqFJQ7WN6E&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=fplwJS8V3QUEGPUk-6aStQ&oh=00_AfrMRI0cBIXKOWd4S7-y9qThj4wryU0y1vZpYZOeyDZqKw&oe=6973703A" class="loader-logo" alt="สถาบันวิทยาลัยเทคนิคสุราษฎร์ธานี">
-        <div class="progress-container">
-            <div id="progress-bar"></div>
-        </div>
-        <p class="loader-text uppercase">Loading <span id="percent">0</span>%</p>
-    </div>
 
     <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
         <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeModal()"></div>
@@ -150,7 +95,7 @@
                 </div>
             </div>
 
-            <div id="floor-3" class="floor-section bg-white formal-card shadow-sm overflow-hidden animate-in fade-in duration-700">
+            <div id="floor-3" class="floor-section bg-white formal-card shadow-sm overflow-hidden">
                 <div class="navy-bg p-6 text-white flex items-center gap-4">
                     <span class="text-4xl font-black opacity-30">03</span>
                     <div>
@@ -182,7 +127,7 @@
                 </div>
             </div>
 
-            <div id="floor-4" class="floor-section bg-white formal-card shadow-sm overflow-hidden animate-in fade-in duration-700">
+            <div id="floor-4" class="floor-section bg-white formal-card shadow-sm overflow-hidden">
                 <div class="bg-slate-800 p-6 text-white flex items-center gap-4">
                     <span class="text-4xl font-black opacity-30">04</span>
                     <div>
@@ -225,6 +170,7 @@
                     <a href="?floor=4" class="bg-slate-800 text-white px-8 py-3 formal-btn font-bold hover:bg-slate-700 transition-colors shadow-lg shadow-slate-800/20">ไปที่ชั้น 4</a>
                 </div>
             </div>
+
         </div>
     </main>
 
@@ -238,44 +184,6 @@
     </footer>
 
     <script>
-        // --- Smart Loader Logic ---
-        function startLoading() {
-            const progressBar = document.getElementById('progress-bar');
-            const percentText = document.getElementById('percent');
-            const loaderWrapper = document.getElementById('loader-wrapper');
-            
-            let width = 0;
-            
-            // เช็คความเร็วเน็ต (ถ้ามี)
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            let speedFactor = 1.5; // ความเร็วปกติ
-            
-            if (connection) {
-                if (connection.effectiveType === '4g') speedFactor = 3;
-                else if (connection.effectiveType === '3g') speedFactor = 1;
-                else speedFactor = 0.5;
-            }
-
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    // ปิดหน้าจอโหลดเมื่อเสร็จ
-                    setTimeout(() => {
-                        loaderWrapper.style.opacity = '0';
-                        loaderWrapper.style.visibility = 'hidden';
-                        document.body.style.overflow = 'auto'; // คืนค่า scroll
-                    }, 400);
-                } else {
-                    // จำลองการเพิ่มขึ้น (เน็ตเร็วจะบวกเลขเยอะขึ้น)
-                    width += Math.random() * speedFactor;
-                    if (width > 100) width = 100;
-                    progressBar.style.width = width + '%';
-                    percentText.innerText = Math.floor(width);
-                }
-            }, 30);
-        }
-
-        // --- ระบบเดิมทั้งหมด ---
         const navigationData = {
             "631": { angle: 90, dist: 8, guide: "หันขวาเดินตรงไปประมาณ 8 เมตร" },
             "632": { angle: -90, dist: 5, guide: "หันซ้ายเดินตรงไปประมาณ 5 เมตร" },
@@ -302,10 +210,9 @@
         function closeModal() { document.getElementById('guide-modal').classList.add('hidden'); }
 
         function initApp() {
-            startLoading(); // เริ่มการโหลด
-
             const params = new URLSearchParams(window.location.search);
             const floor = params.get('floor');
+            
             const s3 = document.getElementById('floor-3');
             const s4 = document.getElementById('floor-4');
             const empty = document.getElementById('empty-state');
@@ -327,7 +234,7 @@
             } else {
                 empty.style.display = 'block';
                 document.getElementById('nav-scan').classList.add('nav-btn-active');
-                setTimeout(openModal, 1500); // เปิด Modal หลังจากโหลดเสร็จครู่หนึ่ง
+                openModal();
             }
         }
 
@@ -341,4 +248,3 @@
     </script>
 </body>
 </html>
-
