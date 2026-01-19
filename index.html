@@ -1,18 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบ AR Navigation - วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
+    
+    <link rel="icon" type="image/jpeg" href="favicon.png.jpg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { font-family: 'Sarabun', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        /* ปรับสีให้เข้ากับสีม่วงของแผนกตามรูปถ่าย */
+        .gradient-bg { background: linear-gradient(135deg, #4c1d95 0%, #3b82f6 100%); }
         .floor-section { display: none; }
-        .nav-btn-active { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .nav-btn-active { background-color: #f5f3ff; color: #5b21b6; border: 1px solid #ddd6fe; }
+        
+        .logo-shadow { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -21,66 +26,72 @@
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
         <div class="relative bg-white w-full max-w-lg mx-4 rounded-3xl shadow-2xl overflow-hidden">
             <div class="gradient-bg p-6 text-white text-center">
+                <img src="image_b3ca31.png" alt="AR Logo" class="h-12 mx-auto mb-2 brightness-0 invert">
                 <h3 class="text-xl font-bold italic">IT SURAT AR GUIDE</h3>
             </div>
             <div class="p-6 space-y-4">
-                <div class="flex items-start gap-3 bg-blue-50 p-4 rounded-2xl">
-                    <i class="fa-solid fa-location-dot text-blue-600 mt-1"></i>
+                <div class="flex items-start gap-3 bg-purple-50 p-4 rounded-2xl border border-purple-100">
+                    <i class="fa-solid fa-location-dot text-purple-600 mt-1"></i>
                     <p class="text-gray-700 text-sm md:text-base leading-relaxed">
                         📍 <b>จุดเริ่มต้น:</b> โปรดยืนหน้าป้ายแผนกไอที (ชั้น 3 ป้ายเล็ก / ชั้น 4 ป้ายใหญ่) แล้วหันหน้าเข้าหาป้ายก่อนกดเริ่มนำทาง เพื่อความแม่นยำของเข็มทิศ
                     </p>
                 </div>
-                <div class="flex items-start gap-3 bg-amber-50 p-4 rounded-2xl">
+                <div class="flex items-start gap-3 bg-amber-50 p-4 rounded-2xl border border-amber-100">
                     <i class="fa-solid fa-person-walking text-amber-600 mt-1"></i>
                     <p class="text-gray-700 text-sm md:text-base leading-relaxed">
                         🚶 <b>ระบบนับก้าว:</b> ระยะทางจะลดลงโดยอัตโนมัติเมื่อท่านก้าวเดินจริง
                     </p>
                 </div>
-                <button onclick="closeModal()" class="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-blue-800 transition-all">เข้าใจแล้ว เริ่มเลย</button>
+                <button onclick="closeModal()" class="w-full bg-purple-900 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-purple-800 transition-all active:scale-95">เข้าใจแล้ว เริ่มเลย</button>
             </div>
         </div>
     </div>
 
-    <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <img src="https://upload.wikimedia.org/wikipedia/th/1/1a/Surat_Thani_Technical_College_Logo.png" alt="Logo" class="h-10">
-                <div>
-                    <h1 class="text-blue-900 font-bold text-sm md:text-lg leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
-                    <p class="text-[10px] text-gray-500 font-medium tracking-widest uppercase">Information Technology</p>
+    <nav class="bg-white shadow-md border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <img src="image_b3ca31.png" alt="Logo" class="h-14 md:h-16 logo-shadow">
+                <div class="hidden md:block border-l pl-4 border-gray-200">
+                    <h1 class="text-purple-900 font-bold text-sm leading-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
+                    <p class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">IT Department</p>
                 </div>
             </div>
-            <div class="flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200 shadow-inner">
-                <a href="index.html" id="nav-scan" class="px-4 py-2 rounded-lg text-sm font-bold text-gray-500 transition-all">สแกนป้าย</a>
-                <a href="?floor=3" id="nav-f3" class="px-4 py-2 rounded-lg text-sm font-bold text-gray-500 transition-all">ชั้น 3</a>
-                <a href="?floor=4" id="nav-f4" class="px-4 py-2 rounded-lg text-sm font-bold text-gray-500 transition-all">ชั้น 4</a>
+            <div class="flex items-center bg-gray-100 p-1 rounded-2xl border border-gray-200 shadow-inner">
+                <a href="index.html" id="nav-scan" class="px-6 py-2 rounded-xl text-sm font-bold text-gray-500 transition-all">สแกนป้าย</a>
+                <a href="?floor=3" id="nav-f3" class="px-6 py-2 rounded-xl text-sm font-bold text-gray-500 transition-all">ชั้น 3</a>
+                <a href="?floor=4" id="nav-f4" class="px-6 py-2 rounded-xl text-sm font-bold text-gray-500 transition-all">ชั้น 4</a>
             </div>
         </div>
     </nav>
 
-    <header class="bg-white py-12 border-b text-center">
-        <h2 class="text-4xl font-extrabold text-gray-900 mb-2">ระบบ AR Navigation</h2>
-        <p class="text-gray-500 max-w-xs mx-auto">เลือกจุดหมายปลายทางที่ต้องการ ระบบจะนำทางท่านด้วยเทคโนโลยี AR</p>
+    <header class="bg-white py-12 border-b text-center relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 opacity-5 w-full h-full">
+            <img src="favicon.png.jpg" alt="Watermark" class="h-64 mx-auto">
+        </div>
+        <div class="relative z-10">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-2">ระบบ AR Navigation</h2>
+            <p class="text-gray-500 max-w-xs mx-auto">เลือกจุดหมายปลายทางที่ต้องการ ระบบจะนำทางท่านด้วยเทคโนโลยี AR</p>
+        </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-10">
         <div class="max-w-3xl mx-auto">
             
-            <div id="floor-3" class="floor-section bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div id="floor-3" class="floor-section bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
                 <div class="gradient-bg p-8 text-white text-center">
                     <h3 class="text-3xl font-bold">ชั้น 3</h3>
                     <p class="opacity-80">ตึกแผนกเทคโนโลยีสารสนเทศ</p>
                 </div>
                 <div class="p-8 grid grid-cols-2 gap-4">
-                    <button onclick="navigate('631')" class="bg-blue-50 text-blue-700 py-6 rounded-2xl font-bold border border-blue-100 shadow-sm hover:bg-blue-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 631 (ขวา)</button>
-                    <button onclick="navigate('632')" class="bg-blue-50 text-blue-700 py-6 rounded-2xl font-bold border border-blue-100 shadow-sm hover:bg-blue-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 632 (ซ้าย)</button>
-                    <button onclick="navigate('633')" class="bg-blue-50 text-blue-700 py-6 rounded-2xl font-bold border border-blue-100 shadow-sm hover:bg-blue-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 633 (ซ้าย)</button>
-                    <button onclick="navigate('634')" class="bg-blue-50 text-blue-700 py-6 rounded-2xl font-bold border border-blue-100 shadow-sm hover:bg-blue-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 634 (ซ้าย)</button>
-                    <button onclick="navigate('635')" class="bg-blue-50 text-blue-700 py-6 rounded-2xl font-bold border border-blue-100 shadow-sm hover:bg-blue-600 hover:text-white transition-all transform hover:scale-[1.02] col-span-2">ห้อง 635 (ซ้ายสุด)</button>
+                    <button onclick="navigate('631')" class="bg-purple-50 text-purple-700 py-6 rounded-2xl font-bold border border-purple-100 shadow-sm hover:bg-purple-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 631 (ขวา)</button>
+                    <button onclick="navigate('632')" class="bg-purple-50 text-purple-700 py-6 rounded-2xl font-bold border border-purple-100 shadow-sm hover:bg-purple-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 632 (ซ้าย)</button>
+                    <button onclick="navigate('633')" class="bg-purple-50 text-purple-700 py-6 rounded-2xl font-bold border border-purple-100 shadow-sm hover:bg-purple-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 633 (ซ้าย)</button>
+                    <button onclick="navigate('634')" class="bg-purple-50 text-purple-700 py-6 rounded-2xl font-bold border border-purple-100 shadow-sm hover:bg-purple-600 hover:text-white transition-all transform hover:scale-[1.02]">ห้อง 634 (ซ้าย)</button>
+                    <button onclick="navigate('635')" class="bg-purple-50 text-purple-700 py-6 rounded-2xl font-bold border border-purple-100 shadow-sm hover:bg-purple-600 hover:text-white transition-all transform hover:scale-[1.02] col-span-2">ห้อง 635 (ซ้ายสุด)</button>
                 </div>
             </div>
 
-            <div id="floor-4" class="floor-section bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div id="floor-4" class="floor-section bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
                 <div class="bg-gray-900 p-8 text-white text-center">
                     <h3 class="text-3xl font-bold">ชั้น 4</h3>
                     <p class="opacity-80">ตึกแผนกเทคโนโลยีสารสนเทศ</p>
@@ -95,27 +106,28 @@
             </div>
 
             <div id="empty-state" class="text-center p-16 bg-white rounded-3xl border-2 border-dashed border-gray-200">
-                <div class="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fa-solid fa-camera text-3xl text-blue-600"></i>
+                <div class="bg-purple-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fa-solid fa-camera text-4xl text-purple-600"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800">กรุณาสแกนป้าย</h3>
-                <p class="text-gray-500 mt-2 mb-8">สแกน QR Code หน้าแผนก หรือเลือกชั้นด้านบน</p>
-                <button onclick="alert('กรุณาเลือกชั้น หรือใช้ตัวสแกน QR Code')" class="gradient-bg text-white px-10 py-4 rounded-full font-bold shadow-xl hover:opacity-90 transition-all transform active:scale-95">
-                    เปิดกล้องสแกนทันที
-                </button>
+                <h3 class="text-2xl font-bold text-gray-800">กรุณาสแกนป้ายเพื่อเริ่ม</h3>
+                <p class="text-gray-500 mt-2 mb-8">สแกน QR Code หน้าป้ายแผนก หรือเลือกชั้นจากด้านบน</p>
+                <div class="flex flex-col gap-3 max-w-xs mx-auto">
+                    <a href="?floor=3" class="gradient-bg text-white py-4 rounded-2xl font-bold shadow-lg">ไปที่ ชั้น 3</a>
+                    <a href="?floor=4" class="bg-gray-800 text-white py-4 rounded-2xl font-bold shadow-lg">ไปที่ ชั้น 4</a>
+                </div>
             </div>
 
         </div>
     </main>
 
-    <footer class="bg-white border-t py-10 mt-20">
-        <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-sm">
-            <p>© 2026 แผนกเทคโนโลยีสารสนเทศ | วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
+    <footer class="bg-white border-t py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <img src="favicon.png.jpg" alt="College Logo" class="h-10 mx-auto mb-4 grayscale opacity-50">
+            <p class="text-gray-400 text-sm">© 2026 แผนกเทคโนโลยีสารสนเทศ | วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
         </div>
     </footer>
 
     <script>
-        // ฐานข้อมูล Logic: dist เปลี่ยนเป็น Number เพื่อให้หน้า AR คำนวณก้าวเดินได้
         const navigationData = {
             "631": { angle: 90, dist: 8, guide: "หันขวาเดินตรงไป" },
             "632": { angle: -90, dist: 5, guide: "หันซ้ายเดินตรงไป" },
@@ -135,8 +147,7 @@
         function initApp() {
             const params = new URLSearchParams(window.location.search);
             const floor = params.get('floor');
-            if (!floor) openModal();
-
+            
             const s3 = document.getElementById('floor-3');
             const s4 = document.getElementById('floor-4');
             const empty = document.getElementById('empty-state');
@@ -152,12 +163,12 @@
             } else {
                 empty.style.display = 'block';
                 document.getElementById('nav-scan').classList.add('nav-btn-active');
+                openModal();
             }
         }
 
         function navigate(roomId) {
             const data = navigationData[roomId] || { angle: 0, dist: 0, guide: "เดินตรงไป" };
-            // ส่งค่าไปเป็น Parameter เพื่อให้หน้า AR รับไปประมวลผลต่อ
             const url = `ar-view.html?target=${encodeURIComponent(roomId)}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
             window.location.href = url;
         }
