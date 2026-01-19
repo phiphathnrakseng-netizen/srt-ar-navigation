@@ -3,66 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Navigation - Fix Visibility</title>
+    <title>AR Navigation - Real-time Tracking</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@600;700&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Sarabun', sans-serif; background: #000; }
 
-        /* แถบด้านบน: ดำทึบ แต่กำหนดความสูงชัดเจน ไม่ให้คลุมทั้งจอ */
         #ui-header {
             position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-            background: #000; color: #fff; z-index: 10;
+            background: rgba(0,0,0,0.9); color: #fff; z-index: 10;
             display: none; flex-direction: column; justify-content: center; align-items: center;
             border-bottom: 2px solid #3b82f6;
         }
 
-        /* แถบด้านล่าง: ดำทึบ แยกโซนคำแนะนำกับคำเตือน */
         #ui-footer {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 120px;
-            background: #000; color: #fff; z-index: 10;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 130px;
+            background: rgba(0,0,0,0.9); color: #fff; z-index: 10;
             display: none; flex-direction: column;
             border-top: 2px solid #3b82f6;
         }
 
-        #guidance-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #sensor-warning { background: #ffcc00; color: #000; padding: 5px; text-align: center; font-weight: 700; font-size: 0.85rem; }
+        #guidance-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; }
+        #sensor-warning { background: #ffcc00; color: #000; padding: 5px; text-align: center; font-weight: 700; font-size: 0.8rem; }
 
-        .label { font-size: 0.65rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 1.5px; }
-        .target { font-size: 1.2rem; font-weight: 700; }
-        .step-text { font-size: 1.5rem; font-weight: 700; }
+        .label { font-size: 0.65rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 2px; }
+        .target { font-size: 1.1rem; font-weight: 700; color: #fff; }
+        .step-text { font-size: 1.3rem; font-weight: 700; text-align: center; }
 
-        /* ปรับแต่ง A-Scene ให้แสดงผลเต็มจอหลังเลเยอร์ UI */
         a-scene { position: absolute; top: 0; left: 0; z-index: 1; }
 
         #entry-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 100; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; color: white;
+            justify-content: center; align-items: center; color: white; text-align: center; padding: 20px;
         }
         .start-btn {
-            background: #3b82f6; color: white; padding: 20px 40px;
-            border-radius: 8px; font-size: 1.3rem; font-weight: 700; border: none;
+            background: #3b82f6; color: white; padding: 20px 50px;
+            border-radius: 50px; font-size: 1.5rem; font-weight: 700; border: none;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5);
         }
     </style>
 </head>
 <body>
 
     <div id="entry-screen">
-        <button class="start-btn" onclick="initPrecisionAR()">เริ่มนำทาง (START)</button>
-        <p style="margin-top:20px; opacity:0.7;">ลูกศรจะปรากฏบริเวณกลางจอ</p>
+        <h2 style="margin-bottom:10px;">พร้อมนำทาง</h2>
+        <p style="margin-bottom:30px; opacity:0.8;">กรุณายืนหน้าป้ายแผนกไอที<br>และหันหน้าตรงไปตามทางเดิน</p>
+        <button class="start-btn" onclick="initPrecisionAR()">START</button>
     </div>
 
     <div id="ui-header">
-        <div class="label">จุดหมาย</div>
+        <div class="label">ห้องเป้าหมาย</div>
         <div id="room-id" class="target">...</div>
     </div>
 
     <div id="ui-footer">
         <div id="guidance-content">
-            <div class="label">คำแนะนำ</div>
-            <span id="instruction-text" class="step-text">🚶 ตรงไปอีก 10 เมตร</span>
+            <div class="label">ระยะทางคงเหลือ</div>
+            <span id="instruction-text" class="step-text">กำลังโหลดข้อมูล...</span>
         </div>
         <div id="sensor-warning">
             ⚠️ หากลูกศรรวน ให้เดินตาม "ข้อความ" เป็นหลัก
@@ -72,7 +71,7 @@
     <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
         <a-entity camera id="fixed-camera"></a-entity>
         
-        <a-entity id="arrow-pivot" position="0 -0.5 -3" visible="false">
+        <a-entity id="arrow-pivot" position="0 -0.8 -3" visible="false">
             <a-entity id="arrow-visual">
                 <a-cone radius-bottom="0.25" height="0.5" material="color: #3b82f6; emissive: #3b82f6; emissiveIntensity: 1;" rotation="90 0 0"></a-cone>
                 <a-box position="0 -0.3 0" width="0.12" height="0.4" depth="0.1" material="color: #1e3a8a;"></a-box>
@@ -82,27 +81,73 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('room-id').innerText = urlParams.get('target') || 'เป้าหมาย';
-
+        const targetRoom = urlParams.get('target') || 'เป้าหมาย';
+        const guideLabel = urlParams.get('guide') || 'เดินตรงไป';
+        const targetAngle = parseFloat(urlParams.get('angle')) || 0;
+        
+        let remainingDist = parseFloat(urlParams.get('dist')) || 0;
         let initialAlpha = null;
-        let targetRotY = 0;
+        let currentDeviceAlpha = 0;
         let lerpedRotY = 0;
         const smoothSpeed = 0.15;
 
+        // --- ระบบตรวจจับก้าวเดิน (Step Detection) ---
+        let lastAccel = 0;
+        const stepThreshold = 12.5; // ความแรงของการก้าว (ปรับจูนตามการเดินจริง)
+        const stepLength = 0.7; // ระยะก้าวมาตรฐาน 0.7 เมตร
+
+        document.getElementById('room-id').innerText = targetRoom;
+
         async function initPrecisionAR() {
+            // ขอสิทธิ์ Sensor สำหรับ iOS/Android รุ่นใหม่
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 const res = await DeviceOrientationEvent.requestPermission();
-                if (res === 'granted') window.addEventListener('deviceorientation', onDeviceMove);
+                const res2 = await DeviceMotionEvent.requestPermission();
+                if (res === 'granted' && res2 === 'granted') {
+                    startSensors();
+                }
             } else {
-                window.addEventListener('deviceorientation', onDeviceMove);
+                startSensors();
             }
             showUI();
+            updateDisplay();
         }
 
-        function onDeviceMove(event) {
-            if (event.alpha === null) return;
-            if (initialAlpha === null) initialAlpha = event.alpha;
-            targetRotY = event.alpha - initialAlpha; 
+        function startSensors() {
+            window.addEventListener('deviceorientation', (e) => {
+                if (e.alpha !== null) {
+                    if (initialAlpha === null) initialAlpha = e.alpha;
+                    currentDeviceAlpha = e.alpha;
+                }
+            });
+
+            window.addEventListener('devicemotion', (e) => {
+                const acc = e.accelerationIncludingGravity;
+                if (!acc) return;
+                
+                // คำนวณความแรงรวมของแรงสั่นสะเทือน
+                const magnitude = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+                const delta = Math.abs(magnitude - lastAccel);
+
+                if (delta > stepThreshold) {
+                    if (remainingDist > 0) {
+                        remainingDist -= stepLength;
+                        if (remainingDist < 0) remainingDist = 0;
+                        updateDisplay();
+                    }
+                }
+                lastAccel = magnitude;
+            });
+        }
+
+        function updateDisplay() {
+            const display = document.getElementById('instruction-text');
+            if (remainingDist <= 0) {
+                display.innerHTML = "📍 <span style='color:#22c55e'>ถึงจุดหมายแล้ว</span>";
+                if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+            } else {
+                display.innerText = `🚶 ${guideLabel} (${remainingDist.toFixed(1)} ม.)`;
+            }
         }
 
         function showUI() {
@@ -113,17 +158,24 @@
         }
 
         function animate() {
-            let diff = targetRotY - lerpedRotY;
-            while (diff < -180) diff += 360;
-            while (diff > 180) diff -= 360;
-            lerpedRotY += diff * smoothSpeed;
+            if (initialAlpha !== null) {
+                // คำนวณองศา: (ค่าปัจจุบัน - ค่าเริ่มต้น) + องศาเป้าหมายของห้องนั้นๆ
+                let targetY = (currentDeviceAlpha - initialAlpha) + targetAngle;
+                
+                let diff = targetY - lerpedRotY;
+                while (diff < -180) diff += 360;
+                while (diff > 180) diff -= 360;
+                lerpedRotY += diff * smoothSpeed;
 
-            const pivot = document.getElementById('arrow-pivot');
-            if (pivot && pivot.getAttribute('visible')) {
-                pivot.object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
+                const pivot = document.getElementById('arrow-pivot');
+                if (pivot) {
+                    // ปรับทิศทางลูกศรในระบบ A-Frame
+                    pivot.object3D.rotation.y = THREE.MathUtils.degToRad(-lerpedRotY);
+                }
             }
             requestAnimationFrame(animate);
         }
+        
         animate();
     </script>
 </body>
