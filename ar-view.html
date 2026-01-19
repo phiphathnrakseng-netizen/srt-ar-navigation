@@ -188,12 +188,15 @@
         
         let currentDistance = parseFloat(params.get('dist')) || 0;
         let lastStepTime = 0;
-        const stepLength = 0.7; // ระยะก้าวมาตรฐาน (เมตร)
+        const stepLength = 0.8; // ปรับระยะก้าวให้ยาวขึ้น (0.8 เมตร) เพื่อให้ถึงเร็วขึ้น
+
+        // ตัวแปรสำหรับตรวจจับการเดินแบบสมูท
+        let lastAcc = { x: 0, y: 0, z: 0 };
+        let deltaThreshold = 0.5; // ความไวต่อการเคลื่อนไหว (ยิ่งน้อยยิ่งไว)
 
         document.getElementById('target-name').innerText = targetRoom;
         document.getElementById('dist-remain').innerText = currentDistance.toFixed(1);
 
-        // 1. เปิดกล้อง
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -208,9 +211,7 @@
             }
         }
 
-        // 2. เริ่มทำงานเมื่อผู้ใช้แตะหน้าจอ (สำคัญมากสำหรับ Browser ยุคใหม่)
         async function initSensors() {
-            // UI Feedback
             document.getElementById('guide-text').innerText = initialGuide;
             document.getElementById('status-text').innerHTML = '<i class="fa-solid fa-check-double"></i> Link Established';
             document.getElementById('status-text').className = "text-cyan-400 font-black text-[11px] tracking-widest uppercase";
@@ -218,12 +219,10 @@
             document.getElementById('status-dot').classList.replace('bg-amber-400', 'bg-cyan-400');
             document.getElementById('mission-status').innerText = "Mission Status: Active";
 
-            // ขอสิทธิ์ iOS 13+ (รองรับทั้ง Orientation และ Motion)
             if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
                 try {
                     const motionPermission = await DeviceMotionEvent.requestPermission();
                     const orientationPermission = await DeviceOrientationEvent.requestPermission();
-                    
                     if (motionPermission === 'granted' && orientationPermission === 'granted') {
                         setupEventListeners();
                     }
@@ -231,29 +230,25 @@
                     document.getElementById('guide-text').innerText = "Sensor Permission Denied";
                 }
             } else {
-                // สำหรับ Android หรือ Browser ทั่วไป
                 setupEventListeners();
             }
         }
 
         function setupEventListeners() {
-            // เข็มทิศ
             if ('ondeviceorientationabsolute' in window) {
                 window.addEventListener('deviceorientationabsolute', handleOrientation);
             } else {
                 window.addEventListener('deviceorientation', handleOrientation);
             }
-            // การก้าวเดิน
             window.addEventListener('devicemotion', handleMotion);
         }
 
-        // 3. จัดการทิศทาง (Arrow Rotation)
         function handleOrientation(event) {
             let heading = 0;
             if (event.webkitCompassHeading) {
-                heading = event.webkitCompassHeading; // iOS
+                heading = event.webkitCompassHeading;
             } else {
-                heading = 360 - event.alpha; // Android
+                heading = 360 - event.alpha;
             }
 
             if (heading) {
@@ -262,28 +257,38 @@
             }
         }
 
-        // 4. ตรวจจับการก้าวเดิน (Pedometer Logic)
+        // --- จุดที่แก้ไข: ระบบตรวจจับการก้าวเดินแบบละเอียด ---
         function handleMotion(event) {
-            let acc = event.accelerationIncludingGravity;
+            // ใช้ความเร่งแบบ Linear (ไม่รวมแรงโน้มถ่วง) เพื่อตัดเสียงรบกวน
+            let acc = event.acceleration; 
+            if (!acc || acc.z === null) {
+                // ถ้าเครื่องไม่รองรับ ให้ใช้แบบรวมแรงโน้มถ่วงแทน
+                acc = event.accelerationIncludingGravity;
+            }
             if (!acc) return;
 
-            // คำนวณความแรงจากการเคลื่อนไหว (Magnitude)
-            let magnitude = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+            // คำนวณความแตกต่างจากการเคลื่อนไหวครั้งก่อน (Delta) 
+            // วิธีนี้จะแม่นยำกว่าการวัด Magnitude เพราะมันจับจังหวะ "โยก" ของมือ
+            let deltaX = Math.abs(acc.x - lastAcc.x);
+            let deltaY = Math.abs(acc.y - lastAcc.y);
+            let deltaZ = Math.abs(acc.z - lastAcc.z);
+            
+            let totalDelta = deltaX + deltaY + deltaZ;
             const now = Date.now();
 
-            /* ค่าความไว (Threshold): 
-               12.0 = เดินปกติ (แนะนำ)
-               13.5 = ต้องก้าวยาว/กระแทกเท้า
-            */
-            if (magnitude > 12.2 && (now - lastStepTime) > 550) {
+            // เงื่อนไข: ถ้ามีการขยับที่เกิดจากการก้าว (แม้จะถือนิ่งๆ มือก็จะสั่นนิดหน่อยตามจังหวะเดิน)
+            // ปรับ Threshold ไว้ที่ 0.6 สำหรับการเดินนิ่งๆ
+            if (totalDelta > 0.6 && (now - lastStepTime) > 650) {
                 if (currentDistance > 0) {
                     processStep();
                     lastStepTime = now;
                 }
             }
+
+            // บันทึกค่าปัจจุบันไว้เทียบครั้งถัดไป
+            lastAcc = { x: acc.x, y: acc.y, z: acc.z };
         }
 
-        // 5. ประมวลผลเมื่อมีการก้าว
         function processStep() {
             if (currentDistance <= 0) return;
 
@@ -293,11 +298,9 @@
             const distElement = document.getElementById('dist-remain');
             distElement.innerText = currentDistance.toFixed(1);
             
-            // เอฟเฟกต์สั่นสะเทือนทางสายตา (Visual Pulse)
             distElement.classList.add('scale-110', 'text-cyan-300');
             setTimeout(() => distElement.classList.remove('scale-110', 'text-cyan-300'), 150);
 
-            // เมื่อถึงเป้าหมาย
             if (currentDistance <= 0.5) {
                 document.getElementById('guide-text').innerText = "ARRIVAL AT DESTINATION";
                 document.getElementById('guide-text').parentElement.style.backgroundColor = "var(--neon-blue)";
@@ -306,10 +309,7 @@
             }
         }
 
-        // เริ่มต้นเปิดกล้องตอนโหลดหน้า
         window.onload = startCamera;
-        
-        // รอการคลิกจากผู้ใช้เพื่อปลดล็อกเซนเซอร์
         document.body.addEventListener('click', initSensors, { once: true });
     </script>
 </body>
