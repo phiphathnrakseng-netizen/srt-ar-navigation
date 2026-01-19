@@ -5,59 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Advanced AR Navigation | STC IT</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Sans+Thai:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --neon: #00f2ff; --neon-p: #bc13fe; }
-        body { font-family: 'Sarabun', sans-serif; background: #000; overflow: hidden; color: white; }
+        :root { --neon: #00f2ff; --neon-p: #bc13fe; --warning: #f59e0b; }
+        body { font-family: 'IBM Plex Sans Thai', sans-serif; background: #000; overflow: hidden; color: white; }
         .font-modern { font-family: 'Orbitron', sans-serif; }
 
         #video-preview {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -10; object-fit: cover; filter: brightness(0.6) contrast(1.1) saturate(1.2);
+            z-index: -10; object-fit: cover; filter: brightness(0.5) contrast(1.2);
         }
 
         /* --- AR Visual Elements --- */
         .ar-grid {
-            position: fixed; bottom: 0; width: 100%; height: 40vh;
+            position: fixed; bottom: 0; width: 100%; height: 60vh;
             background-image: linear-gradient(var(--neon) 1px, transparent 1px), linear-gradient(90deg, var(--neon) 1px, transparent 1px);
-            background-size: 50px 50px; background-position: center bottom;
-            transform: perspective(100px) rotateX(60deg);
-            opacity: 0.15; pointer-events: none; z-index: -1;
+            background-size: 60px 60px; background-position: center bottom;
+            transform: perspective(150px) rotateX(70deg);
+            opacity: 0.1; pointer-events: none; z-index: -1;
         }
 
-        /* กล่องเป้าหมาย AR */
-        #ar-target-box {
-            position: absolute; width: 200px; height: 200px;
+        /* เอฟเฟกต์ป้ายทะลุพื้น (The Monolith) */
+        #arrival-portal {
+            position: absolute; bottom: 15%; left: 50%;
+            transform: translateX(-50%) scale(0);
+            opacity: 0; transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 40; text-align: center;
+        }
+
+        #arrival-portal.active {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+
+        .hologram-card {
+            background: linear-gradient(180deg, rgba(0, 242, 255, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
             border: 2px solid var(--neon);
-            transition: all 0.3s ease;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
-            opacity: 0.5;
+            padding: 40px 60px;
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.5), inset 0 0 20px rgba(0, 242, 255, 0.3);
+            position: relative; overflow: hidden;
+            backdrop-filter: blur(10px);
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
         }
-        .corner { position: absolute; width: 20px; height: 20px; border: 3px solid var(--neon); }
-        .tl { top: -5px; left: -5px; border-right: 0; border-bottom: 0; }
-        .tr { top: -5px; right: -5px; border-left: 0; border-bottom: 0; }
-        .bl { bottom: -5px; left: -5px; border-right: 0; border-top: 0; }
-        .br { bottom: -5px; right: -5px; border-left: 0; border-top: 0; }
 
-        /* ป้ายชื่อห้องลอย (โผล่มาเมื่อใกล้ถึง) */
-        #ar-floating-tag {
-            position: absolute; top: 20%;
-            transform: scale(0.5); opacity: 0;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--neon);
-            padding: 10px 25px; border-radius: 4px;
+        .hologram-card::after {
+            content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.3), transparent);
+            animation: scan 3s infinite;
         }
-        #ar-floating-tag.visible { opacity: 1; transform: scale(1) translateY(-20px); }
 
-        /* Animation ก้าวเดิน */
-        .step-glitch { animation: glitch 0.2s ease; }
+        @keyframes scan { 0% { top: -100%; } 100% { top: 100%; } }
+
+        .ground-ring {
+            width: 300px; height: 100px;
+            background: radial-gradient(ellipse, var(--neon) 0%, transparent 70%);
+            border: 4px solid var(--neon);
+            border-radius: 50%;
+            transform: rotateX(75deg);
+            margin: -50px auto;
+            filter: blur(5px);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: rotateX(75deg) scale(0.8); opacity: 0.5; }
+            50% { transform: rotateX(75deg) scale(1.1); opacity: 1; }
+            100% { transform: rotateX(75deg) scale(0.8); opacity: 0.5; }
+        }
+
+        /* HUD elements */
+        .step-glitch { animation: glitch 0.3s ease; }
         @keyframes glitch {
             0% { transform: translate(0); filter: hue-rotate(0deg); }
-            50% { transform: translate(5px, -5px); filter: hue-rotate(90deg); }
-            100% { transform: translate(0); filter: hue-rotate(0deg); }
+            33% { transform: translate(-10px, 5px); filter: invert(0.2); }
+            66% { transform: translate(10px, -5px); filter: hue-rotate(180deg); }
+            100% { transform: translate(0); }
         }
 
         .arrow-nav { filter: drop-shadow(0 0 15px var(--neon)); transition: transform 0.1s linear; }
@@ -68,136 +91,123 @@
     <video id="video-preview" autoplay playsinline muted></video>
     <div class="ar-grid"></div>
 
+    <div id="arrival-portal">
+        <div class="hologram-card">
+            <p class="font-modern text-xs tracking-[0.5em] text-cyan-400 mb-2">DESTINATION REACHED</p>
+            <h1 id="final-room-name" class="text-6xl font-black italic tracking-tighter text-white">ROOM 631</h1>
+            <div class="w-full h-1 bg-cyan-500 mt-4 opacity-50"></div>
+            <p class="mt-4 font-bold text-cyan-300">ยินดีต้อนรับสู่แผนก IT</p>
+        </div>
+        <div class="ground-ring"></div>
+    </div>
+
     <div class="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
         
-        <div class="flex justify-between items-start mt-2">
-            <div class="pointer-events-auto">
+        <div class="flex justify-between items-start">
+            <div>
                 <div class="flex items-center gap-2 mb-1">
                     <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    <p class="font-modern text-[10px] tracking-tighter text-white opacity-80">REC // AR_NAV_LOG</p>
+                    <p class="font-modern text-[10px] text-white opacity-80">STC_AR_OS v4.0</p>
                 </div>
-                <h2 id="target-name" class="text-3xl font-black italic tracking-tight uppercase">...</h2>
+                <h2 id="target-header" class="text-3xl font-black italic tracking-tight uppercase">...</h2>
             </div>
-            <button onclick="history.back()" class="w-12 h-12 rounded-full glass pointer-events-auto border border-white/20 flex items-center justify-center">
-                <i class="fa-solid fa-chevron-left"></i>
+            <button onclick="history.back()" class="w-12 h-12 rounded-full bg-white/10 pointer-events-auto border border-white/20 flex items-center justify-center backdrop-blur-md">
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
-        <div class="relative flex-1 flex items-center justify-center">
-            
-            <div id="ar-floating-tag" class="flex flex-col items-center">
-                <p class="font-modern text-[10px] text-cyan-400 mb-1">TARGET_LOCKED</p>
-                <h3 id="floating-room-name" class="text-2xl font-bold">ROOM NAME</h3>
-            </div>
+        <div id="ar-view-center" class="relative flex-1 flex items-center justify-center">
+            <div id="ar-target-box" class="w-64 h-64 border border-white/20 transition-all duration-500 flex items-center justify-center">
+                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-cyan-400"></div>
+                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-cyan-400"></div>
+                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-cyan-400"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-cyan-400"></div>
 
-            <div id="ar-target-box">
-                <div class="corner tl"></div><div class="corner tr"></div>
-                <div class="corner bl"></div><div class="corner br"></div>
-                
                 <div id="arrow-container" class="arrow-nav">
-                    <svg width="80" height="80" viewBox="0 0 100 100">
-                        <path d="M50 10 L20 80 L50 65 L80 80 Z" fill="var(--neon)" />
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <path d="M50 5 L15 85 L50 70 L85 85 Z" fill="var(--neon)" />
                     </svg>
                 </div>
             </div>
-
-            <p id="guide-msg" class="absolute bottom-10 font-modern text-[11px] tracking-widest text-cyan-300 opacity-60">ALIGN ARROW TO TARGET</p>
+            <p id="guide-msg" class="absolute bottom-10 font-modern text-[10px] tracking-widest text-cyan-400 animate-pulse">SCANNING AREA...</p>
         </div>
 
-        <div class="flex justify-between items-end border-t border-white/10 pt-4">
-            <div>
-                <p class="font-modern text-[9px] text-cyan-500 mb-1">DISTANCE_ANALYSIS</p>
-                <div class="flex items-baseline gap-2">
-                    <span id="dist-remain" class="font-modern text-7xl font-black text-white">0</span>
-                    <span class="text-lg font-bold text-cyan-400 font-modern">M</span>
+        <div class="flex justify-between items-end border-t border-white/10 pt-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div class="flex items-center gap-4">
+                <div>
+                    <p class="font-modern text-[9px] text-cyan-500">DISTANCE</p>
+                    <div class="flex items-baseline gap-1">
+                        <span id="dist-remain" class="font-modern text-6xl font-black">0</span>
+                        <span class="text-sm font-bold text-cyan-400 font-modern">M</span>
+                    </div>
                 </div>
             </div>
             
             <div class="text-right">
-                <p class="font-modern text-[9px] text-cyan-500 mb-1">STATUS</p>
-                <div id="status-tag" class="px-3 py-1 bg-cyan-500 text-black text-[10px] font-bold rounded">NAVIGATING</div>
+                <div id="status-tag" class="px-3 py-1 bg-white/10 text-[10px] font-bold border border-white/20">SEARCHING...</div>
+                <p id="lat-log" class="font-modern text-[8px] mt-2 opacity-40">LOC: 9.1472, 99.3306</p>
             </div>
         </div>
     </div>
 
-    <button onclick="processStep()" class="absolute bottom-4 right-4 opacity-0 w-20 h-20 z-50 pointer-events-auto"></button>
+    <button onclick="processStep()" class="absolute inset-0 z-0 opacity-0"></button>
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const targetRoom = params.get('target') || "Room";
+        const targetRoom = params.get('target') || "Unknown Room";
         const targetAngle = parseFloat(params.get('angle')) || 0;
-        let currentDistance = parseFloat(params.get('dist')) || 0;
-        let lastStepTime = 0;
-        let lastAcc = { x: 0, y: 0, z: 0 };
+        let currentDistance = parseFloat(params.get('dist')) || 10;
+        let isArrived = false;
 
-        document.getElementById('target-name').innerText = targetRoom;
-        document.getElementById('floating-room-name').innerText = targetRoom;
+        document.getElementById('target-header').innerText = targetRoom;
+        document.getElementById('final-room-name').innerText = targetRoom;
         document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
 
         async function startCamera() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-            document.getElementById('video-preview').srcObject = stream;
-        }
-
-        async function initSensors() {
-            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                await DeviceMotionEvent.requestPermission();
-                await DeviceOrientationEvent.requestPermission();
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment', focusMode: 'continuous' } 
+                });
+                document.getElementById('video-preview').srcObject = stream;
+            } catch (err) {
+                console.error("Camera error:", err);
             }
-            window.addEventListener('deviceorientationabsolute', handleOrientation);
-            window.addEventListener('deviceorientation', handleOrientation);
-            window.addEventListener('devicemotion', handleMotion);
-            document.getElementById('guide-msg').innerText = "SYSTEM_ACTIVE";
         }
 
         function handleOrientation(event) {
+            if(isArrived) return;
             let heading = event.webkitCompassHeading || (360 - event.alpha);
             let diff = targetAngle - heading;
             
-            // หมุนลูกศร
             document.getElementById('arrow-container').style.transform = `rotate(${diff}deg)`;
             
-            // ถ้าหันหน้าไปใกล้เคียงทิศทางห้อง (บวก-ลบ 20 องศา) ให้กล่องเป้าหมายขยาย
             let box = document.getElementById('ar-target-box');
-            if (Math.abs(diff) < 20 || Math.abs(diff) > 340) {
-                box.style.transform = "scale(1.2)";
+            if (Math.abs(diff) < 25 || Math.abs(diff) > 335) {
+                box.style.transform = "scale(1.1)";
                 box.style.borderColor = "var(--neon)";
-                box.style.opacity = "1";
+                box.style.boxShadow = "0 0 30px rgba(0, 242, 255, 0.4)";
+                document.getElementById('status-tag').innerText = "TRACKING TARGET";
+                document.getElementById('status-tag').style.color = "var(--neon)";
             } else {
-                box.style.transform = "scale(0.8)";
+                box.style.transform = "scale(0.9)";
                 box.style.borderColor = "rgba(255,255,255,0.2)";
-                box.style.opacity = "0.5";
+                box.style.boxShadow = "none";
+                document.getElementById('status-tag').innerText = "CALIBRATING...";
+                document.getElementById('status-tag').style.color = "white";
             }
-        }
-
-        function handleMotion(event) {
-            let acc = event.acceleration || event.accelerationIncludingGravity;
-            let delta = Math.abs(acc.x - lastAcc.x) + Math.abs(acc.y - lastAcc.y) + Math.abs(acc.z - lastAcc.z);
-            const now = Date.now();
-
-            if (delta > 0.6 && (now - lastStepTime) > 650) {
-                if (currentDistance > 0) {
-                    processStep();
-                    lastStepTime = now;
-                }
-            }
-            lastAcc = { x: acc.x, y: acc.y, z: acc.z };
         }
 
         function processStep() {
-            currentDistance -= 0.8;
+            if(isArrived) return;
+
+            currentDistance -= 0.7; // ลดระยะทางทีละนิด
             if (currentDistance < 0) currentDistance = 0;
 
             document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
             
-            // เอฟเฟกต์ Glitch เวลาเดิน
+            // Effect สั่นสะเทือนเวลาเดิน
             document.body.classList.add('step-glitch');
-            setTimeout(() => document.body.classList.remove('step-glitch'), 200);
-
-            // แสดงป้ายชื่อห้องลอย เมื่อเหลือ < 3 เมตร
-            if (currentDistance <= 3) {
-                document.getElementById('ar-floating-tag').classList.add('visible');
-            }
+            setTimeout(() => document.body.classList.remove('step-glitch'), 300);
 
             if (currentDistance <= 0) {
                 triggerArrival();
@@ -205,14 +215,33 @@
         }
 
         function triggerArrival() {
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 400]);
-            document.getElementById('status-tag').innerText = "DESTINATION REACHED";
-            document.getElementById('status-tag').style.background = "#bc13fe";
-            document.getElementById('ar-target-box').style.display = "none";
+            isArrived = true;
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]);
+
+            // ซ่อนเข็มทิศและ UI นำทาง
+            document.getElementById('ar-view-center').style.opacity = "0";
+            document.getElementById('status-tag').innerText = "TARGET_FOUND";
+            document.getElementById('status-tag').style.background = "var(--neon-p)";
+
+            // แสดงเอฟเฟกต์ป้ายทะลุพื้น
+            const portal = document.getElementById('arrival-portal');
+            portal.classList.add('active');
+
+            // เปลี่ยนสี HUD เป็นสีม่วงเพื่อแสดงว่าถึงแล้ว
+            document.documentElement.style.setProperty('--neon', '#bc13fe');
         }
 
+        // ขออนุญาตเซนเซอร์
+        document.body.addEventListener('click', async () => {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                await DeviceOrientationEvent.requestPermission();
+            }
+            window.addEventListener('deviceorientationabsolute', handleOrientation);
+            window.addEventListener('deviceorientation', handleOrientation);
+            document.getElementById('guide-msg').innerText = "AI_ASSISTANT_READY";
+        }, { once: true });
+
         window.onload = startCamera;
-        document.body.addEventListener('click', initSensors, { once: true });
     </script>
 </body>
 </html>
