@@ -13,7 +13,7 @@
             --neon-purple: #bc13fe;
         }
 
-        body { font-family: 'Sarabun', sans-serif; background: #000; }
+        body { font-family: 'Sarabun', sans-serif; background: #000; margin: 0; padding: 0; }
         .font-modern { font-family: 'Orbitron', sans-serif; }
 
         #video-preview {
@@ -47,6 +47,7 @@
             position: absolute;
             opacity: 0.2;
             animation: scanning 4s linear infinite;
+            pointer-events: none;
         }
 
         @keyframes scanning {
@@ -68,7 +69,6 @@
             100% { opacity: 0.6; }
         }
 
-        /* ปุ่มสำรอง Manual Step */
         .manual-trigger {
             position: absolute;
             bottom: 120px;
@@ -118,8 +118,8 @@
             <div class="flex justify-between items-start">
                 <div>
                     <div class="flex items-center gap-2 mb-1">
-                        <div class="w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
-                        <span class="font-modern text-[10px] tracking-[0.3em] text-cyan-400 uppercase">Mission Status: Active</span>
+                        <div id="status-dot" class="w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
+                        <span id="mission-status" class="font-modern text-[10px] tracking-[0.3em] text-cyan-400 uppercase">System: Initializing</span>
                     </div>
                     <h2 id="target-name" class="text-3xl font-black tracking-tight text-white uppercase italic">...</h2>
                 </div>
@@ -152,7 +152,7 @@
 
             <div class="mt-14">
                 <div class="glass-panel px-10 py-3 rounded-full border border-cyan-500/20 pulse-soft">
-                    <p id="guide-text" class="text-xs font-bold tracking-[0.2em] text-cyan-200 uppercase">Calibrating Environment...</p>
+                    <p id="guide-text" class="text-xs font-bold tracking-[0.2em] text-cyan-200 uppercase text-center">Tap Screen to Link Sensors</p>
                 </div>
             </div>
         </div>
@@ -167,7 +167,7 @@
             </div>
 
             <div class="glass-panel p-6 rounded-br-3xl border-t-2 border-cyan-500/30">
-                <p class="font-modern text-[9px] tracking-widest text-cyan-500/50 mb-2 font-bold">ENGINE STATUS</p>
+                <p class="font-modern text-[9px] tracking-widest text-cyan-500/50 mb-2 font-bold">SENSOR ENGINE</p>
                 <div id="status-card" class="flex flex-col gap-1">
                     <div id="status-text" class="font-black text-[11px] flex items-center gap-2 text-amber-500 tracking-widest uppercase">
                         <i class="fa-solid fa-circle-notch animate-spin"></i> Offline
@@ -188,11 +188,12 @@
         
         let currentDistance = parseFloat(params.get('dist')) || 0;
         let lastStepTime = 0;
-        const stepLength = 0.65; 
+        const stepLength = 0.7; // ระยะก้าวมาตรฐาน (เมตร)
 
         document.getElementById('target-name').innerText = targetRoom;
         document.getElementById('dist-remain').innerText = currentDistance.toFixed(1);
 
+        // 1. เปิดกล้อง
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -200,40 +201,81 @@
                     audio: false 
                 });
                 document.getElementById('video-preview').srcObject = stream;
-            } catch (err) { console.error(err); }
+                document.getElementById('mission-status').innerText = "Mission Status: Ready";
+            } catch (err) { 
+                console.error(err);
+                document.getElementById('guide-text').innerText = "Camera Access Denied";
+            }
         }
 
-        function initSensors() {
+        // 2. เริ่มทำงานเมื่อผู้ใช้แตะหน้าจอ (สำคัญมากสำหรับ Browser ยุคใหม่)
+        async function initSensors() {
+            // UI Feedback
             document.getElementById('guide-text').innerText = initialGuide;
             document.getElementById('status-text').innerHTML = '<i class="fa-solid fa-check-double"></i> Link Established';
             document.getElementById('status-text').className = "text-cyan-400 font-black text-[11px] tracking-widest uppercase";
             document.getElementById('status-bar').style.width = "100%";
+            document.getElementById('status-dot').classList.replace('bg-amber-400', 'bg-cyan-400');
+            document.getElementById('mission-status').innerText = "Mission Status: Active";
 
-            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission().then(state => {
-                    if (state === 'granted') window.addEventListener('deviceorientation', handleOrientation);
-                });
+            // ขอสิทธิ์ iOS 13+ (รองรับทั้ง Orientation และ Motion)
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                try {
+                    const motionPermission = await DeviceMotionEvent.requestPermission();
+                    const orientationPermission = await DeviceOrientationEvent.requestPermission();
+                    
+                    if (motionPermission === 'granted' && orientationPermission === 'granted') {
+                        setupEventListeners();
+                    }
+                } catch (e) {
+                    document.getElementById('guide-text').innerText = "Sensor Permission Denied";
+                }
             } else {
-                window.addEventListener('deviceorientationabsolute', handleOrientation);
+                // สำหรับ Android หรือ Browser ทั่วไป
+                setupEventListeners();
             }
+        }
+
+        function setupEventListeners() {
+            // เข็มทิศ
+            if ('ondeviceorientationabsolute' in window) {
+                window.addEventListener('deviceorientationabsolute', handleOrientation);
+            } else {
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+            // การก้าวเดิน
             window.addEventListener('devicemotion', handleMotion);
         }
 
+        // 3. จัดการทิศทาง (Arrow Rotation)
         function handleOrientation(event) {
-            let heading = event.webkitCompassHeading || (360 - event.alpha);
+            let heading = 0;
+            if (event.webkitCompassHeading) {
+                heading = event.webkitCompassHeading; // iOS
+            } else {
+                heading = 360 - event.alpha; // Android
+            }
+
             if (heading) {
                 let arrowRotation = targetAngle - heading;
                 document.getElementById('arrow-container').style.transform = `rotate(${arrowRotation}deg)`;
             }
         }
 
+        // 4. ตรวจจับการก้าวเดิน (Pedometer Logic)
         function handleMotion(event) {
             let acc = event.accelerationIncludingGravity;
             if (!acc) return;
+
+            // คำนวณความแรงจากการเคลื่อนไหว (Magnitude)
             let magnitude = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
             const now = Date.now();
-            // 13.5 คือค่าความแรงก้าวเดินมาตรฐาน
-            if (magnitude > 13.5 && (now - lastStepTime) > 450) {
+
+            /* ค่าความไว (Threshold): 
+               12.0 = เดินปกติ (แนะนำ)
+               13.5 = ต้องก้าวยาว/กระแทกเท้า
+            */
+            if (magnitude > 12.2 && (now - lastStepTime) > 550) {
                 if (currentDistance > 0) {
                     processStep();
                     lastStepTime = now;
@@ -241,6 +283,7 @@
             }
         }
 
+        // 5. ประมวลผลเมื่อมีการก้าว
         function processStep() {
             if (currentDistance <= 0) return;
 
@@ -250,19 +293,23 @@
             const distElement = document.getElementById('dist-remain');
             distElement.innerText = currentDistance.toFixed(1);
             
-            // Visual feedback เมื่อมีการก้าวเดิน
+            // เอฟเฟกต์สั่นสะเทือนทางสายตา (Visual Pulse)
             distElement.classList.add('scale-110', 'text-cyan-300');
             setTimeout(() => distElement.classList.remove('scale-110', 'text-cyan-300'), 150);
 
-            if (currentDistance <= 0.8) {
+            // เมื่อถึงเป้าหมาย
+            if (currentDistance <= 0.5) {
                 document.getElementById('guide-text').innerText = "ARRIVAL AT DESTINATION";
-                document.getElementById('guide-text').parentElement.classList.replace('border-cyan-500/20', 'bg-cyan-500');
+                document.getElementById('guide-text').parentElement.style.backgroundColor = "var(--neon-blue)";
                 document.getElementById('guide-text').classList.replace('text-cyan-200', 'text-black');
                 if (window.navigator.vibrate) window.navigator.vibrate([200, 100, 200]);
             }
         }
 
+        // เริ่มต้นเปิดกล้องตอนโหลดหน้า
         window.onload = startCamera;
+        
+        // รอการคลิกจากผู้ใช้เพื่อปลดล็อกเซนเซอร์
         document.body.addEventListener('click', initSensors, { once: true });
     </script>
 </body>
