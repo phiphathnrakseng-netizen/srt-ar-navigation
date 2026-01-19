@@ -3,63 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Navigation View | วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
+    <title>AR Mission Control | STC IT</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+        }
+
+        body { font-family: 'Sarabun', sans-serif; background: #000; }
+        .font-modern { font-family: 'Orbitron', sans-serif; }
+
         #video-preview {
             position: fixed; right: 0; bottom: 0;
             min-width: 100%; min-height: 100%;
-            width: auto; height: auto; z-index: -100;
-            object-fit: cover;
+            z-index: -100; object-fit: cover;
+            filter: brightness(0.7) contrast(1.1);
         }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .neon-border {
+            border-left: 4px solid var(--neon-blue);
+            box-shadow: -5px 0 15px rgba(0, 242, 255, 0.3);
+        }
+
         .arrow-indicator {
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 15px var(--neon-blue));
         }
-        .pulse-animation {
-            animation: pulse 2s infinite;
+
+        /* HUD Scanning Lines */
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--neon-blue), transparent);
+            position: absolute;
+            opacity: 0.3;
+            animation: scanning 3s linear infinite;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
+
+        @keyframes scanning {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .dist-glow {
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+        }
+
+        .pulse-soft {
+            animation: pulse-soft 2s infinite;
+        }
+
+        @keyframes pulse-soft {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
         }
     </style>
 </head>
-<body class="bg-black overflow-hidden font-['Sarabun']">
+<body class="overflow-hidden text-white">
 
     <video id="video-preview" autoplay playsinline muted></video>
+    <div class="scan-line"></div>
 
-    <div class="relative h-screen flex flex-col justify-between p-6">
+    <div class="relative h-screen flex flex-col justify-between p-4 md:p-8">
         
-        <div class="bg-white/90 backdrop-blur-md p-5 rounded-3xl shadow-2xl flex justify-between items-center border-b-4 border-purple-600">
-            <div>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-black">กำลังนำทางไป</p>
-                <h2 id="target-name" class="text-2xl font-black text-purple-900 leading-tight">...</h2>
+        <div class="glass-panel neon-border p-5 rounded-tr-3xl">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
+                        <span class="font-modern text-[10px] tracking-[0.3em] text-cyan-400">AR NAVIGATION SYSTEM</span>
+                    </div>
+                    <h2 id="target-name" class="text-3xl font-black tracking-tight text-white uppercase italic">...</h2>
+                </div>
+                <button onclick="history.back()" class="text-white/40 hover:text-white transition-colors">
+                    <i class="fa-solid fa-circle-xmark fa-2xl"></i>
+                </button>
             </div>
-            <button onclick="history.back()" class="bg-red-50 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner">
-                <i class="fa-solid fa-xmark fa-lg"></i>
-            </button>
         </div>
 
-        <div class="flex flex-col items-center justify-center">
-            <div id="arrow-container" class="arrow-indicator">
-                <i class="fa-solid fa-location-arrow text-8xl text-purple-500 drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]"></i>
+        <div class="flex flex-col items-center justify-center relative">
+            <div class="absolute w-64 h-64 border-2 border-dashed border-white/10 rounded-full animate-[spin_10s_linear_infinite]"></div>
+            
+            <div id="arrow-container" class="arrow-indicator relative">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="url(#paint0_linear)" />
+                    <defs>
+                        <linearGradient id="paint0_linear" x1="12" y1="2" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#00f2ff" />
+                            <stop offset="1" stop-color="#0066ff" />
+                        </linearGradient>
+                    </defs>
+                </svg>
             </div>
-            <div class="mt-10 bg-purple-900/90 text-white px-8 py-4 rounded-2xl backdrop-blur-md shadow-2xl border border-white/20 text-center">
-                <p id="guide-text" class="text-lg font-bold">กรุณาแตะหน้าจอเพื่อเริ่มระบบ</p>
+
+            <div class="mt-12 group">
+                <div class="glass-panel px-8 py-3 rounded-full border border-cyan-500/30 pulse-soft">
+                    <p id="guide-text" class="text-sm font-bold tracking-widest text-cyan-200 uppercase">INITIALIZING SENSORS...</p>
+                </div>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div class="bg-white/90 backdrop-blur-md p-5 rounded-3xl text-center shadow-2xl">
-                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">ระยะคงเหลือ</p>
-                <p class="text-4xl font-black text-purple-600"><span id="dist-remain">0</span><span class="text-lg ml-1">ม.</span></p>
+            <div class="glass-panel p-6 rounded-bl-3xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-2 opacity-10">
+                    <i class="fa-solid fa-route fa-2xl"></i>
+                </div>
+                <p class="font-modern text-[9px] tracking-widest text-gray-400 mb-2">DISTANCE REMAINING</p>
+                <div class="flex items-baseline gap-1">
+                    <span id="dist-remain" class="font-modern text-5xl font-black text-cyan-400 dist-glow">0</span>
+                    <span class="font-modern text-xs text-cyan-700">METERS</span>
+                </div>
             </div>
-            <div id="status-card" class="bg-white/90 backdrop-blur-md p-5 rounded-3xl text-center shadow-2xl transition-colors">
-                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">เซนเซอร์เดิน</p>
-                <div id="status-text" class="text-amber-500 font-black text-lg">
-                    <i class="fa-solid fa-pause-circle"></i> รอเริ่ม
+
+            <div class="glass-panel p-6 rounded-br-3xl relative">
+                <p class="font-modern text-[9px] tracking-widest text-gray-400 mb-2">SYSTEM STATUS</p>
+                <div id="status-card" class="flex flex-col gap-1">
+                    <div id="status-text" class="font-black text-sm flex items-center gap-2 text-amber-500 uppercase tracking-tighter">
+                        <i class="fa-solid fa-satellite-dish animate-pulse"></i> STANDBY
+                    </div>
+                    <div class="w-full bg-white/10 h-1 mt-2">
+                        <div id="status-bar" class="bg-cyan-500 h-full w-1/3 transition-all duration-500"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,68 +148,50 @@
         const initialGuide = params.get('guide');
         
         let currentDistance = parseFloat(params.get('dist')) || 0;
-        let isMoving = false;
-        let stepCount = 0;
-        const stepLength = 0.65; // ความยาวก้าวเดินเฉลี่ย 0.65 เมตร
+        let lastStepTime = 0;
+        const stepLength = 0.65; 
 
-        // อัปเดต UI เริ่มต้น
-        document.getElementById('target-name').innerText = "ห้อง " + targetRoom;
+        document.getElementById('target-name').innerText = targetRoom;
         document.getElementById('dist-remain').innerText = currentDistance.toFixed(1);
 
-        // 1. ระบบกล้อง
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment', focusMode: 'continuous' }, 
+                    video: { facingMode: 'environment' }, 
                     audio: false 
                 });
                 document.getElementById('video-preview').srcObject = stream;
-            } catch (err) {
-                console.error("Camera Error:", err);
-            }
+            } catch (err) { console.error(err); }
         }
 
-        // 2. ระบบเข็มทิศ
         function initSensors() {
             document.getElementById('guide-text').innerText = initialGuide;
-            document.getElementById('status-text').innerHTML = '<i class="fa-solid fa-person-walking"></i> พร้อมตรวจจับ';
-            document.getElementById('status-text').className = "text-green-500 font-black text-lg";
+            document.getElementById('status-text').innerHTML = '<i class="fa-solid fa-bolt-lightning"></i> ACTIVE TRACKING';
+            document.getElementById('status-text').className = "text-cyan-400 font-black text-sm tracking-widest";
+            document.getElementById('status-bar').style.width = "100%";
 
-            // ขอสิทธิ์ Device Orientation (สำหรับ iOS)
             if (typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission().then(state => {
-                    if (state === 'granted') {
-                        window.addEventListener('deviceorientation', handleOrientation);
-                    }
+                    if (state === 'granted') window.addEventListener('deviceorientation', handleOrientation);
                 });
             } else {
                 window.addEventListener('deviceorientationabsolute', handleOrientation);
             }
-
-            // เริ่มระบบตรวจจับการเดิน
             window.addEventListener('devicemotion', handleMotion);
         }
 
         function handleOrientation(event) {
             let heading = event.webkitCompassHeading || (360 - event.alpha);
             if (heading) {
-                // คำนวณมุม: เป้าหมาย - ทิศเครื่องปัจจุบัน
                 let arrowRotation = targetAngle - heading;
                 document.getElementById('arrow-container').style.transform = `rotate(${arrowRotation}deg)`;
             }
         }
 
-        // 3. ระบบตรวจจับการเดิน (Step Detection)
-        let lastStepTime = 0;
         function handleMotion(event) {
             let acc = event.accelerationIncludingGravity;
             if (!acc) return;
-
-            // คำนวณความแรงของการเคลื่อนที่ (Magnitude)
             let magnitude = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
-
-            // ตรวจสอบแรงกระแทกที่สอดคล้องกับการก้าวเดิน (ค่าปกติประมาณ 12-14)
-            // และเว้นระยะห่างระหว่างก้าวอย่างน้อย 400ms เพื่อไม่ให้นับซ้ำ
             const now = Date.now();
             if (magnitude > 13.5 && (now - lastStepTime) > 450) {
                 if (currentDistance > 0) {
@@ -144,28 +202,26 @@
         }
 
         function processStep() {
-            // ลดระยะทาง
             currentDistance -= stepLength;
             if (currentDistance < 0) currentDistance = 0;
 
-            // อัปเดตหน้าจอ
             const distElement = document.getElementById('dist-remain');
             distElement.innerText = currentDistance.toFixed(1);
             
-            // เอฟเฟกต์เมื่อก้าวเดิน
-            distElement.parentElement.classList.add('scale-110', 'text-purple-800');
-            setTimeout(() => distElement.parentElement.classList.remove('scale-110', 'text-purple-800'), 200);
+            // UI Feedback
+            distElement.classList.add('scale-110');
+            setTimeout(() => distElement.classList.remove('scale-110'), 150);
 
-            // เมื่อถึงจุดหมาย
             if (currentDistance <= 0.8) {
-                document.getElementById('guide-text').innerText = "คุณมาถึง " + targetRoom + " แล้ว";
-                document.getElementById('guide-text').parentElement.className = "mt-10 bg-green-500 text-white px-8 py-4 rounded-2xl shadow-2xl pulse-animation";
+                document.getElementById('guide-text').innerText = "DESTINATION REACHED";
+                document.getElementById('guide-text').parentElement.classList.add('bg-cyan-500', 'text-black');
+                document.getElementById('guide-text').classList.remove('text-cyan-200');
+                document.getElementById('guide-text').classList.add('text-black');
                 if (window.navigator.vibrate) window.navigator.vibrate([200, 100, 200]);
             }
         }
 
         window.onload = startCamera;
-        // บังคับให้ user แตะก่อนเพื่อเปิดใช้งาน Sensor ตามกฎ Browser
         document.body.addEventListener('click', initSensors, { once: true });
     </script>
 </body>
