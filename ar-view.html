@@ -101,7 +101,7 @@
                 </div>
             </div>
 
-            <p id="guide-msg" class="absolute bottom-10 font-modern text-[11px] tracking-widest text-cyan-300 opacity-60">ALIGN ARROW TO TARGET</p>
+            <p id="guide-msg" class="absolute bottom-10 font-modern text-[11px] tracking-widest text-cyan-300 opacity-60 text-center px-4">ALIGN ARROW TO TARGET</p>
         </div>
 
         <div class="flex justify-between items-end border-t border-white/10 pt-4">
@@ -126,6 +126,8 @@
         const params = new URLSearchParams(window.location.search);
         const targetRoom = params.get('target') || "Room";
         const targetAngle = parseFloat(params.get('angle')) || 0;
+        const guideText = params.get('guide') ? decodeURIComponent(params.get('guide')) : "ALIGN ARROW TO TARGET";
+        
         let currentDistance = parseFloat(params.get('dist')) || 0;
         let lastStepTime = 0;
         let lastAcc = { x: 0, y: 0, z: 0 };
@@ -133,68 +135,108 @@
         document.getElementById('target-name').innerText = targetRoom;
         document.getElementById('floating-room-name').innerText = targetRoom;
         document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
+        document.getElementById('guide-msg').innerText = guideText;
 
         async function startCamera() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-            document.getElementById('video-preview').srcObject = stream;
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment', focusMode: 'continuous' } 
+                });
+                document.getElementById('video-preview').srcObject = stream;
+            } catch (err) {
+                console.error("Camera error:", err);
+                document.getElementById('guide-msg').innerText = "CAMERA_ACCESS_DENIED";
+            }
         }
 
         async function initSensors() {
-            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                await DeviceMotionEvent.requestPermission();
-                await DeviceOrientationEvent.requestPermission();
+            // ขออนุญาตสำหรับ iOS
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    const permission = await DeviceOrientationEvent.requestPermission();
+                    if (permission === 'granted') {
+                        setupSensorListeners();
+                    }
+                } catch (err) {
+                    console.error("Sensor permission error:", err);
+                }
+            } else {
+                // สำหรับ Android หรือ Browser ที่ไม่ต้องขอ Permission
+                setupSensorListeners();
             }
-            window.addEventListener('deviceorientationabsolute', handleOrientation);
-            window.addEventListener('deviceorientation', handleOrientation);
-            window.addEventListener('devicemotion', handleMotion);
-            document.getElementById('guide-msg').innerText = "SYSTEM_ACTIVE";
+        }
+
+        function setupSensorListeners() {
+            window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+            window.addEventListener('deviceorientation', handleOrientation, true);
+            window.addEventListener('devicemotion', handleMotion, true);
+            document.getElementById('status-tag').innerText = "SYSTEM_LINKED";
         }
 
         function handleOrientation(event) {
-            let heading = event.webkitCompassHeading || (360 - event.alpha);
+            // ตรวจสอบเข็มทิศ (รองรับทั้ง iOS และ Android)
+            let heading = 0;
+            if (event.webkitCompassHeading) {
+                heading = event.webkitCompassHeading; // iOS
+            } else if (event.absolute && event.alpha !== null) {
+                heading = 360 - event.alpha; // Android (Absolute)
+            } else {
+                return; // ยังไม่มีข้อมูลทิศทาง
+            }
+
+            // คำนวณความต่างของทิศทาง
             let diff = targetAngle - heading;
             
+            // ปรับค่าให้อยู่ในช่วง -180 ถึง 180 เพื่อความลื่นไหล
+            while (diff < -180) diff += 360;
+            while (diff > 180) diff -= 360;
+
             // หมุนลูกศร
             document.getElementById('arrow-container').style.transform = `rotate(${diff}deg)`;
             
-            // ถ้าหันหน้าไปใกล้เคียงทิศทางห้อง (บวก-ลบ 20 องศา) ให้กล่องเป้าหมายขยาย
+            // ตรวจสอบว่าหันหน้าตรงเป้าหมายหรือไม่
             let box = document.getElementById('ar-target-box');
-            if (Math.abs(diff) < 20 || Math.abs(diff) > 340) {
-                box.style.transform = "scale(1.2)";
+            if (Math.abs(diff) < 25) {
+                box.style.transform = "scale(1.15)";
                 box.style.borderColor = "var(--neon)";
                 box.style.opacity = "1";
+                box.style.boxShadow = "0 0 30px var(--neon)";
             } else {
-                box.style.transform = "scale(0.8)";
+                box.style.transform = "scale(0.85)";
                 box.style.borderColor = "rgba(255,255,255,0.2)";
                 box.style.opacity = "0.5";
+                box.style.boxShadow = "none";
             }
         }
 
         function handleMotion(event) {
-            let acc = event.acceleration || event.accelerationIncludingGravity;
-            let delta = Math.abs(acc.x - lastAcc.x) + Math.abs(acc.y - lastAcc.y) + Math.abs(acc.z - lastAcc.z);
+            let acc = event.acceleration;
+            if (!acc || acc.x === null) return;
+
+            let delta = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
             const now = Date.now();
 
-            if (delta > 0.6 && (now - lastStepTime) > 650) {
+            // ตรวจจับก้าวเดิน (แรงกระแทก > 1.2 และ เว้นช่วง > 600ms)
+            if (delta > 1.2 && (now - lastStepTime) > 600) {
                 if (currentDistance > 0) {
                     processStep();
                     lastStepTime = now;
                 }
             }
-            lastAcc = { x: acc.x, y: acc.y, z: acc.z };
         }
 
         function processStep() {
-            currentDistance -= 0.8;
+            // เมื่อเดิน 1 ก้าว ระยะทางจะลดลงประมาณ 0.7 - 0.8 เมตร
+            currentDistance -= 0.75;
             if (currentDistance < 0) currentDistance = 0;
 
             document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
             
-            // เอฟเฟกต์ Glitch เวลาเดิน
+            // เอฟเฟกต์ Glitch
             document.body.classList.add('step-glitch');
-            setTimeout(() => document.body.classList.remove('step-glitch'), 200);
+            setTimeout(() => document.body.classList.remove('step-glitch'), 150);
 
-            // แสดงป้ายชื่อห้องลอย เมื่อเหลือ < 3 เมตร
+            // แสดงป้ายห้องเมื่อเข้าใกล้ (3 เมตร)
             if (currentDistance <= 3) {
                 document.getElementById('ar-floating-tag').classList.add('visible');
             }
@@ -206,12 +248,14 @@
 
         function triggerArrival() {
             if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 400]);
-            document.getElementById('status-tag').innerText = "DESTINATION REACHED";
+            document.getElementById('status-tag').innerText = "ARRIVED";
             document.getElementById('status-tag').style.background = "#bc13fe";
-            document.getElementById('ar-target-box').style.display = "none";
+            document.getElementById('guide-msg').innerText = "YOU HAVE REACHED YOUR DESTINATION";
+            document.getElementById('guide-msg').style.opacity = "1";
         }
 
         window.onload = startCamera;
+        // ต้องคลิกหนึ่งครั้งเพื่อเปิดใช้งาน Sensor (Security Policy ของ Browser)
         document.body.addEventListener('click', initSensors, { once: true });
     </script>
 </body>
