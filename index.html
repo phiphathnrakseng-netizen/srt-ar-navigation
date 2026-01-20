@@ -6,21 +6,15 @@
     
     <title>ระบบนำทาง AR | วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
 
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <style>
         :root {
             --stc-navy-deep: #001A35;
             --stc-navy: #002D62;
-            --stc-gold: #B38B40;
+            --stc-gold: #B8860B;
             --stc-silver: #E2E8F0;
             --stc-bg: #FFFFFF;
         }
@@ -28,304 +22,274 @@
         body { 
             font-family: 'Sarabun', sans-serif; 
             background-color: var(--stc-bg); 
-            color: #0f172a;
-            padding-top: env(safe-area-inset-top);
+            color: #1A1A1A;
+            margin: 0;
         }
 
-        /* บังคับตัดความโค้งมนออกทั้งหมด */
+        /* บังคับยกเลิกความโค้งมนทั่วทั้งเว็บ */
         * { border-radius: 0 !important; }
 
-        .official-shadow {
-            box-shadow: 8px 8px 0px rgba(0, 45, 98, 0.1);
-        }
-
-        .header-official {
+        /* Header สไตล์ทางการ */
+        .official-header {
             background: var(--stc-navy-deep);
-            border-bottom: 8px solid var(--stc-gold);
-            padding: 3rem 1.5rem;
+            border-bottom: 5px solid var(--stc-gold);
             position: relative;
+            padding: 4rem 2rem;
+            color: white;
         }
 
-        .header-pattern {
+        .official-header::before {
+            content: '';
             position: absolute;
-            top: 0; right: 0;
-            width: 300px; height: 100%;
-            background-image: radial-gradient(var(--stc-gold) 1px, transparent 1px);
-            background-size: 20px 20px;
-            opacity: 0.1;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.03) 75%, transparent 75%, transparent);
+            background-size: 100px 100px;
         }
 
-        .btn-stc {
+        /* ปุ่มกดสไตล์สถาบัน */
+        .btn-official {
             background: var(--stc-navy);
             color: white;
-            font-weight: 800;
-            letter-spacing: 1px;
-            border: 2px solid var(--stc-navy);
-            transition: all 0.2s ease;
+            border: 1px solid var(--stc-navy);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        .btn-stc:hover {
-            background: transparent;
+        .btn-official:hover {
+            background: white;
             color: var(--stc-navy);
         }
 
+        /* การ์ดห้องเรียนทรงเหลี่ยมคม */
+        .room-card {
+            background: white;
+            border: 1px solid #D1D5DB;
+            border-left: 8px solid var(--stc-navy);
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0px #F1F5F9;
+        }
+
+        .room-card:hover {
+            border-color: var(--stc-gold);
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--stc-navy);
+        }
+
+        /* Navbar สไตล์สะอาดตา */
         .nav-official {
             background: white;
             border-bottom: 2px solid var(--stc-silver);
+            height: 70px;
         }
 
-        .nav-item-active {
-            background: var(--stc-navy);
-            color: white !important;
+        .nav-link {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-weight: 700;
+            color: #4A5568;
+            font-size: 0.9rem;
+            border-bottom: 4px solid transparent;
         }
 
-        .room-card-official {
-            background: white;
-            border: 1px solid var(--stc-silver);
-            border-left: 8px solid var(--stc-navy);
-            transition: all 0.3s ease;
-        }
-
-        .room-card-official:hover {
-            transform: translateX(5px);
-            border-left-color: var(--stc-gold);
-            box-shadow: 12px 12px 0px rgba(179, 139, 64, 0.1);
-        }
-
-        .section-header {
-            border-left: 5px solid var(--stc-gold);
-            padding-left: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* ตกแต่ง Input ให้ดูคมชัด */
-        .input-official {
-            border: 2px solid var(--stc-silver);
+        .nav-link-active {
+            color: var(--stc-navy);
+            border-bottom: 4px solid var(--stc-navy);
             background: #F8FAFC;
         }
 
-        .input-official:focus {
-            border-color: var(--stc-navy);
+        .section-tag {
+            background: var(--stc-gold);
+            color: white;
+            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        /* Modal ทรงเหลี่ยม */
+        .modal-box {
             background: white;
+            border: 4px solid var(--stc-navy);
+            max-width: 500px;
+            width: 95%;
+        }
+
+        .search-field {
+            border: 2px solid var(--stc-silver);
+            padding: 12px;
+            width: 100%;
             outline: none;
+        }
+
+        .search-field:focus {
+            border-color: var(--stc-navy);
         }
     </style>
 </head>
 <body>
 
     <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="relative bg-white w-full max-w-md border-t-8 border-b-8 border-t-[#002D62] border-b-[#B38B40] shadow-2xl">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="relative modal-box shadow-2xl overflow-hidden">
+            <div class="bg-[#002D62] p-4 text-white flex justify-between items-center">
+                <span class="font-bold tracking-widest text-sm">OFFICIAL GUIDELINE</span>
+                <button onclick="closeModal()" class="hover:text-gold-400"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div class="p-8">
-                <div class="mb-6 text-center">
-                    <i class="fa-solid fa-compass fa-3x text-[#002D62] mb-4"></i>
-                    <h3 class="text-2xl font-black text-[#002D62] uppercase tracking-tighter">ระบบนำทางอัจฉริยะ</h3>
-                    <p class="text-slate-500 text-sm mt-1 font-bold">SMART CAMPUS CALIBRATION</p>
-                </div>
+                <h3 class="text-2xl font-extrabold text-[#002D62] mb-4">ระบบนำทางอัจฉริยะ (AR)</h3>
+                <p class="text-slate-600 mb-6 leading-relaxed">
+                    เพื่อประสิทธิภาพสูงสุดในการนำทาง โปรดอนุญาตให้ระบบเข้าถึง <span class="font-bold text-black">กล้อง</span> และ <span class="font-bold text-black">เซนเซอร์เข็มทิศ</span> ของอุปกรณ์ท่าน
+                </p>
                 <div class="space-y-4 mb-8">
-                    <div class="p-4 bg-slate-50 border-l-4 border-[#002D62]">
-                        <p class="font-bold text-sm">การกำหนดตำแหน่งเริ่มต้น</p>
-                        <p class="text-xs text-slate-500">กรุณายืน ณ จุดระบุพิกัด (ป้อมยาม หรือ หน้าอาคาร) เพื่อให้ระบบ AR ทำงานได้อย่างแม่นยำที่สุด</p>
+                    <div class="flex items-center gap-4 text-sm font-bold p-3 bg-slate-50 border border-slate-100">
+                        <i class="fa-solid fa-circle-info text-blue-600"></i>
+                        ยืนบริเวณจุด Calibration (ป้อมยาม/บันได)
                     </div>
                 </div>
-                <button onclick="closeModal()" class="w-full btn-stc py-4 uppercase text-sm">เริ่มการนำทาง</button>
+                <button onclick="closeModal()" class="w-full btn-official py-4">เข้าสู่ระบบนำทาง</button>
             </div>
         </div>
     </div>
 
-    <nav class="nav-official sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
-            <div class="flex items-center gap-4">
-                <img src="favicon.png" class="h-8 w-8 grayscale contrast-125" alt="Logo">
-                <span class="font-black text-sm uppercase tracking-widest hidden md:block">Surat Thani Technical College</span>
+    <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6">
+        <div class="flex items-center gap-4">
+            <img src="favicon.png" class="h-10 w-10 border border-slate-200" alt="Logo">
+            <div class="leading-tight">
+                <div class="font-black text-sm text-[#002D62]">SURAT THANI TECHNICAL COLLEGE</div>
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">IT Navigation System</div>
             </div>
-            <div class="flex h-full font-bold text-[10px] tracking-widest uppercase">
-                <a href="index.html" id="nav-scan" class="px-6 h-full flex items-center hover:bg-slate-50 border-x border-slate-100 transition-colors">Main</a>
-                <a href="?floor=3" id="nav-f3" class="px-6 h-full flex items-center hover:bg-slate-50 border-r border-slate-100 transition-colors">Floor 3</a>
-                <a href="?floor=4" id="nav-f4" class="px-6 h-full flex items-center hover:bg-slate-50 border-r border-slate-100 transition-colors">Floor 4</a>
-            </div>
+        </div>
+        <div class="hidden md:flex h-full">
+            <a href="index.html" class="nav-link nav-link-active">หน้าหลัก</a>
+            <a href="?floor=3" class="nav-link">ชั้น 3</a>
+            <a href="?floor=4" class="nav-link">ชั้น 4</a>
         </div>
     </nav>
 
-    <header class="header-official overflow-hidden">
-        <div class="header-pattern"></div>
+    <header class="official-header">
         <div class="max-w-6xl mx-auto relative z-10">
-            <div class="inline-block bg-[#B38B40] px-4 py-1 text-[10px] font-black tracking-[0.2em] uppercase text-white mb-6">
-                Official AR Navigation System
-            </div>
-            <h1 class="text-4xl md:text-6xl font-black text-white leading-[0.9] tracking-tighter mb-6">
-                แผนกวิชา <br>
-                <span class="text-[#B38B40]">เทคโนโลยีสารสนเทศ</span>
+            <div class="section-tag">University Navigation</div>
+            <h1 class="text-4xl md:text-6xl font-black leading-none mb-4">
+                ระบบนำทางอาคาร <br>
+                <span class="text-transparent" style="-webkit-text-stroke: 1px white;">แผนกเทคโนโลยีสารสนเทศ</span>
             </h1>
-            <div class="h-1 w-20 bg-white mb-6"></div>
-            <p class="text-slate-400 max-w-xl text-sm leading-relaxed font-medium uppercase tracking-wide">
-                ระบบสนับสนุนการนำทางภายในอาคารด้วยเทคโนโลยีความจริงเสริม <br>
-                วิทยาลัยเทคนิคสุราษฎร์ธานี สถาบันการอาชีวศึกษาภาคใต้ ๑
+            <div class="w-20 h-1 bg-gold-500 mb-4 bg-[#B8860B]"></div>
+            <p class="text-slate-300 max-w-xl text-sm font-light leading-relaxed">
+                เทคโนโลยีความจริงเสริม (Augmented Reality) เพื่อการเข้าถึงห้องปฏิบัติการอย่างแม่นยำ 
+                วิทยาลัยเทคนิคสุราษฎร์ธานี
             </p>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-12">
+    <main class="max-w-6xl mx-auto px-6 py-12">
         
-        <div id="search-container" class="mb-12 hidden" data-aos="fade-right">
-            <div class="section-header">
-                <h2 class="text-2xl font-black uppercase tracking-tighter italic">Search Directory</h2>
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">ระบุหมายเลขห้องปฏิบัติการ</p>
-            </div>
-            <div class="relative max-w-md">
-                <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="กรอกรหัสห้อง (เช่น 631)..." 
-                       class="w-full input-official p-4 pl-12 font-bold text-sm">
-                <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[#002D62]"></i>
+        <div id="search-container" class="mb-12 hidden">
+            <div class="flex flex-col md:flex-row gap-6 items-end border-b-2 border-slate-100 pb-8">
+                <div class="flex-1 w-full">
+                    <label class="block font-black text-xs uppercase tracking-widest text-slate-400 mb-2">Search Destination</label>
+                    <div class="relative">
+                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="พิมพ์หมายเลขห้อง หรือ ชื่อห้อง..." class="search-field font-bold text-lg">
+                        <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="start-phase" class="mb-12 hidden" data-aos="fade-up">
-            <div class="section-header">
-                <h2 class="text-2xl font-black uppercase tracking-tighter">Campus Entry</h2>
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">จุดเริ่มต้นจากภายนอกอาคาร</p>
-            </div>
-            <button onclick="navigate('GUARD_TO_IT')" 
-                    class="w-full bg-white border-2 border-slate-200 p-8 flex flex-col md:flex-row md:items-center justify-between group hover:border-[#002D62] transition-all official-shadow">
-                <div class="text-left mb-4 md:mb-0">
-                    <span class="text-[10px] font-black text-[#B38B40] uppercase tracking-widest block mb-2">Location: Guard Station</span>
-                    <h3 class="text-3xl font-black text-[#002D62]">ป้อมยาม &rarr; แผนกไอที</h3>
+        <div id="start-phase" class="mb-16 hidden">
+            <h2 class="text-2xl font-black mb-8 flex items-center gap-3 text-[#002D62]">
+                <span class="bg-[#002D62] text-white w-8 h-8 flex items-center justify-center text-sm">01</span>
+                จุดเริ่มต้นจากภายนอกอาคาร
+            </h2>
+            <button onclick="navigate('GUARD_TO_IT')" class="w-full room-card p-10 flex flex-col md:flex-row justify-between items-center group">
+                <div class="text-left mb-6 md:mb-0">
+                    <div class="section-tag bg-[#002D62]">Outdoor Navigation</div>
+                    <h3 class="text-3xl font-black text-slate-800">จากป้อมยาม &rarr; แผนกไอที</h3>
+                    <p class="text-slate-400 font-bold mt-2">ระยะทางโดยประมาณ: 150 เมตร</p>
                 </div>
-                <div class="flex items-center gap-4 text-[#002D62] font-black uppercase tracking-widest text-sm">
-                    Begin Navigation <i class="fa-solid fa-arrow-right"></i>
+                <div class="btn-official px-10 py-4 w-full md:w-auto">
+                    เริ่มการนำทาง <i class="fa-solid fa-location-arrow"></i>
                 </div>
             </button>
         </div>
 
-        <div id="floor-3" class="floor-section hidden">
-            <div class="section-header">
-                <h2 class="text-2xl font-black uppercase tracking-tighter italic">Third Floor</h2>
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">ห้องปฏิบัติการชั้น 3</p>
-            </div>
+        <div id="floor-3" class="hidden">
+            <h2 class="text-2xl font-black mb-8 flex items-center gap-3 text-[#002D62]">
+                <span class="bg-[#002D62] text-white w-8 h-8 flex items-center justify-center text-sm">03</span>
+                ห้องปฏิบัติการชั้น 3
+            </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <button onclick="navigate('631')" class="room-card-official p-6 flex justify-between items-center">
-                    <div>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Room Code 631</span>
-                        <h4 class="text-xl font-black text-slate-800">Lab 631</h4>
+                <button onclick="navigate('631')" class="room-card p-6 text-left group">
+                    <div class="font-black text-xs text-slate-400 mb-1">ROOM 631</div>
+                    <h4 class="text-xl font-black text-slate-800 mb-4 italic">Laboratory 631</h4>
+                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
+                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-slate-200 group-hover:text-[#002D62]"></i>
                 </button>
-                <button onclick="navigate('632')" class="room-card-official p-6 flex justify-between items-center">
-                    <div>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Room Code 632</span>
-                        <h4 class="text-xl font-black text-slate-800">Lab 632</h4>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
-                </button>
-                <button onclick="navigate('633')" class="room-card-official p-6 flex justify-between items-center">
-                    <div>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Room Code 633</span>
-                        <h4 class="text-xl font-black text-slate-800">Lab 633</h4>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
-                </button>
-            </div>
-        </div>
-
-        <div id="floor-4" class="floor-section hidden">
-            <div class="section-header">
-                <h2 class="text-2xl font-black uppercase tracking-tighter italic">Fourth Floor</h2>
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">ห้องปฏิบัติการชั้น 4</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <button onclick="navigate('OFFICE')" class="room-card-official p-6 flex justify-between items-center" style="border-left-color: #991b1b;">
-                    <div>
-                        <span class="text-[9px] font-black text-red-800 uppercase tracking-widest block mb-1">Faculty Room</span>
-                        <h4 class="text-xl font-black text-slate-800 uppercase">ห้องพักครูไอที</h4>
-                    </div>
-                    <i class="fa-solid fa-shield text-red-800 opacity-20"></i>
-                </button>
-                <button onclick="navigate('LAB1')" class="room-card-official p-6 flex justify-between items-center">
-                    <div>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Room Code LAB1</span>
-                        <h4 class="text-xl font-black text-slate-800 uppercase">Com-Lab 1</h4>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
-                </button>
-            </div>
-        </div>
-
-        <div id="empty-state" class="text-center py-20 border-4 border-double border-slate-100 hidden">
-            <h3 class="text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter italic">Select Current Location</h3>
-            <p class="text-slate-400 mb-10 text-sm font-bold uppercase tracking-widest">ระบุตำแหน่งปัจจุบันของท่านเพื่อเริ่มระบบนำทาง</p>
-            <div class="flex flex-col gap-4 max-w-sm mx-auto">
-                <a href="index.html" class="btn-stc py-5 text-sm uppercase">อยู่ที่: ป้อมยามวิทยาลัย</a>
-                <div class="grid grid-cols-2 gap-4">
-                    <a href="?floor=3" class="border-2 border-[#002D62] py-4 text-[10px] font-black uppercase text-[#002D62] hover:bg-slate-50 transition-colors">จุดสแกน ชั้น 3</a>
-                    <a href="?floor=4" class="border-2 border-[#002D62] py-4 text-[10px] font-black uppercase text-[#002D62] hover:bg-slate-50 transition-colors">จุดสแกน ชั้น 4</a>
                 </div>
+        </div>
+
+        <div id="empty-state" class="text-center py-20 border-4 border-dashed border-slate-100 hidden">
+            <i class="fa-solid fa-compass fa-4x text-slate-200 mb-6"></i>
+            <h2 class="text-3xl font-black text-slate-800 mb-4">โปรดระบุตำแหน่งปัจจุบัน</h2>
+            <p class="text-slate-400 mb-10 font-bold">เลือกตำแหน่งที่ท่านอยู่ เพื่อให้ระบบเริ่มต้นคำนวณเส้นทาง</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="index.html" class="btn-official px-8 py-4">ป้อมยามทางเข้า</a>
+                <a href="?floor=3" class="btn-official px-8 py-4 bg-white !text-[#002D62]">บันไดชั้น 1</a>
             </div>
         </div>
 
     </main>
 
-    <footer class="bg-slate-50 border-t border-slate-200 py-16 mt-12">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col items-center">
-            <div class="h-1 w-12 bg-[#B38B40] mb-6"></div>
-            <p class="font-black text-slate-900 text-sm uppercase tracking-widest mb-2">Surat Thani Technical College</p>
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em]">© 2026 IT DEPT. OFFICIAL AR SYSTEM</p>
+    <footer class="bg-slate-50 border-t border-slate-200 py-12">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-4">
+                <img src="favicon.png" class="h-12 grayscale opacity-50" alt="Logo">
+                <div class="text-xs font-bold text-slate-400">
+                    วิทยาลัยเทคนิคสุราษฎร์ธานี<br>
+                    แผนกเทคโนโลยีสารสนเทศ
+                </div>
+            </div>
+            <div class="text-[10px] font-black tracking-[4px] text-slate-300 uppercase">
+                © 2026 OFFICIAL AR NAVIGATION SYSTEM
+            </div>
         </div>
     </footer>
 
     <script>
-        AOS.init({ duration: 600, once: true, easing: 'ease-out-quad' });
-
+        // Data และ Logic เหมือนเดิม แต่ปรับการจัดการ UI นิดหน่อย
         const navigationData = {
-            "GUARD_TO_IT": { angle: 15, dist: 150, guide: "เดินตรงไปตามถนนหลัก เลี้ยวขวาที่สามแยกแผนกช่างกลเพื่อเข้าสู่ตึกไอที" },
-            "631": { angle: 90, dist: 8, guide: "ขึ้นบันไดมาชั้น 3 เลี้ยวขวา ห้อง 631 จะอยู่ฝั่งขวามือ" },
-            "632": { angle: -90, dist: 5, guide: "ขึ้นบันไดมาชั้น 3 เลี้ยวซ้าย ห้อง 632 จะอยู่ฝั่งซ้ายมือ" },
-            "633": { angle: -90, dist: 12, guide: "ขึ้นบันไดมาชั้น 3 เลี้ยวซ้ายสุดทาง ห้อง 633 จะอยู่ฝั่งขวามือ" },
-            "OFFICE": { angle: 0, dist: 3, guide: "ขึ้นบันไดมาชั้น 4 เดินตรงเข้าสู่โถงกลาง ห้องพักครูอยู่ตรงหน้า" },
-            "LAB1": { angle: 280, dist: 12, guide: "ขึ้นบันไดมาชั้น 4 เดินไปทางซ้ายสุดทาง ห้อง Com-Lab 1" }
+            "GUARD_TO_IT": { angle: 15, dist: 150, guide: "เดินตรงจากป้อมยามตามถนนหลัก" },
+            "631": { angle: 90, dist: 8, guide: "ขึ้นชั้น 3 หันขวาเดินตรงไป 8 เมตร" }
         };
 
-        function closeModal() {
-            document.getElementById('guide-modal').style.display = 'none';
-        }
-
-        function searchRoom() {
-            const input = document.getElementById('searchInput').value.toUpperCase();
-            const rooms = document.querySelectorAll('.room-card-official');
-            rooms.forEach(room => {
-                const text = room.innerText.toUpperCase();
-                room.style.display = text.includes(input) ? "flex" : "none";
-            });
-        }
+        function closeModal() { document.getElementById('guide-modal').classList.add('hidden'); }
 
         function initApp() {
             const params = new URLSearchParams(window.location.search);
             const floor = params.get('floor');
-            
-            // Elements
             const s3 = document.getElementById('floor-3');
-            const s4 = document.getElementById('floor-4');
             const empty = document.getElementById('empty-state');
             const searchBar = document.getElementById('search-container');
             const startPhase = document.getElementById('start-phase');
             
-            // Hide all
-            [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
+            // ล้างหน้าจอ
+            [s3, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
 
             if (floor === '3') {
                 s3.classList.remove('hidden');
                 searchBar.classList.remove('hidden');
-                document.getElementById('nav-f3').classList.add('nav-item-active');
-            } else if (floor === '4') {
-                s4.classList.remove('hidden');
-                searchBar.classList.remove('hidden');
-                document.getElementById('nav-f4').classList.add('nav-item-active');
-            } else {
-                empty.classList.remove('hidden');
+            } else if (!floor) {
                 startPhase.classList.remove('hidden');
-                document.getElementById('nav-scan').classList.add('nav-item-active');
+                empty.classList.remove('hidden');
             }
         }
 
