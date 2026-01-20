@@ -37,7 +37,7 @@
             padding-top: env(safe-area-inset-top);
         }
 
-        /* ❌ ยกเลิกความโค้งมนทั้งหมดตามความต้องการ */
+        /* ยกเลิกความโค้งมนทั้งหมด */
         * { border-radius: 0 !important; }
 
         .header-optimized {
@@ -203,7 +203,7 @@
             <button onclick="navigate('GUARD_TO_IT')" class="w-full bg-white p-8 border-2 border-[#002D62] flex items-center justify-between group hover:bg-[#002D62] hover:text-white transition-all">
                 <div class="text-left">
                     <span class="text-[10px] font-bold text-slate-400 group-hover:text-blue-200 uppercase block mb-1">Starting Point: Guard House</span>
-                    <h4 class="text-2xl font-black italic uppercase">ป้อมยาม $\rightarrow$ ตึกแผนกไอที</h4>
+                    <h4 class="text-2xl font-black italic uppercase">ป้อมยาม &rarr; ตึกแผนกไอที</h4>
                     <p class="text-sm mt-2 opacity-70">เดินเข้าสู่วิทยาลัยเพื่อไปยังอาคารแผนก</p>
                 </div>
                 <i class="fa-solid fa-person-walking-arrow-right fa-2x"></i>
@@ -211,48 +211,34 @@
         </div>
 
         <div id="floor-3" class="floor-section hidden" data-aos="fade-up">
-            <h2 class="section-title text-xl font-black mb-6 uppercase">Floor 3: IT Laboratories (เดินขึ้นบันได)</h2>
+            <h2 class="section-title text-xl font-black mb-6 uppercase">Floor 3: IT Laboratories</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <button onclick="navigate('631')" class="room-card p-5 flex items-center justify-between group">
                     <div class="text-left">
                         <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Room No. 631</span>
                         <h4 class="font-extrabold text-slate-800">Lab 631</h4>
                     </div>
-                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62] transition-all"></i>
+                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62]"></i>
                 </button>
                 <button onclick="navigate('632')" class="room-card p-5 flex items-center justify-between group">
                     <div class="text-left">
                         <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Room No. 632</span>
                         <h4 class="font-extrabold text-slate-800">Lab 632</h4>
                     </div>
-                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62] transition-all"></i>
+                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62]"></i>
                 </button>
                 <button onclick="navigate('633')" class="room-card p-5 flex items-center justify-between group">
                     <div class="text-left">
                         <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Room No. 633</span>
                         <h4 class="font-extrabold text-slate-800">Lab 633</h4>
                     </div>
-                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62] transition-all"></i>
-                </button>
-                <button onclick="navigate('634')" class="room-card p-5 flex items-center justify-between group">
-                    <div class="text-left">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Room No. 634</span>
-                        <h4 class="font-extrabold text-slate-800">Lab 634</h4>
-                    </div>
-                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62] transition-all"></i>
-                </button>
-                <button onclick="navigate('635')" class="room-card p-5 flex items-center justify-between group">
-                    <div class="text-left">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Room No. 635</span>
-                        <h4 class="font-extrabold text-slate-800">Lab 635</h4>
-                    </div>
-                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62] transition-all"></i>
+                    <i class="fa-solid fa-arrow-up text-slate-200 group-hover:text-[#002D62]"></i>
                 </button>
             </div>
         </div>
 
         <div id="floor-4" class="floor-section hidden" data-aos="fade-up">
-            <h2 class="section-title text-xl font-black mb-6 uppercase">Floor 4: IT Center (เดินขึ้นบันได)</h2>
+            <h2 class="section-title text-xl font-black mb-6 uppercase">Floor 4: IT Center</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <button onclick="navigate('OFFICE')" class="room-card p-5 flex items-center justify-between group" style="border-left-color: #ef4444;">
                     <div class="text-left">
@@ -265,20 +251,6 @@
                     <div class="text-left">
                         <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Lab 01</span>
                         <h4 class="font-extrabold text-slate-800">Com-Lab 1</h4>
-                    </div>
-                    <i class="fa-solid fa-arrow-up text-slate-200"></i>
-                </button>
-                <button onclick="navigate('LAB2')" class="room-card p-5 flex items-center justify-between group">
-                    <div class="text-left">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Lab 02</span>
-                        <h4 class="font-extrabold text-slate-800">Com-Lab 2</h4>
-                    </div>
-                    <i class="fa-solid fa-arrow-up text-slate-200"></i>
-                </button>
-                <button onclick="navigate('LAB3')" class="room-card p-5 flex items-center justify-between group">
-                    <div class="text-left">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Lab 03</span>
-                        <h4 class="font-extrabold text-slate-800">Com-Lab 3</h4>
                     </div>
                     <i class="fa-solid fa-arrow-up text-slate-200"></i>
                 </button>
@@ -310,18 +282,13 @@
     <script>
         AOS.init({ duration: 800, once: true });
 
-        // ข้อมูลนำทาง: ปรับปรุงระยะทางและคำแนะนำเรื่องบันได
         const navigationData = {
             "GUARD_TO_IT": { angle: 15, dist: 150, guide: "เดินตรงจากป้อมยามตามถนนหลัก เลี้ยวขวาที่หน้าอาคารเพื่อเข้าสู่แผนกไอที" },
             "631": { angle: 90, dist: 8, guide: "เดินขึ้นบันไดไปยังชั้น 3 เมื่อถึงแล้วให้หันขวาเดินตรงไป 8 เมตร" },
             "632": { angle: -90, dist: 5, guide: "เดินขึ้นบันไดไปยังชั้น 3 เมื่อถึงแล้วให้หันซ้ายเดินตรงไป 5 เมตร" },
             "633": { angle: -90, dist: 12, guide: "เดินขึ้นบันไดไปยังชั้น 3 เมื่อถึงแล้วให้หันซ้ายเดินตรงไป 12 เมตร" },
-            "634": { angle: -90, dist: 20, guide: "เดินขึ้นบันไดไปยังชั้น 3 เมื่อถึงแล้วให้หันซ้ายเดินตรงไป 20 เมตร" },
-            "635": { angle: -90, dist: 25, guide: "เดินขึ้นบันไดไปยังชั้น 3 เมื่อถึงแล้วเดินตรงไปสุดทางเลี้ยวซ้าย" },
             "OFFICE": { angle: 0, dist: 3, guide: "เดินขึ้นบันไดไปยังชั้น 4 เมื่อถึงแล้วเดินตรงเข้าไปยังห้องพักครู" },
-            "LAB1": { angle: 280, dist: 12, guide: "เดินขึ้นบันไดไปยังชั้น 4 เมื่อถึงแล้วเดินตรงไป 12 เมตร" },
-            "LAB2": { angle: 280, dist: 20, guide: "เดินขึ้นบันไดไปยังชั้น 4 เมื่อถึงแล้วเดินตรงไป 20 เมตร" },
-            "LAB3": { angle: 280, dist: 28, guide: "เดินขึ้นบันไดไปยังชั้น 4 เมื่อถึงแล้วเดินตรงไปสุดทาง" }
+            "LAB1": { angle: 280, dist: 12, guide: "เดินขึ้นบันไดไปยังชั้น 4 เมื่อถึงแล้วเดินตรงไป 12 เมตร" }
         };
 
         function searchRoom() {
@@ -356,7 +323,7 @@
                 document.getElementById('nav-f4').classList.add('nav-link-active');
             } else {
                 empty.classList.remove('hidden');
-                startPhase.classList.remove('hidden'); // แสดงส่วนป้อมยามในหน้าหลัก
+                startPhase.classList.remove('hidden');
                 document.getElementById('nav-scan').classList.add('nav-link-active');
             }
         }
@@ -364,7 +331,6 @@
         function navigate(roomId) {
             const data = navigationData[roomId];
             if(!data) return;
-            // ส่งค่าไปยัง ar-view.html พร้อมข้อมูลแนะนำใหม่
             window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
         }
 
