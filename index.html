@@ -24,68 +24,48 @@
             background-color: var(--stc-bg); 
             color: #1A1A1A;
             margin: 0;
-            overflow: hidden; /* ปิด scroll ตอนโหลด */
+            overflow-x: hidden;
         }
 
-        /* --- Loading Screen Styles --- */
-        #loading-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--stc-navy-deep);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s ease-out, visibility 0.8s;
+        /* --- PRELOADER STYLE --- */
+        #preloader {
+            fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#001A35] transition-opacity duration-700;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+            background: var(--stc-navy-deep); display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .loader-logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 2rem;
-            filter: drop-shadow(0 0 15px rgba(184, 134, 11, 0.3));
-            animation: pulse-gold 2s infinite ease-in-out;
+        .logo-container {
+            position: relative; width: 150px; height: 150px;
+            background: white; border-radius: 50%; padding: 10px;
+            border: 4px solid var(--stc-gold); box-shadow: 0 0 30px rgba(184, 134, 11, 0.3);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;
+            animation: pulse 2s infinite;
         }
 
-        @keyframes pulse-gold {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(184, 134, 11, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0); }
         }
 
-        .progress-container {
-            width: 250px;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 1rem;
+        .loader-track {
+            width: 250px; height: 6px; background: rgba(255,255,255,0.1);
+            position: relative; overflow: hidden; margin-top: 1rem;
         }
 
-        #progress-bar {
-            position: absolute;
-            left: 0; top: 0; height: 100%;
-            width: 0%;
-            background: var(--stc-gold);
-            transition: width 0.3s ease;
+        #loader-bar {
+            position: absolute; top: 0; left: 0; height: 100%;
+            background: linear-gradient(90deg, var(--stc-gold), #ffd700);
+            width: 0%; transition: width 0.3s ease;
         }
 
-        .speed-info {
-            color: var(--stc-gold);
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .network-info {
+            color: var(--stc-gold); font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 2px; margin-top: 1.5rem; text-transform: uppercase;
         }
 
-        .hidden-loader {
-            opacity: 0;
-            visibility: hidden;
-        }
+        /* ----------------------- */
 
-        /* รักษา UI แบบเดิมตามคำขอ (ไม่โค้งมน) */
         * { border-radius: 0 !important; }
 
         .official-header {
@@ -105,102 +85,52 @@
         }
 
         .btn-official {
-            background: var(--stc-navy);
-            color: white;
-            border: 1px solid var(--stc-navy);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            background: var(--stc-navy); color: white; border: 1px solid var(--stc-navy);
+            font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        .btn-official:hover {
-            background: white;
-            color: var(--stc-navy);
-        }
+        .btn-official:hover { background: white; color: var(--stc-navy); }
 
         .room-card {
-            background: white;
-            border: 1px solid #D1D5DB;
-            border-left: 8px solid var(--stc-navy);
-            transition: all 0.2s;
-            box-shadow: 4px 4px 0px #F1F5F9;
+            background: white; border: 1px solid #D1D5DB; border-left: 8px solid var(--stc-navy);
+            transition: all 0.2s; box-shadow: 4px 4px 0px #F1F5F9;
         }
 
-        .room-card:hover {
-            border-color: var(--stc-gold);
-            transform: translate(-2px, -2px);
-            box-shadow: 8px 8px 0px var(--stc-navy);
-        }
+        .room-card:hover { border-color: var(--stc-gold); transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--stc-navy); }
 
-        .nav-official {
-            background: white;
-            border-bottom: 2px solid var(--stc-silver);
-            height: 70px;
-        }
+        .nav-official { background: white; border-bottom: 2px solid var(--stc-silver); height: 70px; }
 
         .nav-link {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 1.5rem;
-            font-weight: 700;
-            color: #4A5568;
-            font-size: 0.9rem;
-            border-bottom: 4px solid transparent;
+            height: 100%; display: flex; align-items: center; padding: 0 1.5rem;
+            font-weight: 700; color: #4A5568; font-size: 0.9rem; border-bottom: 4px solid transparent;
         }
 
-        .nav-link-active {
-            color: var(--stc-navy);
-            border-bottom: 4px solid var(--stc-navy);
-            background: #F8FAFC;
-        }
+        .nav-link-active { color: var(--stc-navy); border-bottom: 4px solid var(--stc-navy); background: #F8FAFC; }
 
-        .section-tag {
-            background: var(--stc-gold);
-            color: white;
-            padding: 2px 12px;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
+        .section-tag { background: var(--stc-gold); color: white; padding: 2px 12px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; margin-bottom: 10px; }
 
-        .modal-box {
-            background: white;
-            border: 4px solid var(--stc-navy);
-            max-width: 500px;
-            width: 95%;
-        }
+        .modal-box { background: white; border: 4px solid var(--stc-navy); max-width: 500px; width: 95%; }
 
-        .search-field {
-            border: 2px solid var(--stc-silver);
-            padding: 12px;
-            width: 100%;
-            outline: none;
-        }
+        .search-field { border: 2px solid var(--stc-silver); padding: 12px; width: 100%; outline: none; }
 
-        .search-field:focus {
-            border-color: var(--stc-navy);
-        }
+        .search-field:focus { border-color: var(--stc-navy); }
     </style>
 </head>
 <body>
 
-    <div id="loading-screen">
-        <img src="favicon.png" class="loader-logo" alt="STC Logo">
-        <div class="progress-container">
-            <div id="progress-bar"></div>
+    <div id="preloader">
+        <div class="logo-container">
+            <img src="favicon.png" alt="STC Logo" class="w-full h-full object-contain">
         </div>
-        <div class="speed-info">
-            <i id="speed-icon" class="fa-solid fa-wifi"></i>
-            <span id="speed-text">CONNECTING...</span>
+        <div class="text-white font-bold text-lg mb-2 tracking-widest">LOADING SYSTEM</div>
+        <div class="loader-track">
+            <div id="loader-bar"></div>
         </div>
-        <div class="mt-4 text-[10px] text-slate-500 uppercase tracking-[3px]">Surat Thani Technical College</div>
+        <div class="network-info">
+            <i class="fa-solid fa-wifi mr-2"></i> 
+            Speed: <span id="speed-value">Detecting...</span>
+        </div>
     </div>
 
     <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -228,7 +158,7 @@
 
     <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6">
         <div class="flex items-center gap-4">
-            <img src="favicon.png" class="h-10 w-10 object-contain" alt="STC Logo">
+            <img src="favicon.png" class="h-10 w-10 object-contain" alt="Logo">
             <div class="leading-tight">
                 <div class="font-black text-sm text-[#002D62]">SURAT THANI TECHNICAL COLLEGE</div>
                 <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">IT Navigation System</div>
@@ -313,42 +243,32 @@
     </main>
 
     <script>
-        // --- Loading Logic ---
+        // --- PRELOADER LOGIC ---
         function startLoader() {
-            const progressBar = document.getElementById('progress-bar');
-            const speedText = document.getElementById('speed-text');
-            const speedIcon = document.getElementById('speed-icon');
-            let width = 0;
+            const bar = document.getElementById('loader-bar');
+            const speedText = document.getElementById('speed-value');
+            const preloader = document.getElementById('preloader');
+            
+            // ตรวจสอบความเร็วเน็ต (ถ้า Browser รองรับ)
+            let speedMbps = navigator.connection ? navigator.connection.downlink : 10;
+            speedText.innerText = speedMbps + " Mbps";
 
-            // ตรวจสอบความเร็วอินเทอร์เน็ต (ถ้า Browser รองรับ)
-            let speedMbps = "---";
-            if (navigator.connection) {
-                speedMbps = navigator.connection.downlink; // เป็นค่า Mbps
-            }
+            let progress = 0;
+            // คำนวณความเร็วการโหลด: เน็ตเร็ว (speed สูง) จะเพิ่ม progress ไวขึ้น
+            let loadSpeed = speedMbps > 5 ? 2 : 0.5; 
 
-            // จำลองการโหลดตามความเร็วเน็ต
             const interval = setInterval(() => {
-                if (width >= 100) {
+                progress += loadSpeed;
+                bar.style.width = progress + "%";
+
+                if (progress >= 100) {
                     clearInterval(interval);
+                    preloader.style.opacity = "0";
                     setTimeout(() => {
-                        document.getElementById('loading-screen').classList.add('hidden-loader');
-                        document.body.style.overflow = 'auto'; // เปิด scroll
-                    }, 500);
-                } else {
-                    // ถ้าเน็ตเร็วจะเพิ่มค่า width ไวขึ้น
-                    let increment = speedMbps !== "---" ? (speedMbps * 2) : 5;
-                    width += Math.min(increment, 15); 
-                    if(width > 100) width = 100;
-                    
-                    progressBar.style.width = width + '%';
-                    speedText.innerText = `SIGNAL: ${speedMbps} MBPS - ${width}%`;
-                    
-                    // เปลี่ยนไอคอนตามความเร็ว
-                    if(speedMbps > 5) speedIcon.className = "fa-solid fa-bolt";
-                    else if(speedMbps > 2) speedIcon.className = "fa-solid fa-wifi";
-                    else speedIcon.className = "fa-solid fa-gauge-simple-high";
+                        preloader.style.display = "none";
+                    }, 700);
                 }
-            }, 100);
+            }, 30);
         }
 
         const navigationData = {
@@ -379,7 +299,7 @@
         }
 
         function initApp() {
-            startLoader(); // เริ่มทำงาน Loader
+            startLoader(); // เริ่มทำงานหน้าโหลด
             const params = new URLSearchParams(window.location.search);
             const floor = params.get('floor');
             const s3 = document.getElementById('floor-3');
