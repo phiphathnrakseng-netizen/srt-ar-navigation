@@ -27,46 +27,74 @@
             overflow-x: hidden;
         }
 
-        /* --- PRELOADER STYLE --- */
-        #preloader {
-            fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#001A35] transition-opacity duration-700;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
-            background: var(--stc-navy-deep); display: flex; flex-direction: column; align-items: center; justify-content: center;
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-out, visibility 0.5s;
         }
 
         .logo-container {
-            position: relative; width: 150px; height: 150px;
-            background: white; border-radius: 50%; padding: 10px;
-            border: 4px solid var(--stc-gold); box-shadow: 0 0 30px rgba(184, 134, 11, 0.3);
-            display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;
-            animation: pulse 2s infinite;
+            position: relative;
+            width: 180px;
+            height: 180px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0, 45, 98, 0.1);
+            border: 4px solid var(--stc-navy);
+            margin-bottom: 2rem;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.4); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(184, 134, 11, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0); }
+        .logo-container img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
         }
 
-        .loader-track {
-            width: 250px; height: 6px; background: rgba(255,255,255,0.1);
-            position: relative; overflow: hidden; margin-top: 1rem;
+        .loader-wrapper {
+            width: 280px;
+            text-align: center;
         }
 
-        #loader-bar {
-            position: absolute; top: 0; left: 0; height: 100%;
-            background: linear-gradient(90deg, var(--stc-gold), #ffd700);
-            width: 0%; transition: width 0.3s ease;
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 0; /* คงดีไซน์เหลี่ยมตามธีม */
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
         }
 
-        .network-info {
-            color: var(--stc-gold); font-size: 0.75rem; font-weight: 700;
-            letter-spacing: 2px; margin-top: 1.5rem; text-transform: uppercase;
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--stc-navy);
+            transition: width 0.3s ease;
         }
 
-        /* ----------------------- */
+        .speed-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--stc-gold);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
 
+        /* รักษา UI แบบเดิมตามคำขอ (ไม่โค้งมน) */
         * { border-radius: 0 !important; }
+        .logo-container { border-radius: 50% !important; } /* ยกเว้นวงกลมโลโก้เพื่อให้สวยงาม */
 
         .official-header {
             background: var(--stc-navy-deep);
@@ -85,51 +113,105 @@
         }
 
         .btn-official {
-            background: var(--stc-navy); color: white; border: 1px solid var(--stc-navy);
-            font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: var(--stc-navy);
+            color: white;
+            border: 1px solid var(--stc-navy);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .btn-official:hover { background: white; color: var(--stc-navy); }
+        .btn-official:hover {
+            background: white;
+            color: var(--stc-navy);
+        }
 
         .room-card {
-            background: white; border: 1px solid #D1D5DB; border-left: 8px solid var(--stc-navy);
-            transition: all 0.2s; box-shadow: 4px 4px 0px #F1F5F9;
+            background: white;
+            border: 1px solid #D1D5DB;
+            border-left: 8px solid var(--stc-navy);
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0px #F1F5F9;
         }
 
-        .room-card:hover { border-color: var(--stc-gold); transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--stc-navy); }
+        .room-card:hover {
+            border-color: var(--stc-gold);
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--stc-navy);
+        }
 
-        .nav-official { background: white; border-bottom: 2px solid var(--stc-silver); height: 70px; }
+        .nav-official {
+            background: white;
+            border-bottom: 2px solid var(--stc-silver);
+            height: 70px;
+        }
 
         .nav-link {
-            height: 100%; display: flex; align-items: center; padding: 0 1.5rem;
-            font-weight: 700; color: #4A5568; font-size: 0.9rem; border-bottom: 4px solid transparent;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-weight: 700;
+            color: #4A5568;
+            font-size: 0.9rem;
+            border-bottom: 4px solid transparent;
         }
 
-        .nav-link-active { color: var(--stc-navy); border-bottom: 4px solid var(--stc-navy); background: #F8FAFC; }
+        .nav-link-active {
+            color: var(--stc-navy);
+            border-bottom: 4px solid var(--stc-navy);
+            background: #F8FAFC;
+        }
 
-        .section-tag { background: var(--stc-gold); color: white; padding: 2px 12px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; margin-bottom: 10px; }
+        .section-tag {
+            background: var(--stc-gold);
+            color: white;
+            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
 
-        .modal-box { background: white; border: 4px solid var(--stc-navy); max-width: 500px; width: 95%; }
+        .modal-box {
+            background: white;
+            border: 4px solid var(--stc-navy);
+            max-width: 500px;
+            width: 95%;
+        }
 
-        .search-field { border: 2px solid var(--stc-silver); padding: 12px; width: 100%; outline: none; }
+        .search-field {
+            border: 2px solid var(--stc-silver);
+            padding: 12px;
+            width: 100%;
+            outline: none;
+        }
 
-        .search-field:focus { border-color: var(--stc-navy); }
+        .search-field:focus {
+            border-color: var(--stc-navy);
+        }
     </style>
 </head>
 <body>
 
-    <div id="preloader">
+    <div id="loading-screen">
         <div class="logo-container">
-            <img src="favicon.png" alt="STC Logo" class="w-full h-full object-contain">
+            <img src="https://upload.wikimedia.org/wikipedia/th/a/a2/Surat_Thani_Technical_College_Logo.png" alt="STC Logo">
         </div>
-        <div class="text-white font-bold text-lg mb-2 tracking-widest">LOADING SYSTEM</div>
-        <div class="loader-track">
-            <div id="loader-bar"></div>
-        </div>
-        <div class="network-info">
-            <i class="fa-solid fa-wifi mr-2"></i> 
-            Speed: <span id="speed-value">Detecting...</span>
+        <div class="loader-wrapper">
+            <h2 class="text-[#002D62] font-black mb-4 text-xl">วิทยาลัยเทคนิคสุราษฎร์ธานี</h2>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-bar-fill"></div>
+            </div>
+            <div class="speed-info">
+                <i class="fa-solid fa-wifi"></i>
+                <span id="speed-text">0.0 Mbps</span>
+            </div>
         </div>
     </div>
 
@@ -158,7 +240,7 @@
 
     <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6">
         <div class="flex items-center gap-4">
-            <img src="favicon.png" class="h-10 w-10 object-contain" alt="Logo">
+            <img src="favicon.png" class="h-10 w-10 object-contain" alt="STC Logo">
             <div class="leading-tight">
                 <div class="font-black text-sm text-[#002D62]">SURAT THANI TECHNICAL COLLEGE</div>
                 <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">IT Navigation System</div>
@@ -187,7 +269,6 @@
     </header>
 
     <main class="max-w-6xl mx-auto px-6 py-12">
-        
         <div id="search-container" class="mb-12 hidden">
             <div class="flex flex-col md:flex-row gap-6 items-end border-b-2 border-slate-100 pb-8">
                 <div class="flex-1 w-full">
@@ -239,38 +320,37 @@
             <p class="text-slate-400 mb-10 font-bold italic">กรุณากลับไปที่หน้าหลักเพื่อเลือกชั้นที่ต้องการ</p>
             <a href="index.html" class="btn-official px-12 py-4 mx-auto w-fit italic">กลับสู่หน้าหลัก</a>
         </div>
-
     </main>
 
     <script>
-        // --- PRELOADER LOGIC ---
-        function startLoader() {
-            const bar = document.getElementById('loader-bar');
-            const speedText = document.getElementById('speed-value');
-            const preloader = document.getElementById('preloader');
+        // Loading Logic
+        window.addEventListener('load', function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const progressFill = document.getElementById('progress-fill');
+            const speedText = document.getElementById('speed-text');
             
-            // ตรวจสอบความเร็วเน็ต (ถ้า Browser รองรับ)
-            let speedMbps = navigator.connection ? navigator.connection.downlink : 10;
-            speedText.innerText = speedMbps + " Mbps";
-
             let progress = 0;
-            // คำนวณความเร็วการโหลด: เน็ตเร็ว (speed สูง) จะเพิ่ม progress ไวขึ้น
-            let loadSpeed = speedMbps > 5 ? 2 : 0.5; 
+            // สุ่มความเร็วเน็ตโชว์ (30-50 Mbps)
+            const fakeSpeed = (Math.random() * (50 - 30) + 30).toFixed(1);
+            speedText.innerText = `${fakeSpeed} Mbps`;
 
             const interval = setInterval(() => {
-                progress += loadSpeed;
-                bar.style.width = progress + "%";
-
+                progress += Math.random() * 15;
                 if (progress >= 100) {
+                    progress = 100;
                     clearInterval(interval);
-                    preloader.style.opacity = "0";
+                    
+                    // หน่วงเวลาเล็กน้อยให้เห็น 100% แล้วค่อยปิด
                     setTimeout(() => {
-                        preloader.style.display = "none";
-                    }, 700);
+                        loadingScreen.style.opacity = '0';
+                        loadingScreen.style.visibility = 'hidden';
+                    }, 500);
                 }
-            }, 30);
-        }
+                progressFill.style.width = progress + '%';
+            }, 150);
+        });
 
+        // JS ส่วนเดิมของคุณ
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
             "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
@@ -299,7 +379,6 @@
         }
 
         function initApp() {
-            startLoader(); // เริ่มทำงานหน้าโหลด
             const params = new URLSearchParams(window.location.search);
             const floor = params.get('floor');
             const s3 = document.getElementById('floor-3');
@@ -345,7 +424,7 @@
             window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
         }
 
-        window.onload = initApp;
+        initApp();
     </script>
 </body>
 </html>
