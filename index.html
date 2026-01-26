@@ -240,13 +240,16 @@
     </main>
 
     <script>
-        // ข้อมูลนำทางและชื่อห้องที่แก้ไขแล้ว
+        // ข้อมูลนำทางและชื่อห้อง
         const navigationData = {
             "TO_IT_BUILDING": { 
                 angle: 0, 
                 dist: 195, 
                 guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" 
             },
+            // จุดหมายเพิ่มเติม: ป้ายแผนก
+            "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
+            "DEPT_LABEL_4": { angle: 5, dist: 215, guide: "ขึ้นไปที่ชั้น 4 ป้ายชื่อแผนกจะอยู่บริเวณโถงหน้าห้องพักครู" },
             // ชั้น 3
             "631": { angle: 5, dist: 215, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
             "632": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
@@ -267,6 +270,8 @@
 
         function getRoomName(id) {
             const names = {
+                "DEPT_LABEL_3": "ป้ายแผนกไอที (ชั้น 3)",
+                "DEPT_LABEL_4": "ป้ายแผนกไอที (ชั้น 4)",
                 "631": "ห้องเรียน 631",
                 "632": "ห้องเรียน 632",
                 "633": "ห้องเรียน 633",
@@ -290,7 +295,6 @@
             const searchBar = document.getElementById('search-container');
             const startPhase = document.getElementById('start-phase');
             
-            // ซ่อนทุกส่วนก่อน
             [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
 
             if (floor === '3') {
@@ -314,8 +318,20 @@
             const container = document.getElementById(`rooms-${floor}`);
             container.innerHTML = '';
             
+            // เพิ่มปุ่มป้ายแผนกของชั้นนั้นๆ เป็นอันแรก
+            const deptId = floor === 3 ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
+            container.innerHTML += `
+                <button onclick="navigate('${deptId}')" class="room-card p-6 text-left group bg-slate-50 border-l-8 !border-[#B8860B]">
+                    <div class="font-black text-xs text-amber-600 mb-1">MAIN ENTRANCE</div>
+                    <h4 class="text-xl font-black text-slate-800 mb-4">${getRoomName(deptId)}</h4>
+                    <div class="text-[#B8860B] font-bold text-sm flex items-center gap-2 italic">
+                        ไปยังจุดรวมพลแผนก <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                </button>
+            `;
+
             Object.keys(navigationData).forEach(key => {
-                if (key === "TO_IT_BUILDING") return;
+                if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
                 
                 const isFloor3 = key.startsWith('63');
                 if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
