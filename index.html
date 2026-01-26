@@ -24,6 +24,65 @@
             background-color: var(--stc-bg); 
             color: #1A1A1A;
             margin: 0;
+            overflow: hidden; /* ปิด scroll ตอนโหลด */
+        }
+
+        /* --- Loading Screen Styles --- */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--stc-navy-deep);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 15px rgba(184, 134, 11, 0.3));
+            animation: pulse-gold 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .progress-container {
+            width: 250px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        #progress-bar {
+            position: absolute;
+            left: 0; top: 0; height: 100%;
+            width: 0%;
+            background: var(--stc-gold);
+            transition: width 0.3s ease;
+        }
+
+        .speed-info {
+            color: var(--stc-gold);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hidden-loader {
+            opacity: 0;
+            visibility: hidden;
         }
 
         /* รักษา UI แบบเดิมตามคำขอ (ไม่โค้งมน) */
@@ -131,6 +190,18 @@
     </style>
 </head>
 <body>
+
+    <div id="loading-screen">
+        <img src="favicon.png" class="loader-logo" alt="STC Logo">
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div class="speed-info">
+            <i id="speed-icon" class="fa-solid fa-wifi"></i>
+            <span id="speed-text">CONNECTING...</span>
+        </div>
+        <div class="mt-4 text-[10px] text-slate-500 uppercase tracking-[3px]">Surat Thani Technical College</div>
+    </div>
 
     <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
@@ -242,7 +313,44 @@
     </main>
 
     <script>
-        // JS ทั้งหมดคงเดิมจากไฟล์เดิมที่คุณส่งมา เพื่อรักษาฟังก์ชันการทำงานไว้
+        // --- Loading Logic ---
+        function startLoader() {
+            const progressBar = document.getElementById('progress-bar');
+            const speedText = document.getElementById('speed-text');
+            const speedIcon = document.getElementById('speed-icon');
+            let width = 0;
+
+            // ตรวจสอบความเร็วอินเทอร์เน็ต (ถ้า Browser รองรับ)
+            let speedMbps = "---";
+            if (navigator.connection) {
+                speedMbps = navigator.connection.downlink; // เป็นค่า Mbps
+            }
+
+            // จำลองการโหลดตามความเร็วเน็ต
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').classList.add('hidden-loader');
+                        document.body.style.overflow = 'auto'; // เปิด scroll
+                    }, 500);
+                } else {
+                    // ถ้าเน็ตเร็วจะเพิ่มค่า width ไวขึ้น
+                    let increment = speedMbps !== "---" ? (speedMbps * 2) : 5;
+                    width += Math.min(increment, 15); 
+                    if(width > 100) width = 100;
+                    
+                    progressBar.style.width = width + '%';
+                    speedText.innerText = `SIGNAL: ${speedMbps} MBPS - ${width}%`;
+                    
+                    // เปลี่ยนไอคอนตามความเร็ว
+                    if(speedMbps > 5) speedIcon.className = "fa-solid fa-bolt";
+                    else if(speedMbps > 2) speedIcon.className = "fa-solid fa-wifi";
+                    else speedIcon.className = "fa-solid fa-gauge-simple-high";
+                }
+            }, 100);
+        }
+
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
             "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
@@ -271,6 +379,7 @@
         }
 
         function initApp() {
+            startLoader(); // เริ่มทำงาน Loader
             const params = new URLSearchParams(window.location.search);
             const floor = params.get('floor');
             const s3 = document.getElementById('floor-3');
