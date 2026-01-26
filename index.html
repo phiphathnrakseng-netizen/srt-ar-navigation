@@ -157,7 +157,7 @@
 
     <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6">
         <div class="flex items-center gap-4">
-            <img src="favicon.png" class="h-10 w-10 border border-slate-200" alt="Logo">
+            <img src="favicon.png" class="h-10 w-10 object-contain" alt="STC Logo">
             <div class="leading-tight">
                 <div class="font-black text-sm text-[#002D62]">SURAT THANI TECHNICAL COLLEGE</div>
                 <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">IT Navigation System</div>
@@ -208,7 +208,9 @@
             <button onclick="navigate('TO_IT_BUILDING')" class="w-full room-card p-10 flex flex-col md:flex-row justify-between items-center group mb-6">
                 <div class="text-left mb-6 md:mb-0">
                     <div class="section-tag bg-[#002D62]">Main Route</div>
-                    <h3 class="text-3xl font-black text-slate-800 italic">ป้อมยาม &rarr; อาคารแผนกไอที (ตึกสีม่วง)</h3>
+                    <h3 class="text-3xl font-black text-slate-800 italic flex items-center gap-3">
+                        ป้อมยาม <i class="fa-solid fa-arrow-right-long text-[#B8860B]"></i> อาคารแผนกไอที
+                    </h3>
                     <p class="text-slate-400 font-bold mt-2 italic">เดินตรงผ่านหน้าอาคารอำนวยการ (ตึก 11)</p>
                 </div>
                 <div class="btn-official px-10 py-4 w-full md:w-auto">
@@ -240,23 +242,16 @@
     </main>
 
     <script>
-        // ข้อมูลนำทางและชื่อห้อง
+        // JS ทั้งหมดคงเดิมจากไฟล์เดิมที่คุณส่งมา เพื่อรักษาฟังก์ชันการทำงานไว้
         const navigationData = {
-            "TO_IT_BUILDING": { 
-                angle: 0, 
-                dist: 195, 
-                guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" 
-            },
-            // จุดหมายเพิ่มเติม: ป้ายแผนก
+            "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
             "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
             "DEPT_LABEL_4": { angle: 5, dist: 215, guide: "ขึ้นไปที่ชั้น 4 ป้ายชื่อแผนกจะอยู่บริเวณโถงหน้าห้องพักครู" },
-            // ชั้น 3
             "631": { angle: 5, dist: 215, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
             "632": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
             "633": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งซ้าย" },
             "634": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่สุดทางขวา" },
             "635": { angle: 5, dist: 210, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องแรกซ้ายมือ" },
-            // ชั้น 4
             "TEACHER_ROOM": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องพักครูอยู่ขวามือ" },
             "LECTURE": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องบรรยายอยู่ซ้ายมือ" },
             "LAB1": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 1" },
@@ -264,24 +259,13 @@
             "LAB3": { angle: 5, dist: 240, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 3" }
         };
 
-        function closeModal() { 
-            document.getElementById('guide-modal').classList.add('hidden'); 
-        }
-
+        function closeModal() { document.getElementById('guide-modal').classList.add('hidden'); }
         function getRoomName(id) {
             const names = {
-                "DEPT_LABEL_3": "ป้ายแผนกไอที (ชั้น 3)",
-                "DEPT_LABEL_4": "ป้ายแผนกไอที (ชั้น 4)",
-                "631": "ห้องเรียน 631",
-                "632": "ห้องเรียน 632",
-                "633": "ห้องเรียน 633",
-                "634": "ห้องเรียน 634",
-                "635": "ห้องเรียน 635",
-                "TEACHER_ROOM": "ห้องพักครู",
-                "LECTURE": "ห้องแลคเชอร์",
-                "LAB1": "ห้องแลป 1",
-                "LAB2": "ห้องแลป 2",
-                "LAB3": "ห้องแลป 3"
+                "DEPT_LABEL_3": "ป้ายแผนกไอที (ชั้น 3)", "DEPT_LABEL_4": "ป้ายแผนกไอที (ชั้น 4)",
+                "631": "ห้องเรียน 631", "632": "ห้องเรียน 632", "633": "ห้องเรียน 633",
+                "634": "ห้องเรียน 634", "635": "ห้องเรียน 635", "TEACHER_ROOM": "ห้องพักครู",
+                "LECTURE": "ห้องแลคเชอร์", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2", "LAB3": "ห้องแลป 3"
             };
             return names[id] || id;
         }
@@ -298,62 +282,32 @@
             [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
 
             if (floor === '3') {
-                s3.classList.remove('hidden');
-                searchBar.classList.remove('hidden');
-                document.getElementById('floor-title').innerText = "3";
-                renderRooms(3);
+                s3.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('floor-title').innerText = "3"; renderRooms(3);
             } else if (floor === '4') {
-                s4.classList.remove('hidden');
-                searchBar.classList.remove('hidden');
-                document.getElementById('floor-title').innerText = "4";
-                renderRooms(4);
-            } else if (!floor) {
-                startPhase.classList.remove('hidden');
-            } else {
-                empty.classList.remove('hidden');
-            }
+                s4.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('floor-title').innerText = "4"; renderRooms(4);
+            } else if (!floor) { startPhase.classList.remove('hidden'); }
+            else { empty.classList.remove('hidden'); }
         }
 
         function renderRooms(floor) {
             const container = document.getElementById(`rooms-${floor}`);
             container.innerHTML = '';
-            
-            // เพิ่มปุ่มป้ายแผนกของชั้นนั้นๆ เป็นอันแรก
             const deptId = floor === 3 ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
-            container.innerHTML += `
-                <button onclick="navigate('${deptId}')" class="room-card p-6 text-left group bg-slate-50 border-l-8 !border-[#B8860B]">
-                    <div class="font-black text-xs text-amber-600 mb-1">MAIN ENTRANCE</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">${getRoomName(deptId)}</h4>
-                    <div class="text-[#B8860B] font-bold text-sm flex items-center gap-2 italic">
-                        ไปยังจุดรวมพลแผนก <i class="fa-solid fa-location-dot"></i>
-                    </div>
-                </button>
-            `;
-
+            container.innerHTML += `<button onclick="navigate('${deptId}')" class="room-card p-6 text-left group bg-slate-50 border-l-8 !border-[#B8860B]"><div class="font-black text-xs text-amber-600 mb-1">MAIN ENTRANCE</div><h4 class="text-xl font-black text-slate-800 mb-4">${getRoomName(deptId)}</h4><div class="text-[#B8860B] font-bold text-sm flex items-center gap-2 italic">ไปยังจุดรวมพลแผนก <i class="fa-solid fa-location-dot"></i></div></button>`;
             Object.keys(navigationData).forEach(key => {
                 if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
-                
                 const isFloor3 = key.startsWith('63');
                 if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
-                    container.innerHTML += `
-                        <button onclick="navigate('${key}')" class="room-card p-6 text-left group">
-                            <div class="font-black text-xs text-slate-400 mb-1">${key}</div>
-                            <h4 class="text-xl font-black text-slate-800 mb-4">${getRoomName(key)}</h4>
-                            <div class="text-[#002D62] font-bold text-sm flex items-center gap-2 italic">
-                                เริ่มจากป้อมยาม <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                            </div>
-                        </button>
-                    `;
+                    container.innerHTML += `<button onclick="navigate('${key}')" class="room-card p-6 text-left group"><div class="font-black text-xs text-slate-400 mb-1">${key}</div><h4 class="text-xl font-black text-slate-800 mb-4">${getRoomName(key)}</h4><div class="text-[#002D62] font-bold text-sm flex items-center gap-2 italic">เริ่มจากป้อมยาม <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i></div></button>`;
                 }
             });
         }
 
         function searchRoom() {
             const input = document.getElementById('searchInput').value.toLowerCase();
-            const roomCards = document.querySelectorAll('.room-card');
-            roomCards.forEach(card => {
-                card.style.display = card.textContent.toLowerCase().includes(input) ? 'block' : 'none';
-            });
+            document.querySelectorAll('.room-card').forEach(card => card.style.display = card.textContent.toLowerCase().includes(input) ? 'block' : 'none');
         }
 
         function navigate(roomId) {
