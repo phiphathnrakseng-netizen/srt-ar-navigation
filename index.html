@@ -33,7 +33,7 @@
             inset: 0;
             background: #ffffff;
             z-index: 9999;
-            display: flex;
+            display: none; /* ปิดไว้ก่อน แล้วค่อยเปิดด้วย JS */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -45,7 +45,7 @@
             width: 170px;
             height: 170px;
             background: white;
-            border-radius: 50% !important; /* บังคับวงกลม */
+            border-radius: 50% !important;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -105,7 +105,7 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* --- UI Elements (Keep Original) --- */
+        /* --- UI Elements --- */
         * { border-radius: 0 !important; }
         .logo-container { border-radius: 50% !important; }
 
@@ -207,7 +207,7 @@
         </div>
     </div>
 
-    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
         <div class="relative bg-white border-4 border-[#002D62] max-w-[500px] w-full shadow-2xl overflow-hidden">
             <div class="bg-[#002D62] p-4 text-white flex justify-between items-center">
@@ -239,9 +239,9 @@
             </div>
         </div>
         <div class="hidden md:flex h-full">
-            <a href="index.html" class="nav-link nav-link-active">หน้าหลัก</a>
-            <a href="?floor=3" class="nav-link">ชั้น 3</a>
-            <a href="?floor=4" class="nav-link">ชั้น 4</a>
+            <a href="index.html" class="nav-link" id="nav-home">หน้าหลัก</a>
+            <a href="?floor=3" class="nav-link" id="nav-f3">ชั้น 3</a>
+            <a href="?floor=4" class="nav-link" id="nav-f4">ชั้น 4</a>
         </div>
     </nav>
 
@@ -278,7 +278,6 @@
                 <span class="bg-[#002D62] text-white w-8 h-8 flex items-center justify-center text-sm">01</span>
                 เลือกจุดหมายปลายทางของท่าน
             </h2>
-            
             <button onclick="navigate('TO_IT_BUILDING')" class="w-full room-card p-10 flex flex-col md:flex-row justify-between items-center group mb-6">
                 <div class="text-left mb-6 md:mb-0">
                     <div class="section-tag bg-[#002D62]">Main Route</div>
@@ -291,7 +290,6 @@
                     เริ่มการนำทาง <i class="fa-solid fa-person-walking-arrow-right"></i>
                 </div>
             </button>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <a href="?floor=3" class="btn-official py-10 text-xl italic bg-white !text-[#002D62] border-2 border-[#002D62]">ไปยังชั้น 3 (631 - 635)</a>
                 <a href="?floor=4" class="btn-official py-10 text-xl italic bg-white !text-[#002D62] border-2 border-[#002D62]">ไปยังชั้น 4 (พักครู/ห้องแลป)</a>
@@ -301,26 +299,34 @@
         <div id="floor-3" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-3"></div></div>
         <div id="floor-4" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-4"></div></div>
 
-        <div id="empty-state" class="text-center py-20 border-4 border-dashed border-slate-100 hidden">
-            <i class="fa-solid fa-map-location-dot fa-4x text-slate-200 mb-6"></i>
-            <h2 class="text-3xl font-black text-slate-800 mb-4">ไม่พบชั้นที่ระบุ</h2>
-            <a href="index.html" class="btn-official px-12 py-4 mx-auto w-fit italic">กลับสู่หน้าหลัก</a>
+        <div id="empty-state" class="text-center py-20 hidden">
+            <h2 class="text-2xl font-black text-slate-800 mb-4">ไม่พบชั้นที่ระบุ</h2>
+            <a href="index.html" class="btn-official px-12 py-4 mx-auto w-fit">กลับสู่หน้าหลัก</a>
         </div>
     </main>
 
     <script>
-        // --- 1. Loading Logic ---
-        window.addEventListener('load', function() {
+        // --- Loading Logic with First-Time Check ---
+        function runLoading() {
             const loadingScreen = document.getElementById('loading-screen');
             const progressFill = document.getElementById('progress-fill');
             const speedText = document.getElementById('speed-text');
             
+            // ตรวจสอบว่าเคยโหลดไปหรือยังใน Session นี้
+            const hasLoaded = sessionStorage.getItem('stc_loaded');
+
+            if (hasLoaded) {
+                loadingScreen.style.display = 'none'; // ถ้าเคยโหลดแล้ว ปิดทิ้งเลย
+                return;
+            }
+
+            // ถ้ายังไม่เคยโหลด ให้แสดงหน้าโหลด
+            loadingScreen.style.display = 'flex';
             let progress = 0;
-            // สุ่มเลขจำลองความเร็วเน็ต
             const fakeSpeed = (Math.random() * (45 - 25) + 25).toFixed(1);
 
             const interval = setInterval(() => {
-                progress += Math.random() * 12;
+                progress += Math.random() * 15;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
@@ -328,16 +334,24 @@
                     
                     setTimeout(() => {
                         loadingScreen.style.opacity = '0';
-                        setTimeout(() => loadingScreen.style.visibility = 'hidden', 600);
+                        setTimeout(() => {
+                            loadingScreen.style.visibility = 'hidden';
+                            loadingScreen.style.display = 'none';
+                            // บันทึกว่าโหลดแล้ว
+                            sessionStorage.setItem('stc_loaded', 'true');
+                            // แสดง Modal เฉพาะครั้งแรกที่โหลดเสร็จ
+                            if (!new URLSearchParams(window.location.search).get('floor')) {
+                                document.getElementById('guide-modal').classList.remove('hidden');
+                            }
+                        }, 600);
                     }, 500);
                 } else {
                     progressFill.style.width = progress + '%';
                     speedText.innerText = `Loading... ${(progress/2).toFixed(1)} Mbps`;
                 }
-            }, 100);
-        });
+            }, 80);
+        }
 
-        // --- 2. Navigation Data & Logic ---
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
             "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
@@ -377,14 +391,19 @@
             
             [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
 
+            // จัดการ Active Nav
             if (floor === '3') {
                 s3.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('nav-f3').classList.add('nav-link-active');
                 document.getElementById('floor-title').innerText = "3"; renderRooms(3);
             } else if (floor === '4') {
                 s4.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('nav-f4').classList.add('nav-link-active');
                 document.getElementById('floor-title').innerText = "4"; renderRooms(4);
-            } else if (!floor) { startPhase.classList.remove('hidden'); }
-            else { empty.classList.remove('hidden'); }
+            } else if (!floor) {
+                startPhase.classList.remove('hidden');
+                document.getElementById('nav-home').classList.add('nav-link-active');
+            } else { empty.classList.remove('hidden'); }
         }
 
         function renderRooms(floor) {
@@ -412,7 +431,11 @@
             window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
         }
 
-        initApp();
+        // เริ่มต้นการทำงาน
+        window.addEventListener('DOMContentLoaded', () => {
+            runLoading();
+            initApp();
+        });
     </script>
 </body>
 </html>
