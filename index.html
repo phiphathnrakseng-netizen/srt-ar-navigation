@@ -27,7 +27,7 @@
             overflow-x: hidden;
         }
 
-        /* Loading Screen Styles */
+        /* --- Loading Screen Styles --- */
         #loading-screen {
             position: fixed;
             inset: 0;
@@ -37,64 +37,77 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s ease-out, visibility 0.5s;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s;
         }
 
         .logo-container {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 170px;
+            height: 170px;
             background: white;
-            border-radius: 50%;
+            border-radius: 50% !important; /* บังคับวงกลม */
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(0, 45, 98, 0.1);
-            border: 4px solid var(--stc-navy);
-            margin-bottom: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 45, 98, 0.15), inset 0 0 0 2px var(--stc-navy);
+            border: 6px solid white;
+            margin-bottom: 2.5rem;
+            outline: 1px solid var(--stc-silver);
+            animation: fadeInScale 0.8s ease-out;
         }
 
         .logo-container img {
-            width: 80%;
-            height: 80%;
+            width: 75%;
+            height: 75%;
             object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
         }
 
         .loader-wrapper {
-            width: 280px;
+            width: 300px;
             text-align: center;
         }
 
         .progress-bar-bg {
             width: 100%;
-            height: 8px;
-            background: #eee;
-            border-radius: 0; /* คงดีไซน์เหลี่ยมตามธีม */
+            height: 10px;
+            background: #F1F5F9;
+            border: 1px solid var(--stc-silver);
             overflow: hidden;
-            margin-bottom: 1rem;
-            border: 1px solid #ddd;
+            margin-bottom: 1.5rem;
         }
 
         .progress-bar-fill {
             width: 0%;
             height: 100%;
-            background: var(--stc-navy);
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, var(--stc-navy), #0056b3);
+            box-shadow: 0 0 10px rgba(0, 45, 98, 0.2);
+            transition: width 0.4s cubic-bezier(0.1, 0.7, 1.0, 0.1);
         }
 
         .speed-info {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            color: var(--stc-gold);
-            font-weight: 700;
-            font-size: 0.9rem;
+            gap: 10px;
+            color: var(--stc-navy);
+            font-weight: 800;
+            font-size: 0.95rem;
         }
 
-        /* รักษา UI แบบเดิมตามคำขอ (ไม่โค้งมน) */
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- UI Elements (Keep Original) --- */
         * { border-radius: 0 !important; }
-        .logo-container { border-radius: 50% !important; } /* ยกเว้นวงกลมโลโก้เพื่อให้สวยงาม */
+        .logo-container { border-radius: 50% !important; }
 
         .official-header {
             background: var(--stc-navy-deep);
@@ -117,7 +130,6 @@
             color: white;
             border: 1px solid var(--stc-navy);
             font-weight: 700;
-            letter-spacing: 0.5px;
             transition: all 0.2s;
             display: flex;
             align-items: center;
@@ -125,10 +137,7 @@
             gap: 10px;
         }
 
-        .btn-official:hover {
-            background: white;
-            color: var(--stc-navy);
-        }
+        .btn-official:hover { background: white; color: var(--stc-navy); }
 
         .room-card {
             background: white;
@@ -157,7 +166,6 @@
             padding: 0 1.5rem;
             font-weight: 700;
             color: #4A5568;
-            font-size: 0.9rem;
             border-bottom: 4px solid transparent;
         }
 
@@ -177,50 +185,34 @@
             display: inline-block;
             margin-bottom: 10px;
         }
-
-        .modal-box {
-            background: white;
-            border: 4px solid var(--stc-navy);
-            max-width: 500px;
-            width: 95%;
-        }
-
-        .search-field {
-            border: 2px solid var(--stc-silver);
-            padding: 12px;
-            width: 100%;
-            outline: none;
-        }
-
-        .search-field:focus {
-            border-color: var(--stc-navy);
-        }
     </style>
 </head>
 <body>
 
     <div id="loading-screen">
         <div class="logo-container">
-            <img src="https://upload.wikimedia.org/wikipedia/th/a/a2/Surat_Thani_Technical_College_Logo.png" alt="STC Logo">
+            <img src="favicon.png" alt="STC Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/th/a/a2/Surat_Thani_Technical_College_Logo.png'">
         </div>
         <div class="loader-wrapper">
-            <h2 class="text-[#002D62] font-black mb-4 text-xl">วิทยาลัยเทคนิคสุราษฎร์ธานี</h2>
+            <h2 class="text-[#002D62] font-black mb-4 text-xl tracking-tight">วิทยาลัยเทคนิคสุราษฎร์ธานี</h2>
             <div class="progress-bar-bg">
                 <div id="progress-fill" class="progress-bar-fill"></div>
             </div>
             <div class="speed-info">
-                <i class="fa-solid fa-wifi"></i>
-                <span id="speed-text">0.0 Mbps</span>
+                <div class="flex items-center gap-2 bg-slate-100 px-4 py-1 border border-slate-200">
+                    <i class="fa-solid fa-gauge-high text-[#B8860B]"></i>
+                    <span id="speed-text" class="font-mono text-sm">Checking Connection...</span>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-        <div class="relative modal-box shadow-2xl overflow-hidden">
+        <div class="relative bg-white border-4 border-[#002D62] max-w-[500px] w-full shadow-2xl overflow-hidden">
             <div class="bg-[#002D62] p-4 text-white flex justify-between items-center">
                 <span class="font-bold tracking-widest text-sm">OFFICIAL GUIDELINE</span>
-                <button onclick="closeModal()" class="hover:text-gold-400"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeModal()" class="hover:text-amber-400"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-8">
                 <h3 class="text-2xl font-extrabold text-[#002D62] mb-4">ยินดีต้อนรับสู่ระบบ AR</h3>
@@ -233,7 +225,7 @@
                         อนุญาตการเข้าถึงกล้องและเซนเซอร์
                     </div>
                 </div>
-                <button onclick="closeModal()" class="w-full btn-official py-4">รับทราบและเริ่มใช้งาน</button>
+                <button onclick="closeModal()" class="w-full btn-official py-4 uppercase tracking-widest">รับทราบและเริ่มใช้งาน</button>
             </div>
         </div>
     </div>
@@ -274,7 +266,7 @@
                 <div class="flex-1 w-full">
                     <label class="block font-black text-xs uppercase tracking-widest text-slate-400 mb-2">ค้นหาห้องเรียนชั้น <span id="floor-title">--</span></label>
                     <div class="relative">
-                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ระบุชื่อห้อง เช่น 631, ห้องแลป..." class="search-field font-bold text-lg">
+                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ระบุชื่อห้อง เช่น 631, ห้องแลป..." class="w-full border-2 border-slate-200 p-3 outline-none focus:border-[#002D62] font-bold text-lg">
                         <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
                     </div>
                 </div>
@@ -306,51 +298,46 @@
             </div>
         </div>
 
-        <div id="floor-3" class="hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-3"></div>
-        </div>
-
-        <div id="floor-4" class="hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-4"></div>
-        </div>
+        <div id="floor-3" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-3"></div></div>
+        <div id="floor-4" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-4"></div></div>
 
         <div id="empty-state" class="text-center py-20 border-4 border-dashed border-slate-100 hidden">
             <i class="fa-solid fa-map-location-dot fa-4x text-slate-200 mb-6"></i>
             <h2 class="text-3xl font-black text-slate-800 mb-4">ไม่พบชั้นที่ระบุ</h2>
-            <p class="text-slate-400 mb-10 font-bold italic">กรุณากลับไปที่หน้าหลักเพื่อเลือกชั้นที่ต้องการ</p>
             <a href="index.html" class="btn-official px-12 py-4 mx-auto w-fit italic">กลับสู่หน้าหลัก</a>
         </div>
     </main>
 
     <script>
-        // Loading Logic
+        // --- 1. Loading Logic ---
         window.addEventListener('load', function() {
             const loadingScreen = document.getElementById('loading-screen');
             const progressFill = document.getElementById('progress-fill');
             const speedText = document.getElementById('speed-text');
             
             let progress = 0;
-            // สุ่มความเร็วเน็ตโชว์ (30-50 Mbps)
-            const fakeSpeed = (Math.random() * (50 - 30) + 30).toFixed(1);
-            speedText.innerText = `${fakeSpeed} Mbps`;
+            // สุ่มเลขจำลองความเร็วเน็ต
+            const fakeSpeed = (Math.random() * (45 - 25) + 25).toFixed(1);
 
             const interval = setInterval(() => {
-                progress += Math.random() * 15;
+                progress += Math.random() * 12;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
+                    speedText.innerText = `Connected: ${fakeSpeed} Mbps`;
                     
-                    // หน่วงเวลาเล็กน้อยให้เห็น 100% แล้วค่อยปิด
                     setTimeout(() => {
                         loadingScreen.style.opacity = '0';
-                        loadingScreen.style.visibility = 'hidden';
+                        setTimeout(() => loadingScreen.style.visibility = 'hidden', 600);
                     }, 500);
+                } else {
+                    progressFill.style.width = progress + '%';
+                    speedText.innerText = `Loading... ${(progress/2).toFixed(1)} Mbps`;
                 }
-                progressFill.style.width = progress + '%';
-            }, 150);
+            }, 100);
         });
 
-        // JS ส่วนเดิมของคุณ
+        // --- 2. Navigation Data & Logic ---
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
             "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
@@ -368,6 +355,7 @@
         };
 
         function closeModal() { document.getElementById('guide-modal').classList.add('hidden'); }
+        
         function getRoomName(id) {
             const names = {
                 "DEPT_LABEL_3": "ป้ายแผนกไอที (ชั้น 3)", "DEPT_LABEL_4": "ป้ายแผนกไอที (ชั้น 4)",
