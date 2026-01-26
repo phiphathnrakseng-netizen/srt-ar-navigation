@@ -26,10 +26,8 @@
             margin: 0;
         }
 
-        /* บังคับยกเลิกความโค้งมนทั่วทั้งเว็บ */
         * { border-radius: 0 !important; }
 
-        /* Header สไตล์ทางการ */
         .official-header {
             background: var(--stc-navy-deep);
             border-bottom: 5px solid var(--stc-gold);
@@ -46,7 +44,6 @@
             background-size: 100px 100px;
         }
 
-        /* ปุ่มกดสไตล์สถาบัน */
         .btn-official {
             background: var(--stc-navy);
             color: white;
@@ -65,7 +62,6 @@
             color: var(--stc-navy);
         }
 
-        /* การ์ดห้องเรียนทรงเหลี่ยมคม */
         .room-card {
             background: white;
             border: 1px solid #D1D5DB;
@@ -80,7 +76,6 @@
             box-shadow: 8px 8px 0px var(--stc-navy);
         }
 
-        /* Navbar สไตล์สะอาดตา */
         .nav-official {
             background: white;
             border-bottom: 2px solid var(--stc-silver);
@@ -115,7 +110,6 @@
             margin-bottom: 10px;
         }
 
-        /* Modal ทรงเหลี่ยม */
         .modal-box {
             background: white;
             border: 4px solid var(--stc-navy);
@@ -145,17 +139,17 @@
                 <button onclick="closeModal()" class="hover:text-gold-400"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-8">
-                <h3 class="text-2xl font-extrabold text-[#002D62] mb-4">ระบบนำทางอัจฉริยะ (AR)</h3>
+                <h3 class="text-2xl font-extrabold text-[#002D62] mb-4">ยินดีต้อนรับสู่ระบบ AR</h3>
                 <p class="text-slate-600 mb-6 leading-relaxed">
-                    เพื่อประสิทธิภาพสูงสุดในการนำทาง โปรดอนุญาตให้ระบบเข้าถึง <span class="font-bold text-black">กล้อง</span> และ <span class="font-bold text-black">เซนเซอร์เข็มทิศ</span> ของอุปกรณ์ท่าน
+                    เพื่อให้ระบบนำทางได้อย่างแม่นยำ กรุณายืนบริเวณ <span class="font-bold text-[#B8860B]">ป้อมยามหน้าวิทยาลัย</span> และหันหน้าไปทางถนนหลักของวิทยาลัยก่อนเริ่ม
                 </p>
                 <div class="space-y-4 mb-8">
                     <div class="flex items-center gap-4 text-sm font-bold p-3 bg-slate-50 border border-slate-100">
-                        <i class="fa-solid fa-circle-info text-blue-600"></i>
-                        ยืนบริเวณจุด Calibration (ป้อมยาม/บันได)
+                        <i class="fa-solid fa-camera text-blue-600"></i>
+                        อนุญาตการเข้าถึงกล้องและเซนเซอร์
                     </div>
                 </div>
-                <button onclick="closeModal()" class="w-full btn-official py-4">เข้าสู่ระบบนำทาง</button>
+                <button onclick="closeModal()" class="w-full btn-official py-4">รับทราบและเริ่มใช้งาน</button>
             </div>
         </div>
     </div>
@@ -182,10 +176,10 @@
                 ระบบนำทางอาคาร <br>
                 <span class="text-transparent" style="-webkit-text-stroke: 1px white;">แผนกเทคโนโลยีสารสนเทศ</span>
             </h1>
-            <div class="w-20 h-1 bg-gold-500 mb-4 bg-[#B8860B]"></div>
+            <div class="w-20 h-1 bg-[#B8860B] mb-4"></div>
             <p class="text-slate-300 max-w-xl text-sm font-light leading-relaxed">
-                เทคโนโลยีความจริงเสริม (Augmented Reality) เพื่อการเข้าถึงห้องปฏิบัติการอย่างแม่นยำ 
-                วิทยาลัยเทคนิคสุราษฎร์ธานี
+                เส้นทางเริ่มต้นจาก: ป้อมยามหน้าวิทยาลัยเทคนิคสุราษฎร์ธานี <br>
+                ไปยังอาคารแผนกเทคโนโลยีสารสนเทศ (ตึกสีม่วง)
             </p>
         </div>
     </header>
@@ -195,9 +189,9 @@
         <div id="search-container" class="mb-12 hidden">
             <div class="flex flex-col md:flex-row gap-6 items-end border-b-2 border-slate-100 pb-8">
                 <div class="flex-1 w-full">
-                    <label class="block font-black text-xs uppercase tracking-widest text-slate-400 mb-2">Search Destination</label>
+                    <label class="block font-black text-xs uppercase tracking-widest text-slate-400 mb-2">ค้นหาห้องเรียนชั้น <span id="floor-title">--</span></label>
                     <div class="relative">
-                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="พิมพ์หมายเลขห้อง หรือ ชื่อห้อง..." class="search-field font-bold text-lg">
+                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ระบุหมายเลขห้อง เช่น 631, LAB 1..." class="search-field font-bold text-lg">
                         <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
                     </div>
                 </div>
@@ -207,166 +201,63 @@
         <div id="start-phase" class="mb-16 hidden">
             <h2 class="text-2xl font-black mb-8 flex items-center gap-3 text-[#002D62]">
                 <span class="bg-[#002D62] text-white w-8 h-8 flex items-center justify-center text-sm">01</span>
-                จุดเริ่มต้นจากภายนอกอาคาร
+                เลือกจุดหมายปลายทางของท่าน
             </h2>
-            <button onclick="navigate('GUARD_TO_IT')" class="w-full room-card p-10 flex flex-col md:flex-row justify-between items-center group">
+            
+            <button onclick="navigate('TO_IT_BUILDING')" class="w-full room-card p-10 flex flex-col md:flex-row justify-between items-center group mb-6">
                 <div class="text-left mb-6 md:mb-0">
-                    <div class="section-tag bg-[#002D62]">Outdoor Navigation</div>
-                    <h3 class="text-3xl font-black text-slate-800">จากป้อมยาม &rarr; แผนกไอที</h3>
-                    <p class="text-slate-400 font-bold mt-2">ระยะทางโดยประมาณ: 150 เมตร</p>
+                    <div class="section-tag bg-[#002D62]">Main Route</div>
+                    <h3 class="text-3xl font-black text-slate-800 italic">ป้อมยาม &rarr; อาคารแผนกไอที (ตึกสีม่วง)</h3>
+                    <p class="text-slate-400 font-bold mt-2 italic">เดินตรงผ่านหน้าอาคารอำนวยการ (ตึก 11)</p>
                 </div>
                 <div class="btn-official px-10 py-4 w-full md:w-auto">
-                    เริ่มการนำทาง <i class="fa-solid fa-location-arrow"></i>
+                    เริ่มการนำทาง <i class="fa-solid fa-person-walking-arrow-right"></i>
                 </div>
             </button>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="?floor=3" class="btn-official py-10 text-xl italic bg-white !text-[#002D62] border-2 border-[#002D62]">ไปยังชั้น 3 (631 - 635)</a>
+                <a href="?floor=4" class="btn-official py-10 text-xl italic bg-white !text-[#002D62] border-2 border-[#002D62]">ไปยังชั้น 4 (พักครู/LAB)</a>
+            </div>
         </div>
 
         <div id="floor-3" class="hidden">
-            <h2 class="text-2xl font-black mb-8 flex items-center gap-3 text-[#002D62]">
-                <span class="bg-[#002D62] text-white w-8 h-8 flex items-center justify-center text-sm">03</span>
-                ห้องปฏิบัติการชั้น 3
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <button onclick="navigate('631')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">ROOM 631</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องปฏิบัติการคอมพิวเตอร์ 631</h4>
-                    <p class="text-sm text-slate-500 mb-3">คอมพิวเตอร์ 30 เครื่อง • โปรเจคเตอร์</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('632')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">ROOM 632</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องปฏิบัติการเครือข่าย 632</h4>
-                    <p class="text-sm text-slate-500 mb-3">อุปกรณ์เครือข่าย Cisco • สวิตช์ 24 port</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('633')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">ROOM 633</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องสมุดอิเล็กทรอนิกส์ 633</h4>
-                    <p class="text-sm text-slate-500 mb-3">คอมพิวเตอร์ค้นคว้า 15 เครื่อง • eBook</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('634')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">ROOM 634</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องปฏิบัติการโปรแกรมมิ่ง 634</h4>
-                    <p class="text-sm text-slate-500 mb-3">เครื่องพัฒนาซอฟต์แวร์ • IDE พร้อมใช้งาน</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('635')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">ROOM 635</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องเรียนทฤษฎี 635</h4>
-                    <p class="text-sm text-slate-500 mb-3">ความจุ 40 ที่นั่ง • กระดานอัจฉริยะ</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-3">
+                </div>
         </div>
 
         <div id="floor-4" class="hidden">
-            <h2 class="text-2xl font-black mb-8 flex items-center gap-3 text-[#002D62]">
-                <span class="bg-[#002D62] text-white w-8 h-8 flex items-center justify-center text-sm">04</span>
-                ห้องปฏิบัติการชั้น 4
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <button onclick="navigate('TEACHER_ROOM')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">TEACHER ROOM</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องพักครูแผนกไอที</h4>
-                    <p class="text-sm text-slate-500 mb-3">พื้นที่ทำงานครู • ห้องประชุมย่อย</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('LECTURE')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">LECTURE HALL</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องบรรยายใหญ่</h4>
-                    <p class="text-sm text-slate-500 mb-3">ความจุ 80 คน • ระบบเสียงครบวงจร</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('LAB1')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">LAB 1</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องปฏิบัติการฮาร์ดแวร์ 1</h4>
-                    <p class="text-sm text-slate-500 mb-3">ซ่อมบำรุงคอมพิวเตอร์ • ชุดเครื่องมือ</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('LAB2')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">LAB 2</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องปฏิบัติการฮาร์ดแวร์ 2</h4>
-                    <p class="text-sm text-slate-500 mb-3">เซิร์ฟเวอร์ • ระบบจ่ายไฟสำรอง</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-                
-                <button onclick="navigate('LAB3')" class="room-card p-6 text-left group">
-                    <div class="font-black text-xs text-slate-400 mb-1">LAB 3</div>
-                    <h4 class="text-xl font-black text-slate-800 mb-4">ห้องปฏิบัติการพิเศษ</h4>
-                    <p class="text-sm text-slate-500 mb-3">อุปกรณ์ IoT • ระบบอัตโนมัติ</p>
-                    <div class="text-[#002D62] font-bold text-sm flex items-center gap-2">
-                        เข้าสู่โหมด AR <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </button>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-4">
+                </div>
         </div>
 
         <div id="empty-state" class="text-center py-20 border-4 border-dashed border-slate-100 hidden">
-            <i class="fa-solid fa-compass fa-4x text-slate-200 mb-6"></i>
-            <h2 class="text-3xl font-black text-slate-800 mb-4">โปรดระบุตำแหน่งปัจจุบัน</h2>
-            <p class="text-slate-400 mb-10 font-bold">เลือกตำแหน่งที่ท่านอยู่ เพื่อให้ระบบเริ่มต้นคำนวณเส้นทาง</p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="index.html" class="btn-official px-8 py-4">ป้อมยามทางเข้า</a>
-                <a href="?floor=3" class="btn-official px-8 py-4 bg-white !text-[#002D62]">บันไดชั้น 1</a>
-            </div>
+            <i class="fa-solid fa-map-location-dot fa-4x text-slate-200 mb-6"></i>
+            <h2 class="text-3xl font-black text-slate-800 mb-4">กำลังรอการเลือกเส้นทาง</h2>
+            <p class="text-slate-400 mb-10 font-bold italic">กรุณากลับไปที่หน้าหลักเพื่อเลือกจุดเริ่มต้นจากป้อมยาม</p>
+            <a href="index.html" class="btn-official px-12 py-4 mx-auto w-fit italic">กลับสู่หน้าหลัก</a>
         </div>
 
     </main>
 
-    <footer class="bg-slate-50 border-t border-slate-200 py-12">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-            <div class="flex items-center gap-4">
-                <img src="favicon.png" class="h-12 grayscale opacity-50" alt="Logo">
-                <div class="text-xs font-bold text-slate-400">
-                    วิทยาลัยเทคนิคสุราษฎร์ธานี<br>
-                    แผนกเทคโนโลยีสารสนเทศ
-                </div>
-            </div>
-            <div class="text-[10px] font-black tracking-[4px] text-slate-300 uppercase">
-                © 2026 OFFICIAL AR NAVIGATION SYSTEM
-            </div>
-        </div>
-    </footer>
-
     <script>
+        // แก้ไขค่าระยะทางจริงจากภาพถ่าย (ป้อมยาม -> ตึกไอที)
         const navigationData = {
-            "GUARD_TO_IT": { angle: 15, dist: 150, guide: "เดินตรงจากป้อมยามตามถนนหลัก" },
-            "631": { angle: 90, dist: 8, guide: "ขึ้นชั้น 3 หันขวาเดินตรงไป 8 เมตร" },
-            "632": { angle: 95, dist: 12, guide: "จากห้อง 631 เดินต่อไปอีก 4 เมตร" },
-            "633": { angle: 100, dist: 16, guide: "อยู่ถัดจากห้อง 632 ทางซ้ายมือ" },
-            "634": { angle: 110, dist: 20, guide: "สุดทางเดินชั้น 3 ด้านขวา" },
-            "635": { angle: 85, dist: 6, guide: "ใกล้บันไดขึ้นชั้น 3 ด้านซ้าย" },
-            "TEACHER_ROOM": { angle: 45, dist: 5, guide: "ขึ้นบันไดชั้น 4 ตรงไปทางซ้าย" },
-            "LECTURE": { angle: 60, dist: 10, guide: "จากบันไดชั้น 4 เดินตรงไป 10 เมตร" },
-            "LAB1": { angle: 75, dist: 14, guide: "ถัดจากห้องบรรยายใหญ่" },
-            "LAB2": { angle: 80, dist: 16, guide: "อยู่ติดกับ LAB 1" },
-            "LAB3": { angle: 90, dist: 20, guide: "สุดทางเดินชั้น 4 ด้านขวา" }
+            "TO_IT_BUILDING": { 
+                angle: 0, 
+                dist: 195, 
+                guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" 
+            },
+            "631": { angle: 5, dist: 215, guide: "เดินตรงมาที่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 แล้วเลี้ยวขวา" },
+            "632": { angle: 5, dist: 220, guide: "เดินตรงมาที่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 แล้วเลี้ยวขวา" },
+            "633": { angle: 5, dist: 225, guide: "เดินตรงมาที่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งซ้าย" },
+            "634": { angle: 5, dist: 230, guide: "เดินตรงมาที่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่สุดทางขวา" },
+            "635": { angle: 5, dist: 210, guide: "เดินตรงมาที่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องแรกซ้ายมือ" },
+            "TEACHER_ROOM": { angle: 5, dist: 220, guide: "เดินตรงมาที่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องพักครูอยู่ขวามือ" },
+            "LECTURE": { angle: 5, dist: 225, guide: "เดินตรงมาที่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องบรรยายอยู่ซ้ายมือ" },
+            "LAB1": { angle: 5, dist: 230, guide: "ขึ้นชั้น 4 แล้วเดินตรงไปห้องปฏิบัติการ 1" },
+            "LAB2": { angle: 5, dist: 235, guide: "ขึ้นชั้น 4 แล้วเดินตรงไปห้องปฏิบัติการ 2" },
+            "LAB3": { angle: 5, dist: 240, guide: "ขึ้นชั้น 4 แล้วเดินตรงไปห้องปฏิบัติการ 3 (สุดทาง)" }
         };
 
         function closeModal() { 
@@ -382,45 +273,70 @@
             const searchBar = document.getElementById('search-container');
             const startPhase = document.getElementById('start-phase');
             
-            // ล้างหน้าจอ
             [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
 
             if (floor === '3') {
                 s3.classList.remove('hidden');
                 searchBar.classList.remove('hidden');
+                document.getElementById('floor-title').innerText = "3";
+                renderRooms(3);
             } else if (floor === '4') {
                 s4.classList.remove('hidden');
                 searchBar.classList.remove('hidden');
+                document.getElementById('floor-title').innerText = "4";
+                renderRooms(4);
             } else if (!floor) {
                 startPhase.classList.remove('hidden');
+            } else {
                 empty.classList.remove('hidden');
             }
+        }
+
+        function renderRooms(floor) {
+            const container = document.getElementById(`rooms-${floor}`);
+            container.innerHTML = '';
             
-            // อัพเดท navigation active state
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('nav-link-active');
+            // กรองเฉพาะห้องตามชั้น
+            Object.keys(navigationData).forEach(key => {
+                if (key === "TO_IT_BUILDING") return;
+                
+                // เช็คเลขชั้น (สมมติว่า 63x คือชั้น 3, ห้องอื่นๆ คือชั้น 4)
+                const isFloor3 = key.startsWith('63');
+                if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
+                    container.innerHTML += `
+                        <button onclick="navigate('${key}')" class="room-card p-6 text-left group">
+                            <div class="font-black text-xs text-slate-400 mb-1">${key}</div>
+                            <h4 class="text-xl font-black text-slate-800 mb-4">${getRoomName(key)}</h4>
+                            <div class="text-[#002D62] font-bold text-sm flex items-center gap-2 italic">
+                                เริ่มจากป้อมยาม <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </button>
+                    `;
+                }
             });
-            
-            if (floor === '3') {
-                document.querySelector('a[href="?floor=3"]').classList.add('nav-link-active');
-            } else if (floor === '4') {
-                document.querySelector('a[href="?floor=4"]').classList.add('nav-link-active');
-            } else {
-                document.querySelector('a[href="index.html"]').classList.add('nav-link-active');
-            }
+        }
+
+        function getRoomName(id) {
+            const names = {
+                "631": "ห้องปฏิบัติการคอมพิวเตอร์ 631",
+                "632": "ห้องปฏิบัติการเครือข่าย 632",
+                "633": "ห้องสมุดอิเล็กทรอนิกส์ 633",
+                "634": "ห้องปฏิบัติการโปรแกรมมิ่ง 634",
+                "635": "ห้องเรียนทฤษฎี 635",
+                "TEACHER_ROOM": "ห้องพักครูแผนกไอที",
+                "LECTURE": "ห้องบรรยายใหญ่",
+                "LAB1": "ห้องปฏิบัติการ 1",
+                "LAB2": "ห้องปฏิบัติการ 2",
+                "LAB3": "ห้องปฏิบัติการ 3"
+            };
+            return names[id] || id;
         }
 
         function searchRoom() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const roomCards = document.querySelectorAll('.room-card');
-            
             roomCards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if (text.includes(input)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+                card.style.display = card.textContent.toLowerCase().includes(input) ? 'block' : 'none';
             });
         }
 
