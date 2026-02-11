@@ -722,6 +722,152 @@
         .admin-control-btn.admin {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+
+        /* Enhanced Admin Styles */
+        .admin-stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: var(--stc-beige);
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--stc-text);
+            border-bottom: 2px solid var(--stc-beige-dark);
+        }
+
+        .admin-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--stc-beige-dark);
+            font-size: 0.875rem;
+        }
+
+        .admin-table tr:hover {
+            background: var(--stc-beige);
+        }
+
+        .delete-image-btn {
+            background: #dc2626;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-image-btn:hover {
+            background: #b91c1c;
+        }
+
+        .image-preview-small {
+            width: 80px;
+            height: 60px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            border: 2px solid var(--stc-beige);
+        }
+
+        .admin-action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .admin-editable {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .admin-editable:hover {
+            outline: 2px dashed var(--stc-brown-light);
+            border-radius: var(--radius-sm);
+        }
+
+        .admin-edit-icon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--stc-brown);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .admin-editable:hover .admin-edit-icon {
+            opacity: 1;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification.error {
+            border-left: 4px solid #dc2626;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -787,6 +933,16 @@
             <div id="upload-preview" class="upload-preview hidden">
                 <img id="preview-image" alt="Preview">
             </div>
+
+            <div class="flex justify-between items-center mt-4">
+                <div id="current-image-info" class="text-sm text-var(--stc-brown-light) hidden">
+                    <i class="fa-solid fa-image mr-2"></i>
+                    <span>มีรูปภาพอยู่แล้ว</span>
+                </div>
+                <button onclick="deleteCurrentImage()" id="delete-image-btn" class="btn-danger hidden">
+                    <i class="fa-solid fa-trash mr-2"></i>ลบรูปภาพปัจจุบัน
+                </button>
+            </div>
             
             <div class="flex gap-3 mt-6">
                 <button onclick="closeUploadModal()" class="btn-secondary flex-1">ยกเลิก</button>
@@ -809,6 +965,23 @@
             <div class="flex gap-3 mt-6">
                 <button onclick="closeAdminEditModal()" class="btn-secondary flex-1">ยกเลิก</button>
                 <button onclick="saveAdminChanges()" class="btn-primary flex-1">บันทึกการเปลี่ยนแปลง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Content Edit Modal -->
+    <div id="admin-content-modal" class="upload-modal">
+        <div class="upload-modal-content" style="max-width: 500px;">
+            <button class="upload-modal-close" onclick="closeContentEditModal()">&times;</button>
+            <h3 class="text-xl font-bold text-var(--stc-text) mb-2" id="content-modal-title">แก้ไขเนื้อหา</h3>
+            
+            <div id="content-modal-body">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeContentEditModal()" class="btn-secondary flex-1">ยกเลิก</button>
+                <button onclick="saveContentEdit()" class="btn-primary flex-1">บันทึก</button>
             </div>
         </div>
     </div>
@@ -847,11 +1020,13 @@
                     <header class="header-section">
                         <div class="text-center">
                             <span class="badge-beige mb-4 inline-block text-xs">Augmented Reality Navigation</span>
-                            <h2 class="text-3xl md:text-4xl font-bold text-var(--stc-text) mb-4 leading-tight">
-                                <span id="main-title">ระบบนำทางแผนก<br><span class="text-var(--stc-brown)">เทคโนโลยีสารสนเทศ</span></span>
+                            <h2 class="text-3xl md:text-4xl font-bold text-var(--stc-text) mb-4 leading-tight admin-editable" id="main-title" onclick="editContentDirectly('main_title')">
+                                <span id="main-title-text">ระบบนำทางแผนก<br><span class="text-var(--stc-brown)">เทคโนโลยีสารสนเทศ</span></span>
+                                <span class="admin-edit-icon" onclick="editContentDirectly('main_title', event)">✏️</span>
                             </h2>
-                            <p class="text-var(--stc-brown-light) max-w-xl mx-auto text-sm leading-relaxed" id="main-description">
+                            <p class="text-var(--stc-brown-light) max-w-xl mx-auto text-sm leading-relaxed admin-editable" id="main-description" onclick="editContentDirectly('main_description')">
                                 ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์
+                                <span class="admin-edit-icon" onclick="editContentDirectly('main_description', event)">✏️</span>
                             </p>
                         </div>
                     </header>
@@ -871,8 +1046,14 @@
                             </button>
                             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                                 <div class="text-center md:text-left mb-4 md:mb-0">
-                                    <h3 class="text-xl font-bold text-var(--stc-text) mb-2" id="start-title">เริ่มต้นการนำทาง</h3>
-                                    <p class="text-var(--stc-brown-light) text-sm" id="start-description">เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ</p>
+                                    <h3 class="text-xl font-bold text-var(--stc-text) mb-2 admin-editable" id="start-title" onclick="editContentDirectly('start_title')">
+                                        เริ่มต้นการนำทาง
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('start_title', event)">✏️</span>
+                                    </h3>
+                                    <p class="text-var(--stc-brown-light) text-sm admin-editable" id="start-description" onclick="editContentDirectly('start_description')">
+                                        เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('start_description', event)">✏️</span>
+                                    </p>
                                 </div>
                                 <button onclick="navigate('TO_IT_BUILDING')" class="btn-primary text-sm px-6 py-3 rounded-[16px] flex items-center gap-2 whitespace-nowrap">
                                     <i class="fa-solid fa-location-arrow"></i> เริ่มนำทางทันที
@@ -883,7 +1064,10 @@
 
                         <div class="divider my-6"></div>
 
-                        <h4 class="text-lg font-bold text-var(--stc-text) mb-4 text-center" id="explore-title">สำรวจตามชั้นเรียน</h4>
+                        <h4 class="text-lg font-bold text-var(--stc-text) mb-4 text-center admin-editable" id="explore-title" onclick="editContentDirectly('explore_title')">
+                            สำรวจตามชั้นเรียน
+                            <span class="admin-edit-icon" onclick="editContentDirectly('explore_title', event)">✏️</span>
+                        </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
                             <a href="?floor=3" class="card-modern p-5 flex items-center justify-between group hover:bg-var(--stc-beige) border-2 border-transparent hover:border-var(--stc-beige-dark)">
                                 <div class="flex items-center gap-4">
@@ -915,7 +1099,10 @@
                         </div>
 
                         <div class="mt-8 text-center">
-                            <h4 class="text-lg font-bold text-var(--stc-text) mb-4" id="features-title">คุณสมบัติของระบบ</h4>
+                            <h4 class="text-lg font-bold text-var(--stc-text) mb-4 admin-editable" id="features-title" onclick="editContentDirectly('features_title')">
+                                คุณสมบัติของระบบ
+                                <span class="admin-edit-icon" onclick="editContentDirectly('features_title', event)">✏️</span>
+                            </h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 grid-cols-responsive">
                                 <div class="card-modern p-5 text-center feature-item">
                                     <button class="admin-edit-btn" onclick="editContent('feature1')" style="opacity: 0; visibility: hidden;">
@@ -924,8 +1111,14 @@
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-map-location-dot"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2" id="feature1-title">นำทางแบบเรียลไทม์</h5>
-                                    <p class="text-xs text-var(--stc-brown-light)" id="feature1-description">แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง</p>
+                                    <h5 class="text-base font-semibold mb-2 admin-editable" id="feature1-title" onclick="editContentDirectly('feature1_title')">
+                                        นำทางแบบเรียลไทม์
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature1_title', event)">✏️</span>
+                                    </h5>
+                                    <p class="text-xs text-var(--stc-brown-light) admin-editable" id="feature1-description" onclick="editContentDirectly('feature1_description')">
+                                        แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature1_description', event)">✏️</span>
+                                    </p>
                                 </div>
                                 
                                 <div class="card-modern p-5 text-center feature-item">
@@ -935,8 +1128,14 @@
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-location-crosshairs"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2" id="feature2-title">ค้นหาห้องเรียน</h5>
-                                    <p class="text-xs text-var(--stc-brown-light)" id="feature2-description">ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว</p>
+                                    <h5 class="text-base font-semibold mb-2 admin-editable" id="feature2-title" onclick="editContentDirectly('feature2_title')">
+                                        ค้นหาห้องเรียน
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature2_title', event)">✏️</span>
+                                    </h5>
+                                    <p class="text-xs text-var(--stc-brown-light) admin-editable" id="feature2-description" onclick="editContentDirectly('feature2_description')">
+                                        ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature2_description', event)">✏️</span>
+                                    </p>
                                 </div>
                                 
                                 <div class="card-modern p-5 text-center feature-item">
@@ -946,8 +1145,14 @@
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-compass"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2" id="feature3-title">ใช้งานง่าย</h5>
-                                    <p class="text-xs text-var(--stc-brown-light)" id="feature3-description">อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน</p>
+                                    <h5 class="text-base font-semibold mb-2 admin-editable" id="feature3-title" onclick="editContentDirectly('feature3_title')">
+                                        ใช้งานง่าย
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature3_title', event)">✏️</span>
+                                    </h5>
+                                    <p class="text-xs text-var(--stc-brown-light) admin-editable" id="feature3-description" onclick="editContentDirectly('feature3_description')">
+                                        อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน
+                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature3_description', event)">✏️</span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -1033,11 +1238,42 @@
     </div>
 
     <script>
-        // Admin Configuration
-        const ADMIN_CREDENTIALS = {
-            username: "admin",
-            password: "admin123"
-        };
+        // Admin Configuration with multiple users
+        const ADMIN_USERS = [
+            {
+                username: "tiger",
+                password: "099406",
+                name: "Tiger",
+                role: "admin",
+                lastLogin: null
+            },
+            {
+                username: "phiphat",
+                password: "25054",
+                name: "Phiphat",
+                role: "admin",
+                lastLogin: null
+            },
+            {
+                username: "tonnam",
+                password: "88854",
+                name: "Tonnam",
+                role: "admin",
+                lastLogin: null
+            }
+        ];
+
+        // ข้อมูลผู้ใช้ปัจจุบันที่ล็อกอิน
+        let currentAdminUser = null;
+        // ตรวจสอบสถานะการล็อกอิน
+        let isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
+        // เก็บข้อมูลผู้ใช้ปัจจุบัน
+        if (isAdminLoggedIn) {
+            const savedUser = localStorage.getItem('currentAdminUser');
+            if (savedUser) {
+                currentAdminUser = JSON.parse(savedUser);
+            }
+        }
 
         // Data & Logic
         const navigationData = {
@@ -1070,8 +1306,8 @@
             feature3_description: "อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน"
         };
 
-        // ตรวจสอบสถานะการล็อกอิน
-        let isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
+        // เก็บประวัติการแก้ไข
+        let editHistory = JSON.parse(localStorage.getItem('editHistory')) || [];
 
         // Room Management
         function getRoomName(id) {
@@ -1154,7 +1390,7 @@
 
         function loadWebsiteContent() {
             // โหลดเนื้อหาเว็บไซต์จาก localStorage
-            document.getElementById('main-title').innerHTML = websiteContent.main_title;
+            document.getElementById('main-title-text').innerHTML = websiteContent.main_title;
             document.getElementById('main-description').textContent = websiteContent.main_description;
             document.getElementById('start-title').textContent = websiteContent.start_title;
             document.getElementById('start-description').textContent = websiteContent.start_description;
@@ -1184,7 +1420,7 @@
                         <div class="card-modern p-5 cursor-pointer group">
                             <div class="room-image-container">
                                 ${roomImage ? 
-                                    `<img src="${roomImage}" class="room-image" alt="${getRoomName(key)}" onerror="this.src=''">` :
+                                    `<img src="${roomImage}" class="room-image" alt="${getRoomName(key)}" onerror="handleImageError(this, '${key}')">` :
                                     `<div class="room-image-placeholder">
                                         <i class="fa-solid ${key.startsWith('63') ? 'fa-chalkboard' : 'fa-computer'}"></i>
                                         <span class="text-xs mt-2">ไม่มีรูปภาพ</span>
@@ -1216,6 +1452,22 @@
             });
         }
 
+        function handleImageError(img, roomId) {
+            // หากรูปภาพโหลดไม่สำเร็จ ให้ลบรูปภาพและแสดง placeholder
+            delete roomImages[roomId];
+            localStorage.setItem('roomImages', JSON.stringify(roomImages));
+            img.parentElement.innerHTML = `
+                <div class="room-image-placeholder">
+                    <i class="fa-solid ${roomId.startsWith('63') ? 'fa-chalkboard' : 'fa-computer'}"></i>
+                    <span class="text-xs mt-2">ไม่มีรูปภาพ</span>
+                </div>
+                <button class="upload-image-btn" onclick="openUploadModal('${roomId}')">
+                    <i class="fa-solid fa-camera"></i> เพิ่มรูป
+                </button>
+            `;
+            showNotification(`รูปภาพสำหรับห้อง ${getRoomName(roomId)} โหลดไม่สำเร็จ ถูกลบออกแล้ว`, 'error');
+        }
+
         // Admin Login Functions
         function openLoginModal() {
             document.getElementById('login-modal').classList.add('active');
@@ -1232,38 +1484,93 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+            // ค้นหาผู้ใช้ที่ตรงกับ username และ password
+            const foundUser = ADMIN_USERS.find(user => 
+                user.username === username && user.password === password
+            );
+            
+            if (foundUser) {
                 isAdminLoggedIn = true;
+                currentAdminUser = { ...foundUser };
+                currentAdminUser.lastLogin = new Date().toISOString();
+                
                 localStorage.setItem('isAdminLoggedIn', 'true');
-                showNotification('เข้าสู่ระบบ Admin สำเร็จ');
+                localStorage.setItem('currentAdminUser', JSON.stringify(currentAdminUser));
+                
+                // บันทึกประวัติการล็อกอิน
+                addToHistory('login', 'เข้าสู่ระบบ', `ผู้ใช้ ${currentAdminUser.name} เข้าสู่ระบบ`);
+                
+                showNotification(`เข้าสู่ระบบสำเร็จ - สวัสดี ${currentAdminUser.name}`, 'success');
                 updateAdminUI();
                 closeLoginModal();
             } else {
                 document.getElementById('login-error').classList.add('show');
+                document.getElementById('error-message').textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
             }
         }
 
         function adminLogout() {
+            if (currentAdminUser) {
+                addToHistory('logout', 'ออกจากระบบ', `ผู้ใช้ ${currentAdminUser.name} ออกจากระบบ`);
+            }
+            
             isAdminLoggedIn = false;
+            currentAdminUser = null;
             localStorage.setItem('isAdminLoggedIn', 'false');
-            showNotification('ออกจากระบบ Admin สำเร็จ');
+            localStorage.removeItem('currentAdminUser');
+            showNotification('ออกจากระบบ Admin สำเร็จ', 'info');
             updateAdminUI();
+        }
+
+        function addToHistory(type, action, description) {
+            const historyItem = {
+                id: Date.now(),
+                type: type,
+                action: action,
+                description: description,
+                user: currentAdminUser ? currentAdminUser.name : 'ไม่ทราบ',
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleString('th-TH')
+            };
+            
+            editHistory.unshift(historyItem);
+            // เก็บเพียง 50 รายการล่าสุด
+            if (editHistory.length > 50) {
+                editHistory = editHistory.slice(0, 50);
+            }
+            
+            localStorage.setItem('editHistory', JSON.stringify(editHistory));
         }
 
         function updateAdminUI() {
             const adminControls = document.getElementById('admin-controls');
             const adminLoginBtn = document.getElementById('admin-login-btn');
             const editButtons = document.querySelectorAll('.admin-edit-btn');
+            const adminEditIcons = document.querySelectorAll('.admin-edit-icon');
             
-            if (isAdminLoggedIn) {
+            if (isAdminLoggedIn && currentAdminUser) {
                 adminControls.style.display = 'flex';
-                adminLoginBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Admin <span class="admin-badge">ON</span>';
-                adminLoginBtn.onclick = () => showNotification('คุณอยู่ในระบบ Admin แล้ว');
+                adminLoginBtn.innerHTML = `
+                    <i class="fa-solid fa-user-check"></i> 
+                    ${currentAdminUser.name}
+                    <span class="admin-badge">ON</span>
+                `;
+                adminLoginBtn.onclick = () => showNotification(`คุณล็อกอินเป็น ${currentAdminUser.name} อยู่แล้ว`, 'info');
                 
                 // แสดงปุ่มแก้ไข
                 editButtons.forEach(btn => {
                     btn.style.opacity = '1';
                     btn.style.visibility = 'visible';
+                });
+                
+                // แสดงไอคอนแก้ไขบนเนื้อหาที่แก้ไขได้
+                adminEditIcons.forEach(icon => {
+                    icon.style.opacity = '1';
+                });
+                
+                // เพิ่มคลาสให้กับเนื้อหาที่แก้ไขได้
+                document.querySelectorAll('.admin-editable').forEach(element => {
+                    element.style.cursor = 'pointer';
                 });
             } else {
                 adminControls.style.display = 'none';
@@ -1275,36 +1582,67 @@
                     btn.style.opacity = '0';
                     btn.style.visibility = 'hidden';
                 });
+                
+                // ซ่อนไอคอนแก้ไขบนเนื้อหาที่แก้ไขได้
+                adminEditIcons.forEach(icon => {
+                    icon.style.opacity = '0';
+                });
+                
+                // ลบคลาสที่ทำให้คลิกได้
+                document.querySelectorAll('.admin-editable').forEach(element => {
+                    element.style.cursor = 'default';
+                });
             }
         }
 
         // Upload Image Functions
         let currentUploadRoom = null;
         let selectedFile = null;
+        let currentRoomHasImage = false;
 
         function openUploadModal(roomId) {
             event.stopPropagation();
             if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน');
+                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
                 openLoginModal();
                 return;
             }
             
             currentUploadRoom = roomId;
+            currentRoomHasImage = roomImages[roomId] ? true : false;
             document.getElementById('upload-room-name').textContent = getRoomName(roomId);
             document.getElementById('upload-modal').classList.add('active');
             resetUploadForm();
+            
+            // แสดงข้อมูลรูปภาพปัจจุบัน (ถ้ามี)
+            const currentImageInfo = document.getElementById('current-image-info');
+            const deleteImageBtn = document.getElementById('delete-image-btn');
+            
+            if (currentRoomHasImage) {
+                currentImageInfo.classList.remove('hidden');
+                deleteImageBtn.classList.remove('hidden');
+            } else {
+                currentImageInfo.classList.add('hidden');
+                deleteImageBtn.classList.add('hidden');
+            }
         }
 
         function closeUploadModal() {
             document.getElementById('upload-modal').classList.remove('active');
             currentUploadRoom = null;
             selectedFile = null;
+            currentRoomHasImage = false;
         }
 
         function previewImage(event) {
             const file = event.target.files[0];
             if (!file) return;
+
+            // ตรวจสอบขนาดไฟล์ (ไม่เกิน 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('ไฟล์ภาพต้องมีขนาดไม่เกิน 5MB', 'error');
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -1326,15 +1664,42 @@
             document.getElementById('save-image-btn').disabled = true;
         }
 
+        function deleteCurrentImage() {
+            if (!currentUploadRoom || !currentRoomHasImage) return;
+            
+            if (confirm(`คุณแน่ใจหรือไม่ที่จะลบรูปภาพสำหรับห้อง ${getRoomName(currentUploadRoom)}?`)) {
+                delete roomImages[currentUploadRoom];
+                localStorage.setItem('roomImages', JSON.stringify(roomImages));
+                
+                // บันทึกประวัติการลบ
+                addToHistory('delete', 'ลบรูปภาพ', `ลบรูปภาพสำหรับห้อง ${getRoomName(currentUploadRoom)} (${currentUploadRoom})`);
+                
+                showNotification(`ลบรูปภาพสำหรับ ${getRoomName(currentUploadRoom)} เรียบร้อยแล้ว`, 'success');
+                
+                // รีเฟรชหน้าจอ
+                const floor = new URLSearchParams(window.location.search).get('floor');
+                if (floor === '3' || floor === '4') {
+                    renderRooms(parseInt(floor));
+                }
+                
+                closeUploadModal();
+            }
+        }
+
         function saveRoomImage() {
             if (!currentUploadRoom || !selectedFile) return;
 
             // บันทึกรูปภาพลงใน localStorage
+            const oldImage = roomImages[currentUploadRoom];
             roomImages[currentUploadRoom] = selectedFile;
             localStorage.setItem('roomImages', JSON.stringify(roomImages));
 
+            // บันทึกประวัติการแก้ไข
+            const action = oldImage ? 'แก้ไขรูปภาพ' : 'เพิ่มรูปภาพ';
+            addToHistory('image', action, `${action} สำหรับห้อง ${getRoomName(currentUploadRoom)} (${currentUploadRoom})`);
+
             // แสดงการแจ้งเตือน
-            showNotification(`บันทึกรูปภาพสำหรับ ${getRoomName(currentUploadRoom)} เรียบร้อยแล้ว`);
+            showNotification(`${action} สำหรับ ${getRoomName(currentUploadRoom)} เรียบร้อยแล้ว`, 'success');
 
             // รีเฟรชหน้าจอ
             const floor = new URLSearchParams(window.location.search).get('floor');
@@ -1347,10 +1712,11 @@
 
         // Admin Edit Content Functions
         let currentEditType = null;
+        let currentEditElementId = null;
 
         function editContent(type) {
             if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน');
+                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
                 openLoginModal();
                 return;
             }
@@ -1377,58 +1743,15 @@
                     `;
                     break;
                     
-                case 'feature1':
-                    title.textContent = 'แก้ไขคุณสมบัติที่ 1';
-                    description.textContent = 'แก้ไขหัวข้อและคำอธิบายสำหรับคุณสมบัติแรกของระบบ';
-                    content.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label" for="edit-feature-title">หัวข้อ</label>
-                            <input type="text" id="edit-feature-title" class="form-input" value="${websiteContent.feature1_title}">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="edit-feature-description">คำอธิบาย</label>
-                            <textarea id="edit-feature-description" class="form-textarea">${websiteContent.feature1_description}</textarea>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'feature2':
-                    title.textContent = 'แก้ไขคุณสมบัติที่ 2';
-                    description.textContent = 'แก้ไขหัวข้อและคำอธิบายสำหรับคุณสมบัติที่สองของระบบ';
-                    content.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label" for="edit-feature-title">หัวข้อ</label>
-                            <input type="text" id="edit-feature-title" class="form-input" value="${websiteContent.feature2_title}">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="edit-feature-description">คำอธิบาย</label>
-                            <textarea id="edit-feature-description" class="form-textarea">${websiteContent.feature2_description}</textarea>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'feature3':
-                    title.textContent = 'แก้ไขคุณสมบัติที่ 3';
-                    description.textContent = 'แก้ไขหัวข้อและคำอธิบายสำหรับคุณสมบัติที่สามของระบบ';
-                    content.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label" for="edit-feature-title">หัวข้อ</label>
-                            <input type="text" id="edit-feature-title" class="form-input" value="${websiteContent.feature3_title}">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="edit-feature-description">คำอธิบาย</label>
-                            <textarea id="edit-feature-description" class="form-textarea">${websiteContent.feature3_description}</textarea>
-                        </div>
-                    `;
-                    break;
-                    
                 default:
                     title.textContent = 'แก้ไขเนื้อหาเว็บไซต์';
                     description.textContent = 'เลือกส่วนที่ต้องการแก้ไข';
                     content.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <button class="tab-button active" onclick="loadEditTab('main')">หน้าแรก</button>
                             <button class="tab-button" onclick="loadEditTab('features')">คุณสมบัติ</button>
+                            <button class="tab-button" onclick="loadEditTab('rooms')">ข้อมูลห้อง</button>
+                            <button class="tab-button" onclick="loadEditTab('history')">ประวัติการแก้ไข</button>
                         </div>
                         <div id="edit-tab-content" class="mt-6"></div>
                     `;
@@ -1437,6 +1760,164 @@
             }
             
             modal.classList.add('active');
+        }
+
+        function editContentDirectly(contentId, event) {
+            if (!isAdminLoggedIn) {
+                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
+                openLoginModal();
+                return;
+            }
+            
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            currentEditElementId = contentId;
+            const modal = document.getElementById('admin-content-modal');
+            const title = document.getElementById('content-modal-title');
+            const body = document.getElementById('content-modal-body');
+            
+            let currentValue = '';
+            let inputType = 'text';
+            let label = '';
+            
+            switch(contentId) {
+                case 'main_title':
+                    label = 'หัวข้อหลัก';
+                    currentValue = websiteContent.main_title.replace(/<br>/g, '\n');
+                    inputType = 'textarea';
+                    break;
+                case 'main_description':
+                    label = 'คำอธิบายหลัก';
+                    currentValue = websiteContent.main_description;
+                    inputType = 'textarea';
+                    break;
+                case 'start_title':
+                    label = 'หัวข้อเริ่มต้นการนำทาง';
+                    currentValue = websiteContent.start_title;
+                    break;
+                case 'start_description':
+                    label = 'คำอธิบายเริ่มต้นการนำทาง';
+                    currentValue = websiteContent.start_description;
+                    inputType = 'textarea';
+                    break;
+                case 'explore_title':
+                    label = 'หัวข้อสำรวจชั้นเรียน';
+                    currentValue = websiteContent.explore_title;
+                    break;
+                case 'features_title':
+                    label = 'หัวข้อคุณสมบัติของระบบ';
+                    currentValue = websiteContent.features_title;
+                    break;
+                case 'feature1_title':
+                    label = 'หัวข้อคุณสมบัติที่ 1';
+                    currentValue = websiteContent.feature1_title;
+                    break;
+                case 'feature1_description':
+                    label = 'คำอธิบายคุณสมบัติที่ 1';
+                    currentValue = websiteContent.feature1_description;
+                    inputType = 'textarea';
+                    break;
+                case 'feature2_title':
+                    label = 'หัวข้อคุณสมบัติที่ 2';
+                    currentValue = websiteContent.feature2_title;
+                    break;
+                case 'feature2_description':
+                    label = 'คำอธิบายคุณสมบัติที่ 2';
+                    currentValue = websiteContent.feature2_description;
+                    inputType = 'textarea';
+                    break;
+                case 'feature3_title':
+                    label = 'หัวข้อคุณสมบัติที่ 3';
+                    currentValue = websiteContent.feature3_title;
+                    break;
+                case 'feature3_description':
+                    label = 'คำอธิบายคุณสมบัติที่ 3';
+                    currentValue = websiteContent.feature3_description;
+                    inputType = 'textarea';
+                    break;
+            }
+            
+            title.textContent = `แก้ไข: ${label}`;
+            
+            if (inputType === 'textarea') {
+                body.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">${label}</label>
+                        <textarea id="content-edit-input" class="form-textarea" rows="6">${currentValue}</textarea>
+                        ${contentId === 'main_title' ? 
+                            '<p class="text-xs text-var(--stc-brown-light) mt-2">ใช้ &lt;br&gt; สำหรับขึ้นบรรทัดใหม่, ใช้ &lt;span class="text-var(--stc-brown)"&gt;...&lt;/span&gt; สำหรับเน้นข้อความสีน้ำตาล</p>' : 
+                            ''
+                        }
+                    </div>
+                `;
+            } else {
+                body.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">${label}</label>
+                        <input type="text" id="content-edit-input" class="form-input" value="${currentValue}">
+                    </div>
+                `;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeContentEditModal() {
+            document.getElementById('admin-content-modal').classList.remove('active');
+            currentEditElementId = null;
+        }
+
+        function saveContentEdit() {
+            if (!currentEditElementId) return;
+            
+            const input = document.getElementById('content-edit-input');
+            const newValue = input.value;
+            const oldValue = websiteContent[currentEditElementId];
+            
+            if (newValue !== oldValue) {
+                // สำหรับ main_title ให้แปลง \n เป็น <br>
+                if (currentEditElementId === 'main_title') {
+                    websiteContent[currentEditElementId] = newValue.replace(/\n/g, '<br>');
+                } else {
+                    websiteContent[currentEditElementId] = newValue;
+                }
+                
+                localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
+                
+                // บันทึกประวัติการแก้ไข
+                let description = `แก้ไข ${getContentLabel(currentEditElementId)}`;
+                if (oldValue) {
+                    description += `: "${oldValue.substring(0, 50)}${oldValue.length > 50 ? '...' : ''}" → "${newValue.substring(0, 50)}${newValue.length > 50 ? '...' : ''}"`;
+                }
+                addToHistory('content', 'แก้ไขเนื้อหา', description);
+                
+                // โหลดเนื้อหาใหม่
+                loadWebsiteContent();
+                
+                showNotification('บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว', 'success');
+            }
+            
+            closeContentEditModal();
+        }
+
+        function getContentLabel(contentId) {
+            const labels = {
+                'main_title': 'หัวข้อหลัก',
+                'main_description': 'คำอธิบายหลัก',
+                'start_title': 'หัวข้อเริ่มต้นการนำทาง',
+                'start_description': 'คำอธิบายเริ่มต้นการนำทาง',
+                'explore_title': 'หัวข้อสำรวจชั้นเรียน',
+                'features_title': 'หัวข้อคุณสมบัติของระบบ',
+                'feature1_title': 'หัวข้อคุณสมบัติที่ 1',
+                'feature1_description': 'คำอธิบายคุณสมบัติที่ 1',
+                'feature2_title': 'หัวข้อคุณสมบัติที่ 2',
+                'feature2_description': 'คำอธิบายคุณสมบัติที่ 2',
+                'feature3_title': 'หัวข้อคุณสมบัติที่ 3',
+                'feature3_description': 'คำอธิบายคุณสมบัติที่ 3'
+            };
+            return labels[contentId] || contentId;
         }
 
         function loadEditTab(tab) {
@@ -1449,7 +1930,7 @@
                 content.innerHTML = `
                     <div class="form-group">
                         <label class="form-label" for="edit-main-title">หัวข้อหลัก</label>
-                        <input type="text" id="edit-main-title" class="form-input" value="${websiteContent.main_title.replace('<br>', '\n').replace(/<[^>]*>/g, '')}">
+                        <input type="text" id="edit-main-title" class="form-input" value="${websiteContent.main_title.replace(/<br>/g, '\n').replace(/<[^>]*>/g, '')}">
                         <p class="text-xs text-var(--stc-brown-light) mt-1">ใช้ &lt;br&gt; สำหรับขึ้นบรรทัดใหม่, ใช้ &lt;span class='text-var(--stc-brown)'&gt;...&lt;/span&gt; สำหรับเน้นข้อความสีน้ำตาล</p>
                     </div>
                     <div class="form-group">
@@ -1491,7 +1972,132 @@
                         <textarea id="edit-feature3-description" class="form-textarea">${websiteContent.feature3_description}</textarea>
                     </div>
                 `;
+            } else if (tab === 'rooms') {
+                let roomsHTML = '<h4 class="font-semibold text-var(--stc-text) mb-3">จัดการข้อมูลห้องเรียนทั้งหมด</h4>';
+                roomsHTML += '<div class="overflow-x-auto">';
+                roomsHTML += '<table class="admin-table">';
+                roomsHTML += '<thead><tr><th>รหัสห้อง</th><th>ชื่อห้อง</th><th>ชั้น</th><th>รูปภาพ</th><th>คำอธิบาย</th><th>การจัดการ</th></tr></thead>';
+                roomsHTML += '<tbody>';
+                
+                Object.keys(navigationData).forEach(key => {
+                    if (key === "TO_IT_BUILDING") return;
+                    
+                    const roomImage = roomImages[key];
+                    const floor = key.startsWith('63') ? '3' : '4';
+                    
+                    roomsHTML += `
+                        <tr>
+                            <td><strong>${key}</strong></td>
+                            <td>${getRoomName(key)}</td>
+                            <td>ชั้น ${floor}</td>
+                            <td>
+                                ${roomImage ? 
+                                    `<img src="${roomImage}" class="image-preview-small" alt="${key}">` : 
+                                    '<span class="text-red-500 text-sm">ไม่มีรูป</span>'
+                                }
+                            </td>
+                            <td class="text-sm">${getRoomDescription(key)}</td>
+                            <td>
+                                <div class="flex gap-2">
+                                    <button onclick="openUploadModal('${key}')" class="btn-secondary text-xs">
+                                        <i class="fa-solid fa-image"></i>
+                                    </button>
+                                    <button onclick="editRoomDescription('${key}')" class="btn-secondary text-xs">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                roomsHTML += '</tbody></table></div>';
+                content.innerHTML = roomsHTML;
+            } else if (tab === 'history') {
+                let historyHTML = '<h4 class="font-semibold text-var(--stc-text) mb-3">ประวัติการแก้ไขล่าสุด</h4>';
+                
+                if (editHistory.length === 0) {
+                    historyHTML += '<div class="text-center py-8 text-var(--stc-brown-light)">ยังไม่มีประวัติการแก้ไข</div>';
+                } else {
+                    historyHTML += '<div class="space-y-3 max-h-96 overflow-y-auto">';
+                    
+                    editHistory.slice(0, 20).forEach(item => {
+                        const typeIcon = {
+                            'login': 'fa-sign-in-alt',
+                            'logout': 'fa-sign-out-alt',
+                            'image': 'fa-image',
+                            'content': 'fa-edit',
+                            'delete': 'fa-trash'
+                        }[item.type] || 'fa-history';
+                        
+                        historyHTML += `
+                            <div class="p-3 bg-var(--stc-beige) rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid ${typeIcon} text-var(--stc-brown-light)"></i>
+                                        <span class="font-medium">${item.action}</span>
+                                    </div>
+                                    <span class="text-xs text-var(--stc-brown-light)">${item.date}</span>
+                                </div>
+                                <p class="text-sm mt-2">${item.description}</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-xs text-var(--stc-brown-light)">โดย: ${item.user}</span>
+                                    <span class="text-xs px-2 py-1 rounded bg-white">${item.type}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    historyHTML += '</div>';
+                    
+                    if (editHistory.length > 20) {
+                        historyHTML += `<div class="text-center mt-4">
+                            <button onclick="clearHistory()" class="btn-danger text-sm">
+                                <i class="fa-solid fa-trash mr-2"></i>ล้างประวัติทั้งหมด
+                            </button>
+                        </div>`;
+                    }
+                }
+                
+                content.innerHTML = historyHTML;
             }
+        }
+
+        function clearHistory() {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะล้างประวัติการแก้ไขทั้งหมด?')) {
+                editHistory = [];
+                localStorage.setItem('editHistory', JSON.stringify(editHistory));
+                loadEditTab('history');
+                showNotification('ล้างประวัติการแก้ไขเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        function editRoomDescription(roomId) {
+            if (!isAdminLoggedIn) {
+                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
+                openLoginModal();
+                return;
+            }
+            
+            currentEditElementId = roomId;
+            const modal = document.getElementById('admin-content-modal');
+            const title = document.getElementById('content-modal-title');
+            const body = document.getElementById('content-modal-body');
+            
+            title.textContent = `แก้ไขคำอธิบายห้อง: ${getRoomName(roomId)} (${roomId})`;
+            
+            body.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">คำอธิบายห้อง</label>
+                    <textarea id="content-edit-input" class="form-textarea" rows="4">${getRoomDescription(roomId)}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ชื่อห้อง (สามารถเปลี่ยนได้)</label>
+                    <input type="text" id="room-name-input" class="form-input" value="${getRoomName(roomId)}">
+                </div>
+            `;
+            
+            modal.classList.add('active');
         }
 
         function closeAdminEditModal() {
@@ -1500,40 +2106,33 @@
         }
 
         function saveAdminChanges() {
-            if (currentEditType === 'start_navigation') {
+            // Save from tabs
+            if (document.getElementById('edit-main-title')) {
+                const oldContent = { ...websiteContent };
+                
+                websiteContent.main_title = document.getElementById('edit-main-title').value.replace(/\n/g, '<br>');
+                websiteContent.main_description = document.getElementById('edit-main-description').value;
                 websiteContent.start_title = document.getElementById('edit-start-title').value;
                 websiteContent.start_description = document.getElementById('edit-start-description').value;
-            } else if (currentEditType === 'feature1') {
-                websiteContent.feature1_title = document.getElementById('edit-feature-title').value;
-                websiteContent.feature1_description = document.getElementById('edit-feature-description').value;
-            } else if (currentEditType === 'feature2') {
-                websiteContent.feature2_title = document.getElementById('edit-feature-title').value;
-                websiteContent.feature2_description = document.getElementById('edit-feature-description').value;
-            } else if (currentEditType === 'feature3') {
-                websiteContent.feature3_title = document.getElementById('edit-feature-title').value;
-                websiteContent.feature3_description = document.getElementById('edit-feature-description').value;
-            } else {
-                // Save from tabs
-                if (document.getElementById('edit-main-title')) {
-                    websiteContent.main_title = document.getElementById('edit-main-title').value.replace(/\n/g, '<br>');
-                    websiteContent.main_description = document.getElementById('edit-main-description').value;
-                    websiteContent.start_title = document.getElementById('edit-start-title').value;
-                    websiteContent.start_description = document.getElementById('edit-start-description').value;
-                    websiteContent.features_title = document.getElementById('edit-features-title').value;
-                    websiteContent.explore_title = document.getElementById('edit-explore-title').value;
-                    websiteContent.feature1_title = document.getElementById('edit-feature1-title').value;
-                    websiteContent.feature1_description = document.getElementById('edit-feature1-description').value;
-                    websiteContent.feature2_title = document.getElementById('edit-feature2-title').value;
-                    websiteContent.feature2_description = document.getElementById('edit-feature2-description').value;
-                    websiteContent.feature3_title = document.getElementById('edit-feature3-title').value;
-                    websiteContent.feature3_description = document.getElementById('edit-feature3-description').value;
-                }
+                websiteContent.features_title = document.getElementById('edit-features-title').value;
+                websiteContent.explore_title = document.getElementById('edit-explore-title').value;
+                websiteContent.feature1_title = document.getElementById('edit-feature1-title').value;
+                websiteContent.feature1_description = document.getElementById('edit-feature1-description').value;
+                websiteContent.feature2_title = document.getElementById('edit-feature2-title').value;
+                websiteContent.feature2_description = document.getElementById('edit-feature2-description').value;
+                websiteContent.feature3_title = document.getElementById('edit-feature3-title').value;
+                websiteContent.feature3_description = document.getElementById('edit-feature3-description').value;
+                
+                localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
+                
+                // บันทึกประวัติการแก้ไข
+                addToHistory('content', 'แก้ไขเนื้อหาหลายจุด', 'แก้ไขเนื้อหาหลักและคุณสมบัติของเว็บไซต์');
+                
+                loadWebsiteContent();
+                showNotification('บันทึกการเปลี่ยนแปลงเนื้อหาเรียบร้อยแล้ว', 'success');
             }
             
-            localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
-            loadWebsiteContent();
             closeAdminEditModal();
-            showNotification('บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว');
         }
 
         function openAdminPanel() {
@@ -1544,113 +2143,159 @@
             const content = document.getElementById('admin-modal-content');
             
             title.textContent = 'แผงควบคุม Admin';
-            description.textContent = 'จัดการเนื้อหาและรูปภาพทั้งหมดในเว็บไซต์';
+            description.textContent = `จัดการเนื้อหาและรูปภาพทั้งหมดในเว็บไซต์ (ล็อกอินเป็น: ${currentAdminUser ? currentAdminUser.name : 'ไม่ทราบ'})`;
             content.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <button class="tab-button active" onclick="loadAdminTab('content')">เนื้อหาเว็บ</button>
-                    <button class="tab-button" onclick="loadAdminTab('images')">รูปภาพห้อง</button>
+                <div class="admin-stat-card mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="text-white text-lg font-bold">สถิติระบบ</h4>
+                            <p class="text-white/80 text-sm">ข้อมูลทั้งหมดในระบบ</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-white">${Object.keys(navigationData).length - 1}</div>
+                            <div class="text-white/80 text-sm">ห้องทั้งหมด</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <div class="text-white font-bold">${Object.keys(roomImages).length}</div>
+                            <div class="text-white/80 text-xs">มีรูปภาพ</div>
+                        </div>
+                        <div>
+                            <div class="text-white font-bold">${editHistory.length}</div>
+                            <div class="text-white/80 text-xs">ประวัติแก้ไข</div>
+                        </div>
+                    </div>
                 </div>
-                <div id="admin-tab-content"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <button class="tab-button active" onclick="loadEditTab('main')">เนื้อหาเว็บ</button>
+                    <button class="tab-button" onclick="loadEditTab('features')">คุณสมบัติ</button>
+                    <button class="tab-button" onclick="loadEditTab('rooms')">ข้อมูลห้อง</button>
+                    <button class="tab-button" onclick="loadEditTab('history')">ประวัติการแก้ไข</button>
+                </div>
+                <div id="edit-tab-content"></div>
             `;
-            loadAdminTab('content');
+            loadEditTab('main');
             modal.classList.add('active');
         }
 
-        function loadAdminTab(tab) {
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function saveContentEdit() {
+            if (!currentEditElementId) return;
             
-            const content = document.getElementById('admin-tab-content');
+            const input = document.getElementById('content-edit-input');
+            const newValue = input.value;
             
-            if (tab === 'content') {
-                content.innerHTML = `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="font-semibold text-var(--stc-text) mb-3">เนื้อหาหลัก</h4>
-                            <div class="form-group">
-                                <label class="form-label">หัวข้อหลัก</label>
-                                <input type="text" class="form-input" value="${websiteContent.main_title.replace(/<[^>]*>/g, '')}" onchange="updateContent('main_title', this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">คำอธิบายหลัก</label>
-                                <textarea class="form-textarea" onchange="updateContent('main_description', this.value)">${websiteContent.main_description}</textarea>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="font-semibold text-var(--stc-text) mb-3">เริ่มต้นการนำทาง</h4>
-                            <div class="form-group">
-                                <label class="form-label">หัวข้อ</label>
-                                <input type="text" class="form-input" value="${websiteContent.start_title}" onchange="updateContent('start_title', this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">คำอธิบาย</label>
-                                <textarea class="form-textarea" onchange="updateContent('start_description', this.value)">${websiteContent.start_description}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (tab === 'images') {
-                let imagesHTML = '<h4 class="font-semibold text-var(--stc-text) mb-3">รูปภาพห้องเรียนทั้งหมด</h4>';
-                imagesHTML += '<div class="space-y-4">';
+            // ถ้าเป็นการแก้ไขคำอธิบายห้อง
+            if (['631', '632', '633', '634', '635', 'TEACHER_ROOM', 'LAB1', 'LAB2', 'LAB3'].includes(currentEditElementId)) {
+                // เก็บข้อมูลคำอธิบายห้อง (ในระบบจริงควรเก็บใน localStorage)
+                const roomNameInput = document.getElementById('room-name-input');
+                if (roomNameInput) {
+                    addToHistory('content', 'แก้ไขข้อมูลห้อง', `แก้ไขข้อมูลห้อง ${currentEditElementId}: ${roomNameInput.value}`);
+                }
+                showNotification('บันทึกข้อมูลห้องเรียบร้อยแล้ว', 'success');
+            } else {
+                // แก้ไขเนื้อหาเว็บไซต์
+                const oldValue = websiteContent[currentEditElementId];
                 
-                Object.keys(navigationData).forEach(key => {
-                    if (key === "TO_IT_BUILDING") return;
-                    const hasImage = roomImages[key] ? '✓' : '✗';
-                    imagesHTML += `
-                        <div class="flex items-center justify-between p-3 bg-var(--stc-beige) rounded-lg">
-                            <div>
-                                <span class="font-medium">${key}</span>
-                                <span class="text-sm text-var(--stc-brown-light) ml-2">${getRoomName(key)}</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm ${hasImage === '✓' ? 'text-green-600' : 'text-red-600'}">${hasImage}</span>
-                                <button onclick="openUploadModal('${key}')" class="btn-secondary text-xs">${hasImage === '✓' ? 'เปลี่ยนรูป' : 'เพิ่มรูป'}</button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                imagesHTML += '</div>';
-                content.innerHTML = imagesHTML;
+                if (newValue !== oldValue) {
+                    if (currentEditElementId === 'main_title') {
+                        websiteContent[currentEditElementId] = newValue.replace(/\n/g, '<br>');
+                    } else {
+                        websiteContent[currentEditElementId] = newValue;
+                    }
+                    
+                    localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
+                    
+                    // บันทึกประวัติการแก้ไข
+                    addToHistory('content', 'แก้ไขเนื้อหา', `แก้ไข ${getContentLabel(currentEditElementId)}`);
+                    
+                    // โหลดเนื้อหาใหม่
+                    loadWebsiteContent();
+                    
+                    showNotification('บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว', 'success');
+                }
             }
+            
+            closeContentEditModal();
         }
 
         function updateContent(key, value) {
+            const oldValue = websiteContent[key];
             websiteContent[key] = value;
             localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
             loadWebsiteContent();
+            
+            if (oldValue !== value) {
+                addToHistory('content', 'แก้ไขเนื้อหา', `แก้ไข ${getContentLabel(key)}`);
+            }
         }
 
         function saveAllData() {
             localStorage.setItem('roomImages', JSON.stringify(roomImages));
             localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
-            showNotification('บันทึกข้อมูลทั้งหมดเรียบร้อยแล้ว');
+            
+            addToHistory('system', 'บันทึกข้อมูล', 'บันทึกข้อมูลทั้งหมดของระบบ');
+            
+            showNotification('บันทึกข้อมูลทั้งหมดเรียบร้อยแล้ว', 'success');
         }
 
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-[1000] animate-slide-in';
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                'success': 'fa-check-circle',
+                'error': 'fa-exclamation-circle',
+                'info': 'fa-info-circle'
+            };
+            
             notification.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span>${message}</span>
+                <i class="fa-solid ${icons[type]} ${type === 'success' ? 'text-green-500' : type === 'error' ? 'text-red-500' : 'text-blue-500'}"></i>
+                <div>
+                    <p class="font-medium text-var(--stc-text)">${message}</p>
                 </div>
+                <button onclick="this.parentElement.remove()" class="ml-4 text-var(--stc-brown-light) hover:text-var(--stc-brown)">
+                    <i class="fa-solid fa-times"></i>
+                </button>
             `;
             
             document.body.appendChild(notification);
             
+            // อัตโนมัติลบหลังจาก 5 วินาที
             setTimeout(() => {
-                notification.remove();
-            }, 3000);
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOutRight 0.3s ease-out';
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 5000);
         }
 
         function searchRoom() {
             const q = document.getElementById('searchInput').value.toLowerCase();
+            let hasResults = false;
+            
             document.querySelectorAll('.card-modern').forEach(card => {
                 const cardText = card.innerText.toLowerCase();
-                card.style.display = cardText.includes(q) ? 'block' : 'none';
+                if (cardText.includes(q)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
             });
+            
+            // แสดงสถานะไม่พบผลลัพธ์
+            const emptyState = document.getElementById('empty-state');
+            if (q && !hasResults) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
         }
 
         function navigate(id) {
@@ -1672,34 +2317,6 @@
             
             contentWrapper.style.height = `${windowHeight - headerHeight - footerHeight}px`;
         }
-
-        // Add animation style for notification
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slide-in {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            .animate-slide-in {
-                animation: slide-in 0.3s ease-out;
-            }
-        `;
-        document.head.appendChild(style);
-
-        window.addEventListener('DOMContentLoaded', () => {
-            runLoading();
-            setTimeout(() => {
-                initApp();
-                handleResize();
-                window.addEventListener('resize', handleResize);
-            }, 1500);
-        });
 
         // Prevent default touch behavior
         document.addEventListener('touchmove', function(e) {
@@ -1726,6 +2343,124 @@
                 closeAdminEditModal();
             }
         });
+
+        document.getElementById('admin-content-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeContentEditModal();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            runLoading();
+            setTimeout(() => {
+                initApp();
+                handleResize();
+                window.addEventListener('resize', handleResize);
+            }, 1500);
+        });
+
+        // ฟังก์ชันเพิ่มเติมสำหรับ Admin
+        function exportData() {
+            const allData = {
+                roomImages: roomImages,
+                websiteContent: websiteContent,
+                editHistory: editHistory,
+                exportedAt: new Date().toISOString(),
+                exportedBy: currentAdminUser ? currentAdminUser.name : 'unknown'
+            };
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `srtc-navigator-backup-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            addToHistory('system', 'ส่งออกข้อมูล', 'ส่งออกข้อมูลทั้งหมดของระบบ');
+            showNotification('ส่งออกข้อมูลสำเร็จ', 'success');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        
+                        if (confirm('คุณแน่ใจหรือไม่ที่จะนำเข้าข้อมูล? การกระทำนี้จะเขียนทับข้อมูลปัจจุบันทั้งหมด')) {
+                            if (importedData.roomImages) {
+                                roomImages = importedData.roomImages;
+                                localStorage.setItem('roomImages', JSON.stringify(roomImages));
+                            }
+                            
+                            if (importedData.websiteContent) {
+                                websiteContent = importedData.websiteContent;
+                                localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
+                            }
+                            
+                            if (importedData.editHistory) {
+                                editHistory = importedData.editHistory;
+                                localStorage.setItem('editHistory', JSON.stringify(editHistory));
+                            }
+                            
+                            addToHistory('system', 'นำเข้าข้อมูล', 'นำเข้าข้อมูลทั้งหมดจากไฟล์แบ็คอัพ');
+                            showNotification('นำเข้าข้อมูลสำเร็จ', 'success');
+                            
+                            // รีเฟรชหน้า
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        }
+                    } catch (error) {
+                        showNotification('ไฟล์ข้อมูลไม่ถูกต้อง', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // เพิ่มปุ่มนำเข้า/ส่งออกใน Admin Panel
+        function addExportImportButtons() {
+            if (!isAdminLoggedIn) return;
+            
+            // เพิ่มปุ่มใน Admin Panel
+            const adminPanel = document.querySelector('#admin-edit-modal .upload-modal-content');
+            if (adminPanel) {
+                const existingButtons = adminPanel.querySelector('.admin-action-buttons');
+                if (!existingButtons) {
+                    const actionButtons = document.createElement('div');
+                    actionButtons.className = 'admin-action-buttons';
+                    actionButtons.innerHTML = `
+                        <button onclick="exportData()" class="btn-secondary">
+                            <i class="fa-solid fa-download mr-2"></i>ส่งออกข้อมูล
+                        </button>
+                        <button onclick="importData()" class="btn-secondary">
+                            <i class="fa-solid fa-upload mr-2"></i>นำเข้าข้อมูล
+                        </button>
+                    `;
+                    adminPanel.querySelector('#admin-modal-content').appendChild(actionButtons);
+                }
+            }
+        }
+
+        // เรียกใช้เมื่อเปิด Admin Panel
+        const originalOpenAdminPanel = openAdminPanel;
+        openAdminPanel = function() {
+            originalOpenAdminPanel();
+            setTimeout(addExportImportButtons, 100);
+        };
     </script>
 </body>
 </html>
