@@ -170,7 +170,7 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.03);
         }
         .room-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(125, 110, 93, 0.12); }
-        .room-thumb { height: 220px; background-size: cover; background-position: center; transition: 0.6s; }
+        .room-thumb { height: 220px; background-size: cover; background-position: center; transition: 0.6s; background-color: #eee; }
         .room-card:hover .room-thumb { transform: scale(1.08); }
         .room-info { padding: 30px; background: white; text-align: center; }
         .room-info h3 { font-size: 1.35rem; color: var(--primary-color); margin-bottom: 8px; }
@@ -206,7 +206,7 @@
         @media (max-width: 768px) {
             .modal-content { grid-template-columns: 1fr; }
             .modal-img { min-height: 250px; }
-            header { flex-direction: column; text-align: center; }
+            header { flex-direction: column; text-align: center; gap: 15px; }
         }
     </style>
 </head>
@@ -253,7 +253,7 @@
             <h3 style="color: var(--primary-color); margin-bottom: 40px; font-weight: 500;">เลือกชั้นที่ต้องการสำรวจ</h3>
             <div class="room-grid">
                 <div class="room-card" onclick="showPage('floor3')">
-                    <div class="room-thumb" style="background-image: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800')"></div>
+                    <div class="room-thumb" style="background-image: url('631.jpeg')"></div>
                     <div class="room-info">
                         <h3>สำรวจชั้น 3</h3>
                         <p>บรรยากาศห้องเรียนและทฤษฎี</p>
@@ -302,13 +302,13 @@
     </div>
 
     <script>
-        // ข้อมูลห้องเรียนชั้น 3 อัปเดตตามรูปภาพที่แนบมา
+        // ข้อมูลห้องเรียนชั้น 3 อัปเดตตามชื่อไฟล์ที่คุณอัปโหลด
         const roomData = {
             floor3: [
                 { id: '631', name: 'ห้องเรียน 631', img: '631.jpeg', desc: 'ห้องเรียนทฤษฎีมาตรฐาน แผนกเทคโนโลยีสารสนเทศ บรรยากาศเงียบสงบ เหมาะแก่การเรียนรู้ภาคทฤษฎี' },
                 { id: '632', name: 'ห้องเรียน 632', img: '632.jpeg', desc: 'ห้องสอบภาคปฏิบัติและห้องเรียนทฤษฎี ติดป้ายประกาศความปลอดภัยและระเบียบการใช้ห้องอย่างชัดเจน' },
                 { id: '633', name: 'ห้องเรียน 633', img: '633.jpeg', desc: 'ห้องปฏิบัติการคอมพิวเตอร์และห้องเรียนทฤษฎี มีหน้าต่างกระจกใสสามารถมองเห็นการเรียนการสอนภายในห้องได้' },
-                { id: '634', name: 'ห้อง 634 UNKNOWCALLBACK', img: '4589aacf-ae7c-4653-94d4-44093c3b5aa6.jpeg', desc: 'ศูนย์บ่มเพาะผู้ประกอบการอาชีวศึกษา (UNKNOWCALLBACK) แหล่งเรียนรู้เชิงธุรกิจและนวัตกรรม' },
+                { id: '634', name: 'ห้อง 634 (ศูนย์บ่มเพาะฯ)', img: '4589aacf-ae7c-4653-94d4-44093c3b5aa6.jpeg', desc: 'ศูนย์บ่มเพาะผู้ประกอบการอาชีวศึกษา แหล่งเรียนรู้เชิงธุรกิจและนวัตกรรมสำหรับนักศึกษา' },
                 { id: '635', name: 'ห้องปฏิบัติการ 635', img: 'd17862a4-ef02-4173-9281-7be37c44fa5a.jpeg', desc: 'ห้องปฏิบัติการคอมพิวเตอร์หลัก ติดตั้งเครื่องคอมพิวเตอร์ประสิทธิภาพสูงสำหรับงานเขียนโปรแกรมและกราฟิก' }
             ],
             floor4: [
@@ -321,7 +321,8 @@
         function initGrids() {
             ['floor3', 'floor4'].forEach(floor => {
                 const container = document.getElementById(`grid-${floor}`);
-                container.innerHTML = ''; // Clear existing
+                if(!container) return;
+                container.innerHTML = ''; 
                 roomData[floor].forEach(room => {
                     container.innerHTML += `
                         <div class="room-card" onclick="openRoom('${floor}', '${room.id}')">
@@ -339,16 +340,20 @@
         function showPage(pageId) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+            
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) targetPage.classList.add('active');
             
             const btnId = 'btn-' + (pageId === 'home' ? 'home' : pageId);
-            if(document.getElementById(btnId)) document.getElementById(btnId).classList.add('active');
+            const targetBtn = document.getElementById(btnId);
+            if(targetBtn) targetBtn.classList.add('active');
             
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         function openRoom(floor, roomId) {
             const room = roomData[floor].find(r => r.id === roomId);
+            if(!room) return;
             document.getElementById('m-title').innerText = room.name;
             document.getElementById('m-tag').innerText = floor === 'floor3' ? 'ชั้น 3 - โซนการเรียนรู้' : 'ชั้น 4 - โซนปฏิบัติการ';
             document.getElementById('m-desc').innerText = room.desc;
@@ -368,7 +373,8 @@
 
         window.onclick = (e) => { if(e.target.id === 'roomModal') closeModal(); }
         
-        initGrids();
+        // เริ่มต้นสร้าง Grid เมื่อโหลดหน้าเว็บ
+        document.addEventListener('DOMContentLoaded', initGrids);
     </script>
 </body>
 </html>
