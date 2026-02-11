@@ -83,7 +83,7 @@
         .room-card {
             background: white;
             border-left: 5px solid var(--stc-maroon);
-            border-radius: 2px; /* ไม่โค้งมนมากตามโจทย์ */
+            border-radius: 2px;
             box-shadow: 0 2px 0 rgba(0,0,0,0.05);
             transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
             position: relative;
@@ -130,6 +130,14 @@
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Footer Styles --- */
+        .main-footer {
+            background: white;
+            border-top: 1px solid #E2E8F0;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
     </style>
 </head>
 <body>
@@ -230,6 +238,23 @@
         </div>
     </main>
 
+    <footer class="main-footer">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Developed By</p>
+                <p class="text-[#002D62] font-bold text-sm">แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="https://www.facebook.com/sit.stc" target="_blank" class="text-gray-400 hover:text-blue-600 transition-colors">
+                    <i class="fa-brands fa-facebook-f text-lg"></i>
+                </a>
+                <a href="index.html" class="flex items-center">
+                    <img src="it-logo.png" alt="IT Logo" class="h-7 w-auto grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer">
+                </a>
+            </div>
+        </div>
+    </footer>
+
     <div id="room-detail-modal" class="fixed inset-0 z-[150] flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-[#001A35]/95 backdrop-blur-md" onclick="closeRoomDetail()"></div>
         <div class="relative bg-white w-full max-w-lg shadow-2xl modal-content animate-[fadeIn_0.3s_ease-out]">
@@ -259,7 +284,7 @@
     </div>
 
     <script>
-        // ข้อมูลชุดเดิม (ห้ามหาย)
+        // ข้อมูลชุดเดิม
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "จากป้อมยามเดินตรงเข้ามาชั้นล่างตึกไอที (ตึกม่วง)" },
             "FROM_IT_TO_GATE": { angle: 180, dist: 195, guide: "จากหน้าตึกไอทีเดินย้อนกลับไปที่ป้อมยามหน้าประตู 1" },
