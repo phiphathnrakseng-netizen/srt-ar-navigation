@@ -25,17 +25,28 @@
             --radius-sm: 12px;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
         body { 
             font-family: 'Plus Jakarta Sans', 'Noto Sans Thai', sans-serif; 
             background-color: var(--stc-beige-light); 
             color: var(--stc-text);
-            margin: 0;
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--stc-beige-dark); border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: var(--stc-brown-light); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--stc-brown-dark); }
@@ -55,19 +66,19 @@
 
         .logo-container {
             position: relative;
-            width: 160px;
-            height: 160px;
-            margin-bottom: 2.5rem;
+            width: 140px;
+            height: 140px;
+            margin-bottom: 2rem;
             animation: float 3.5s ease-in-out infinite;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-15px); }
         }
 
         .progress-container {
-            width: 240px;
+            width: 200px;
             height: 4px;
             background: var(--stc-beige-dark);
             border-radius: 10px;
@@ -83,52 +94,102 @@
             transition: width 0.4s ease;
         }
 
-        /* UI Elements */
-        .glass-nav {
-            background: rgba(253, 252, 249, 0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(139, 115, 85, 0.08);
+        /* Main Layout Structure */
+        #app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
+        /* Navigation */
+        .glass-nav {
+            background: rgba(253, 252, 249, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 115, 85, 0.08);
+            flex-shrink: 0;
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 1rem;
+            height: calc(100vh - 80px);
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 0.75rem;
+                height: calc(100vh - 70px);
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0.5rem;
+        }
+
+        /* Header */
+        .header-section {
+            padding: 1.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 1rem 0;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Cards and Content */
         .card-modern {
             background: #FFFFFF;
             border-radius: var(--radius-lg);
             border: 1px solid rgba(139, 115, 85, 0.08);
             box-shadow: 0 8px 30px rgba(139, 115, 85, 0.04);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            overflow: hidden;
         }
 
         .card-modern:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(139, 115, 85, 0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(139, 115, 85, 0.08);
             border-color: rgba(139, 115, 85, 0.15);
         }
 
         .btn-primary {
             background: var(--stc-brown);
             color: white;
-            padding: 1rem 2.2rem;
+            padding: 0.875rem 1.75rem;
             border-radius: var(--radius-md);
             font-weight: 600;
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .btn-primary:hover {
             background: var(--stc-brown-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(139, 115, 85, 0.15);
+            box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15);
         }
 
         .badge-beige {
             background: rgba(139, 115, 85, 0.08);
             color: var(--stc-brown);
-            padding: 8px 20px;
+            padding: 0.5rem 1.25rem;
             border-radius: 50px;
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.5px;
+            display: inline-block;
         }
 
         /* Modal */
@@ -136,6 +197,9 @@
             border-radius: var(--radius-lg);
             background: white;
             animation: modalShow 0.5s ease-out;
+            max-width: 95%;
+            max-height: 95vh;
+            overflow-y: auto;
         }
 
         @keyframes modalShow {
@@ -151,11 +215,14 @@
         .divider {
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(139, 115, 85, 0.1), transparent);
+            margin: 1.5rem 0;
         }
 
         .nav-tab {
             transition: all 0.3s ease;
             position: relative;
+            white-space: nowrap;
+            font-size: 0.875rem;
         }
 
         .nav-tab.active::after {
@@ -164,15 +231,15 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 24px;
+            width: 20px;
             height: 3px;
             background: var(--stc-brown);
             border-radius: 2px;
         }
 
         .room-icon {
-            width: 56px;
-            height: 56px;
+            width: 48px;
+            height: 48px;
             border-radius: var(--radius-md);
             background: var(--stc-beige);
             display: flex;
@@ -180,11 +247,82 @@
             justify-content: center;
             color: var(--stc-brown);
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
         .card-modern:hover .room-icon {
             background: var(--stc-brown);
             color: white;
+        }
+
+        /* Responsive Typography */
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+        }
+
+        h4 {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+        }
+
+        p {
+            font-size: clamp(0.875rem, 2vw, 1rem);
+        }
+
+        /* Grid Adjustments for Mobile */
+        @media (max-width: 640px) {
+            .grid-cols-responsive {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .card-modern {
+                padding: 1.25rem !important;
+            }
+            
+            .room-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Footer */
+        .footer-section {
+            background: white;
+            border-top: 1px solid var(--stc-beige-dark);
+            padding: 1.5rem 1rem;
+            flex-shrink: 0;
+        }
+
+        /* Utility Classes */
+        .scrollable-content {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 200px);
+        }
+
+        .fit-screen {
+            min-height: calc(100vh - 80px);
+        }
+
+        .truncate-2-lines {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Hide scrollbar but keep functionality */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
         }
     </style>
 </head>
@@ -203,204 +341,209 @@
         <p id="speed-text" class="text-sm font-medium text-var(--stc-brown-light) mt-6">กำลังเตรียมระบบนำทาง...</p>
     </div>
 
-    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
-        <div class="relative modal-content max-w-md w-full p-8 shadow-2xl">
-            <div class="w-20 h-20 bg-var(--stc-beige) text-var(--stc-brown) rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">
+        <div class="relative modal-content w-full p-6 max-w-md">
+            <div class="w-16 h-16 bg-var(--stc-beige) text-var(--stc-brown) rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl">
                 <i class="fa-solid fa-map-location-dot"></i>
             </div>
-            <h3 class="text-2xl font-bold text-var(--stc-text) mb-4">ยินดีต้อนรับสู่ระบบนำทาง</h3>
-            <p class="text-var(--stc-brown-light) mb-8 leading-relaxed">
+            <h3 class="text-xl font-bold text-var(--stc-text) mb-4 text-center">ยินดีต้อนรับสู่ระบบนำทาง</h3>
+            <p class="text-var(--stc-brown-light) mb-8 leading-relaxed text-center text-sm">
                 เพื่อความแม่นยำในการนำทาง <strong>โปรดเริ่มต้นที่ป้อมยามประตู 1</strong> ระบบจะช่วยนำทางคุณไปยังจุดหมายด้วยเทคโนโลยี Augmented Reality
             </p>
-            <button onclick="closeModal()" class="w-full btn-primary flex justify-center items-center gap-2 py-4">
-                เริ่มต้นใช้งาน <i class="fa-solid fa-arrow-right text-sm"></i>
+            <button onclick="closeModal()" class="w-full btn-primary flex justify-center items-center gap-2 py-3 text-sm">
+                เริ่มต้นใช้งาน <i class="fa-solid fa-arrow-right text-xs"></i>
             </button>
         </div>
     </div>
 
-    <nav class="glass-nav sticky top-0 z-50 px-6 py-5">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='index.html'">
-                <div class="w-12 h-12 rounded-xl overflow-hidden border-2 border-white shadow-md">
-                    <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=A0YUGV-CCkEQ7kNvwG6-8Ex&_nc_oc=AdkDLHncgxk_KfyOeWUVbivye2epYqpIJzZH1-CQAKO-mYBfu3HD5j07pOHCuhXMtwc&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=cYGzBMrAbxn9fLTYXnZC5w&oh=00_Afs7H2VZwjwz6rOkOljsCfL3Rd87uhwrd9kV0EMU-WzX-Q&oe=6991C2BA" 
-                         class="w-full h-full object-cover" alt="STC Logo">
+    <div id="app-container">
+        <nav class="glass-nav sticky top-0 z-50 px-4 py-3">
+            <div class="flex justify-between items-center w-full">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-white shadow-md flex-shrink-0">
+                        <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=A0YUGV-CCkEQ7kNvwG6-8Ex&_nc_oc=AdkDLHncgxk_KfyOeWUVbivye2epYqpIJzZH1-CQAKO-mYBfu3HD5j07pOHCuhXMtwc&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=cYGzBMrAbxn9fLTYXnZC5w&oh=00_Afs7H2VZwjwz6rOkOljsCfL3Rd87uhwrd9kV0EMU-WzX-Q&oe=6991C2BA" 
+                             class="w-full h-full object-cover" alt="STC Logo">
+                    </div>
+                    <div class="hidden sm:block">
+                        <h1 class="text-base font-bold text-var(--stc-text) leading-tight">STC Navigator</h1>
+                        <p class="text-xs text-var(--stc-brown-light) leading-tight">Surat Thani Technical College</p>
+                    </div>
                 </div>
-                <div class="hidden sm:block">
-                    <h1 class="text-lg font-bold text-var(--stc-text)">STC Navigator</h1>
-                    <p class="text-xs text-var(--stc-brown-light)">Surat Thani Technical College</p>
+                
+                <div class="flex bg-var(--stc-beige-dark) p-1 rounded-xl">
+                    <a href="index.html" id="nav-home" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">หน้าหลัก</a>
+                    <a href="?floor=3" id="nav-f3" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">ชั้น 3</a>
+                    <a href="?floor=4" id="nav-f4" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">ชั้น 4</a>
                 </div>
             </div>
-            
-            <div class="flex bg-var(--stc-beige-dark) p-1.5 rounded-2xl">
-                <a href="index.html" id="nav-home" class="nav-tab px-5 py-2.5 rounded-xl text-sm font-medium">หน้าหลัก</a>
-                <a href="?floor=3" id="nav-f3" class="nav-tab px-5 py-2.5 rounded-xl text-sm font-medium">ชั้น 3</a>
-                <a href="?floor=4" id="nav-f4" class="nav-tab px-5 py-2.5 rounded-xl text-sm font-medium">ชั้น 4</a>
+        </nav>
+
+        <div class="content-wrapper hide-scrollbar">
+            <div class="main-content">
+                <div id="home-content">
+                    <header class="header-section">
+                        <div class="text-center">
+                            <span class="badge-beige mb-4 inline-block text-xs">Augmented Reality Navigation</span>
+                            <h2 class="text-3xl md:text-4xl font-bold text-var(--stc-text) mb-4 leading-tight">
+                                ระบบนำทางแผนก<br><span class="text-var(--stc-brown)">เทคโนโลยีสารสนเทศ</span>
+                            </h2>
+                            <p class="text-var(--stc-brown-light) max-w-xl mx-auto text-sm leading-relaxed">
+                                ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์
+                            </p>
+                        </div>
+                    </header>
+                    
+                    <div id="search-container" class="mb-4 hidden">
+                        <div class="relative w-full">
+                            <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ค้นหาห้องเรียนหรือห้องปฏิบัติการ..." 
+                                   class="w-full bg-white rounded-xl p-4 pl-12 outline-none text-sm font-medium shadow border border-var(--stc-beige-dark) focus:border-var(--stc-brown-light) transition-all">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-var(--stc-brown-light)"></i>
+                        </div>
+                    </div>
+
+                    <div id="start-phase" class="hidden">
+                        <div class="card-modern p-6 mb-4 relative overflow-hidden">
+                            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                                <div class="text-center md:text-left mb-4 md:mb-0">
+                                    <h3 class="text-xl font-bold text-var(--stc-text) mb-2">เริ่มต้นการนำทาง</h3>
+                                    <p class="text-var(--stc-brown-light) text-sm">เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ</p>
+                                </div>
+                                <button onclick="navigate('TO_IT_BUILDING')" class="btn-primary text-sm px-6 py-3 rounded-[16px] flex items-center gap-2 whitespace-nowrap">
+                                    <i class="fa-solid fa-location-arrow"></i> เริ่มนำทางทันที
+                                </button>
+                            </div>
+                            <div class="absolute -right-8 -top-8 w-32 h-32 gradient-circle"></div>
+                        </div>
+
+                        <div class="divider my-6"></div>
+
+                        <h4 class="text-lg font-bold text-var(--stc-text) mb-4 text-center">สำรวจตามชั้นเรียน</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
+                            <a href="?floor=3" class="card-modern p-5 flex items-center justify-between group hover:bg-var(--stc-beige) border-2 border-transparent hover:border-var(--stc-beige-dark)">
+                                <div class="flex items-center gap-4">
+                                    <div class="room-icon group-hover:bg-white">
+                                        <i class="fa-solid fa-chalkboard-user"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-var(--stc-brown-light) mb-1">ชั้นเรียน</p>
+                                        <h5 class="text-base font-semibold">ชั้น 3</h5>
+                                        <p class="text-xs text-var(--stc-brown-light) truncate-2-lines">ห้องบรรยายและเรียนทั่วไป</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-var(--stc-brown-light) group-hover:text-var(--stc-brown) text-sm"></i>
+                            </a>
+                            
+                            <a href="?floor=4" class="card-modern p-5 flex items-center justify-between group hover:bg-var(--stc-beige) border-2 border-transparent hover:border-var(--stc-beige-dark)">
+                                <div class="flex items-center gap-4">
+                                    <div class="room-icon group-hover:bg-white">
+                                        <i class="fa-solid fa-computer"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-var(--stc-brown-light) mb-1">ห้องปฏิบัติการ</p>
+                                        <h5 class="text-base font-semibold">ชั้น 4</h5>
+                                        <p class="text-xs text-var(--stc-brown-light) truncate-2-lines">ห้องพักครูและแล็บคอมพิวเตอร์</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-var(--stc-brown-light) group-hover:text-var(--stc-brown) text-sm"></i>
+                            </a>
+                        </div>
+
+                        <div class="mt-6 text-center">
+                            <h4 class="text-lg font-bold text-var(--stc-text) mb-4">คุณสมบัติของระบบ</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 grid-cols-responsive">
+                                <div class="card-modern p-5 text-center">
+                                    <div class="room-icon mx-auto mb-4">
+                                        <i class="fa-solid fa-map-location-dot"></i>
+                                    </div>
+                                    <h5 class="text-base font-semibold mb-2">นำทางแบบเรียลไทม์</h5>
+                                    <p class="text-xs text-var(--stc-brown-light)">แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง</p>
+                                </div>
+                                
+                                <div class="card-modern p-5 text-center">
+                                    <div class="room-icon mx-auto mb-4">
+                                        <i class="fa-solid fa-location-crosshairs"></i>
+                                    </div>
+                                    <h5 class="text-base font-semibold mb-2">ค้นหาห้องเรียน</h5>
+                                    <p class="text-xs text-var(--stc-brown-light)">ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว</p>
+                                </div>
+                                
+                                <div class="card-modern p-5 text-center">
+                                    <div class="room-icon mx-auto mb-4">
+                                        <i class="fa-solid fa-compass"></i>
+                                    </div>
+                                    <h5 class="text-base font-semibold mb-2">ใช้งานง่าย</h5>
+                                    <p class="text-xs text-var(--stc-brown-light)">อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="floor-3" class="hidden">
+                        <div class="mb-4 text-center">
+                            <h3 class="text-xl font-bold text-var(--stc-text) mb-2">ชั้น 3 - ห้องบรรยาย</h3>
+                            <p class="text-xs text-var(--stc-brown-light)">ห้องเรียนประจำแผนกเทคโนโลยีสารสนเทศ</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 scrollable-content" id="rooms-3"></div>
+                    </div>
+                    
+                    <div id="floor-4" class="hidden">
+                        <div class="mb-4 text-center">
+                            <h3 class="text-xl font-bold text-var(--stc-text) mb-2">ชั้น 4 - ห้องปฏิบัติการ</h3>
+                            <p class="text-xs text-var(--stc-brown-light)">ห้องพักครูและห้องปฏิบัติการคอมพิวเตอร์</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 scrollable-content" id="rooms-4"></div>
+                    </div>
+
+                    <div id="empty-state" class="text-center py-12 hidden">
+                        <div class="room-icon mx-auto mb-6">
+                            <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-var(--stc-text) mb-3">ไม่พบข้อมูลที่ค้นหา</h2>
+                        <p class="text-sm text-var(--stc-brown-light) mb-6 max-w-md mx-auto">ลองค้นหาด้วยคำอื่นหรือกลับสู่หน้าหลักเพื่อดูรายการทั้งหมด</p>
+                        <a href="index.html" class="btn-primary inline-flex items-center gap-2 text-sm px-4 py-2">
+                            <i class="fa-solid fa-arrow-left"></i> กลับสู่หน้าหลัก
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <header class="pt-24 pb-20 px-6">
-        <div class="max-w-7xl mx-auto text-center">
-            <span class="badge-beige mb-6 inline-block">Augmented Reality Navigation</span>
-            <h2 class="text-4xl md:text-6xl font-bold text-var(--stc-text) mb-6 leading-tight">
-                ระบบนำทางแผนก<br><span class="text-var(--stc-brown)">เทคโนโลยีสารสนเทศ</span>
-            </h2>
-            <p class="text-var(--stc-brown-light) max-w-2xl mx-auto text-lg leading-relaxed">
-                ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์
-            </p>
-        </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-6 pb-32">
-        
-        <div id="search-container" class="mb-16 hidden">
-            <div class="relative max-w-2xl mx-auto">
-                <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ค้นหาห้องเรียนหรือห้องปฏิบัติการ..." 
-                       class="w-full bg-white rounded-2xl p-5 pl-14 outline-none text-base font-medium shadow-lg border border-var(--stc-beige-dark) focus:border-var(--stc-brown-light) transition-all">
-                <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-var(--stc-brown-light) text-lg"></i>
-            </div>
-        </div>
-
-        <div id="start-phase" class="hidden">
-            <div class="card-modern p-8 md:p-10 mb-16 relative overflow-hidden">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+        <footer class="footer-section">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-4">
                     <div class="text-center md:text-left">
-                        <h3 class="text-3xl font-bold text-var(--stc-text) mb-3">เริ่มต้นการนำทาง</h3>
-                        <p class="text-var(--stc-brown-light) max-w-xl">เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ</p>
-                    </div>
-                    <button onclick="navigate('TO_IT_BUILDING')" class="btn-primary text-lg px-10 py-4 rounded-[20px] flex items-center gap-3">
-                        <i class="fa-solid fa-location-arrow"></i> เริ่มนำทางทันที
-                    </button>
-                </div>
-                <div class="absolute -right-10 -top-10 w-40 h-40 gradient-circle"></div>
-            </div>
-
-            <div class="divider my-12"></div>
-
-            <h4 class="text-2xl font-bold text-var(--stc-text) mb-10 text-center">สำรวจตามชั้นเรียน</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-                <a href="?floor=3" class="card-modern p-8 flex items-center justify-between group hover:bg-var(--stc-beige) border-2 border-transparent hover:border-var(--stc-beige-dark)">
-                    <div class="flex items-center gap-5">
-                        <div class="room-icon group-hover:bg-white">
-                            <i class="fa-solid fa-chalkboard-user text-xl"></i>
+                        <div class="flex items-center gap-3 mb-3 justify-center md:justify-start">
+                            <div class="w-10 h-10 rounded-lg overflow-hidden">
+                                <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=A0YUGV-CCkEQ7kNvwG6-8Ex&_nc_oc=AdkDLHncgxk_KfyOeWUVbivye2epYqpIJzZH1-CQAKO-mYBfu3HD5j07pOHCuhXMtwc&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=cYGzBMrAbxn9fLTYXnZC5w&oh=00_Afs7H2VZwjwz6rOkOljsCfL3Rd87uhwrd9kV0EMU-WzX-Q&oe=6991C2BA" 
+                                     class="w-full h-full object-cover" alt="Logo">
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-var(--stc-text)">วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
+                                <p class="text-xs text-var(--stc-brown-light)">แผนกเทคโนโลยีสารสนเทศ</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-sm text-var(--stc-brown-light) mb-1">ชั้นเรียน</p>
-                            <h5 class="text-xl font-semibold">ชั้น 3</h5>
-                            <p class="text-sm text-var(--stc-brown-light)">ห้องบรรยายและเรียนทั่วไป</p>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-var(--stc-brown-light) group-hover:text-var(--stc-brown)"></i>
-                </a>
-                
-                <a href="?floor=4" class="card-modern p-8 flex items-center justify-between group hover:bg-var(--stc-beige) border-2 border-transparent hover:border-var(--stc-beige-dark)">
-                    <div class="flex items-center gap-5">
-                        <div class="room-icon group-hover:bg-white">
-                            <i class="fa-solid fa-computer text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-var(--stc-brown-light) mb-1">ห้องปฏิบัติการ</p>
-                            <h5 class="text-xl font-semibold">ชั้น 4</h5>
-                            <p class="text-sm text-var(--stc-brown-light)">ห้องพักครูและแล็บคอมพิวเตอร์</p>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-var(--stc-brown-light) group-hover:text-var(--stc-brown)"></i>
-                </a>
-            </div>
-
-            <div class="mt-20 text-center">
-                <h4 class="text-2xl font-bold text-var(--stc-text) mb-6">คุณสมบัติของระบบ</h4>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                    <div class="card-modern p-8 text-center">
-                        <div class="room-icon mx-auto mb-6">
-                            <i class="fa-solid fa-map-location-dot text-xl"></i>
-                        </div>
-                        <h5 class="text-xl font-semibold mb-3">นำทางแบบเรียลไทม์</h5>
-                        <p class="text-var(--stc-brown-light)">แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง</p>
+                        <p class="text-xs text-var(--stc-brown-light) max-w-md">ระบบนำทางด้วยเทคโนโลยี Augmented Reality สำหรับนักศึกษาและบุคลากร</p>
                     </div>
                     
-                    <div class="card-modern p-8 text-center">
-                        <div class="room-icon mx-auto mb-6">
-                            <i class="fa-solid fa-location-crosshairs text-xl"></i>
-                        </div>
-                        <h5 class="text-xl font-semibold mb-3">ค้นหาห้องเรียน</h5>
-                        <p class="text-var(--stc-brown-light)">ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-xl bg-var(--stc-beige) flex items-center justify-center text-var(--stc-brown) hover:bg-var(--stc-brown) hover:text-white transition-all">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-var(--stc-beige) flex items-center justify-center text-var(--stc-brown) hover:bg-var(--stc-brown) hover:text-white transition-all">
+                            <i class="fa-solid fa-globe"></i>
+                        </a>
                     </div>
-                    
-                    <div class="card-modern p-8 text-center">
-                        <div class="room-icon mx-auto mb-6">
-                            <i class="fa-solid fa-compass text-xl"></i>
-                        </div>
-                        <h5 class="text-xl font-semibold mb-3">ใช้งานง่าย</h5>
-                        <p class="text-var(--stc-brown-light)">อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="floor-3" class="hidden">
-            <div class="mb-10 text-center">
-                <h3 class="text-3xl font-bold text-var(--stc-text) mb-3">ชั้น 3 - ห้องบรรยาย</h3>
-                <p class="text-var(--stc-brown-light)">ห้องเรียนประจำแผนกเทคโนโลยีสารสนเทศ</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-3"></div>
-        </div>
-        
-        <div id="floor-4" class="hidden">
-            <div class="mb-10 text-center">
-                <h3 class="text-3xl font-bold text-var(--stc-text) mb-3">ชั้น 4 - ห้องปฏิบัติการ</h3>
-                <p class="text-var(--stc-brown-light)">ห้องพักครูและห้องปฏิบัติการคอมพิวเตอร์</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rooms-4"></div>
-        </div>
-
-        <div id="empty-state" class="text-center py-24 hidden">
-            <div class="room-icon mx-auto mb-8">
-                <i class="fa-solid fa-magnifying-glass text-2xl"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-var(--stc-text) mb-4">ไม่พบข้อมูลที่ค้นหา</h2>
-            <p class="text-var(--stc-brown-light) mb-8 max-w-md mx-auto">ลองค้นหาด้วยคำอื่นหรือกลับสู่หน้าหลักเพื่อดูรายการทั้งหมด</p>
-            <a href="index.html" class="btn-primary inline-flex items-center gap-2">
-                <i class="fa-solid fa-arrow-left"></i> กลับสู่หน้าหลัก
-            </a>
-        </div>
-    </main>
-
-    <footer class="bg-white border-t border-var(--stc-beige-dark) py-16 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-10 mb-12">
-                <div class="text-center md:text-left">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-lg overflow-hidden">
-                            <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=A0YUGV-CCkEQ7kNvwG6-8Ex&_nc_oc=AdkDLHncgxk_KfyOeWUVbivye2epYqpIJzZH1-CQAKO-mYBfu3HD5j07pOHCuhXMtwc&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=cYGzBMrAbxn9fLTYXnZC5w&oh=00_Afs7H2VZwjwz6rOkOljsCfL3Rd87uhwrd9kV0EMU-WzX-Q&oe=6991C2BA" 
-                                 class="w-full h-full object-cover" alt="Logo">
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-var(--stc-text)">วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
-                            <p class="text-xs text-var(--stc-brown-light)">แผนกเทคโนโลยีสารสนเทศ</p>
-                        </div>
-                    </div>
-                    <p class="text-sm text-var(--stc-brown-light) max-w-md">ระบบนำทางด้วยเทคโนโลยี Augmented Reality สำหรับนักศึกษาและบุคลากร</p>
                 </div>
                 
-                <div class="flex gap-4">
-                    <a href="#" class="w-12 h-12 rounded-xl bg-var(--stc-beige) flex items-center justify-center text-var(--stc-brown) hover:bg-var(--stc-brown) hover:text-white transition-all">
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="w-12 h-12 rounded-xl bg-var(--stc-beige) flex items-center justify-center text-var(--stc-brown) hover:bg-var(--stc-brown) hover:text-white transition-all">
-                        <i class="fa-solid fa-globe"></i>
-                    </a>
+                <div class="divider my-4"></div>
+                
+                <div class="pt-2 text-center">
+                    <p class="text-xs text-var(--stc-brown-light)">© 2023 วิทยาลัยเทคนิคสุราษฎร์ธานี | พัฒนาโดยแผนกเทคโนโลยีสารสนเทศ</p>
                 </div>
             </div>
-            
-            <div class="divider"></div>
-            
-            <div class="pt-8 text-center">
-                <p class="text-sm text-var(--stc-brown-light)">© 2023 วิทยาลัยเทคนิคสุราษฎร์ธานี | พัฒนาโดยแผนกเทคโนโลยีสารสนเทศ</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <script>
         // Data & Logic
@@ -440,7 +583,9 @@
                         screen.style.opacity = '0';
                         screen.style.visibility = 'hidden';
                         if (!new URLSearchParams(window.location.search).get('floor')) {
-                            document.getElementById('guide-modal').classList.remove('hidden');
+                            setTimeout(() => {
+                                document.getElementById('guide-modal').classList.remove('hidden');
+                            }, 300);
                         }
                     }, 600);
                 }
@@ -456,18 +601,19 @@
                 'home': document.getElementById('start-phase')
             };
             
+            // Reset all tabs
             document.querySelectorAll('.nav-tab').forEach(a => {
-                a.className = "nav-tab px-5 py-2.5 rounded-xl text-sm font-medium text-var(--stc-brown-light) hover:text-var(--stc-text)";
+                a.className = "nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-var(--stc-brown-light) hover:text-var(--stc-text)";
             });
 
             if (floor === '3' || floor === '4') {
                 sections[floor].classList.remove('hidden');
                 document.getElementById('search-container').classList.remove('hidden');
-                document.getElementById('nav-f' + floor).className = "nav-tab active px-5 py-2.5 rounded-xl text-sm font-medium text-var(--stc-text) bg-white shadow-sm";
+                document.getElementById('nav-f' + floor).className = "nav-tab active px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-var(--stc-text) bg-white shadow-sm";
                 renderRooms(parseInt(floor));
             } else if (!floor) {
                 sections.home.classList.remove('hidden');
-                document.getElementById('nav-home').className = "nav-tab active px-5 py-2.5 rounded-xl text-sm font-medium text-var(--stc-text) bg-white shadow-sm";
+                document.getElementById('nav-home').className = "nav-tab active px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-var(--stc-text) bg-white shadow-sm";
             } else {
                 document.getElementById('empty-state').classList.remove('hidden');
             }
@@ -484,16 +630,16 @@
 
                 if ((floor === 3 && isFloor3) || (floor === 4 && isFloor4)) {
                     container.innerHTML += `
-                        <div onclick="navigate('${key}')" class="card-modern p-8 cursor-pointer group">
-                            <div class="flex justify-between items-start mb-6">
+                        <div onclick="navigate('${key}')" class="card-modern p-4 cursor-pointer group">
+                            <div class="flex justify-between items-start mb-4">
                                 <div class="room-icon">
-                                    <i class="fa-solid ${key.startsWith('63') ? 'fa-chalkboard' : 'fa-computer'} text-xl"></i>
+                                    <i class="fa-solid ${key.startsWith('63') ? 'fa-chalkboard' : 'fa-computer'}"></i>
                                 </div>
-                                <span class="text-xs font-semibold text-var(--stc-brown-light) bg-var(--stc-beige) px-3 py-1.5 rounded-full">${key}</span>
+                                <span class="text-xs font-semibold text-var(--stc-brown-light) bg-var(--stc-beige) px-2 py-1 rounded-full">${key}</span>
                             </div>
-                            <h4 class="text-xl font-semibold text-var(--stc-text) mb-2">${getRoomName(key)}</h4>
-                            <p class="text-sm text-var(--stc-brown-light) mb-6">แตะเพื่อเปิดระบบนำทาง AR ไปยังห้องนี้</p>
-                            <div class="flex items-center gap-2 text-var(--stc-brown) font-medium">
+                            <h4 class="text-sm font-semibold text-var(--stc-text) mb-2 truncate-2-lines">${getRoomName(key)}</h4>
+                            <p class="text-xs text-var(--stc-brown-light) mb-4">แตะเพื่อเปิดระบบนำทาง AR</p>
+                            <div class="flex items-center gap-1 text-var(--stc-brown) font-medium text-xs">
                                 เปิดนำทาง <i class="fa-solid fa-arrow-right text-xs"></i>
                             </div>
                         </div>`;
@@ -518,10 +664,31 @@
             document.getElementById('guide-modal').classList.add('hidden');
         }
 
+        // Handle window resize
+        function handleResize() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const headerHeight = document.querySelector('nav').offsetHeight;
+            const footerHeight = document.querySelector('footer').offsetHeight;
+            const windowHeight = window.innerHeight;
+            
+            contentWrapper.style.height = `${windowHeight - headerHeight - footerHeight}px`;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             runLoading();
-            setTimeout(initApp, 1500);
+            setTimeout(() => {
+                initApp();
+                handleResize();
+                window.addEventListener('resize', handleResize);
+            }, 1500);
         });
+
+        // Prevent default touch behavior
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
