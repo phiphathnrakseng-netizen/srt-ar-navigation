@@ -18,7 +18,6 @@
             transform: scale(1.05);
         }
 
-        /* --- Full Screen Overlay (CRITICAL FIX) --- */
         #sensor-auth-overlay {
             position: fixed; inset: 0; z-index: 9999; 
             background: rgba(0,10,20,0.95); backdrop-filter: blur(20px);
@@ -36,10 +35,11 @@
         #ar-target-box {
             position: absolute; width: 240px; height: 240px;
             border: 1px solid rgba(255,255,255,0.15);
-            transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.3s ease;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
             display: flex; align-items: center; justify-content: center;
             opacity: 0.4; will-change: transform;
         }
+
         .corner { position: absolute; width: 30px; height: 30px; border: 4px solid var(--neon); filter: drop-shadow(0 0 5px var(--neon)); }
         .tl { top: -8px; left: -8px; border-right: 0; border-bottom: 0; }
         .tr { top: -8px; right: -8px; border-left: 0; border-bottom: 0; }
@@ -64,12 +64,12 @@
             100% { transform: translate(0); }
         }
 
-        .distance-critical { color: #ff0055; text-shadow: 0 0 15px #ff0055; }
+        .distance-critical { color: #ff0055 !important; text-shadow: 0 0 15px #ff0055; }
+        .arrow-nav svg { filter: drop-shadow(0 0 10px var(--neon)); transition: transform 0.1s ease-out; }
     </style>
 </head>
 <body class="h-screen select-none bg-black">
 
-    <!-- Overlay ปุ่มกดเพื่อขอสิทธิ์ (แก้ไขให้รองรับ iOS) -->
     <div id="sensor-auth-overlay">
         <div class="text-center mb-10">
             <div class="relative inline-block mb-6">
@@ -88,21 +88,19 @@
     <div class="ar-grid"></div>
 
     <div class="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
-        <!-- Top UI -->
         <div class="flex justify-between items-start mt-6">
             <div class="pointer-events-auto">
                 <div class="flex items-center gap-3 mb-1">
                     <span class="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
-                    <p class="font-modern text-[9px] tracking-[0.3em] text-cyan-400 font-bold">SIGNAL_FEED</p>
+                    <p class="font-modern text-[9px] tracking-[0.3em] text-cyan-400 font-bold uppercase" id="nav-mode-label">SIGNAL_FEED</p>
                 </div>
                 <h2 id="target-display-name" class="text-2xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">...</h2>
             </div>
-            <button onclick="window.location.href='index.html'" class="w-12 h-12 pointer-events-auto border border-white/20 flex items-center justify-center bg-black/40 backdrop-blur-md active:scale-90 transition-transform">
+            <button onclick="window.history.back()" class="w-12 h-12 pointer-events-auto border border-white/20 flex items-center justify-center bg-black/40 backdrop-blur-md active:scale-90 transition-transform">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
 
-        <!-- Center UI -->
         <div class="relative flex-1 flex items-center justify-center">
             <div id="ar-floating-tag" class="flex flex-col items-center z-20">
                 <h3 id="floating-room-name" class="text-2xl font-black tracking-tight">ROOM NAME</h3>
@@ -112,88 +110,92 @@
             <div id="ar-target-box">
                 <div class="corner tl"></div><div class="corner tr"></div>
                 <div class="corner bl"></div><div class="corner br"></div>
-                <div id="arrow-container" class="arrow-nav transition-transform duration-300">
-                    <svg width="100" height="100" viewBox="0 0 100 100">
-                        <path d="M50 10 L20 85 L50 70 L80 85 Z" fill="var(--neon)" stroke="white" stroke-width="1"/>
+                <div id="arrow-container" class="arrow-nav">
+                    <svg width="120" height="120" viewBox="0 0 100 100">
+                        <path d="M50 5 L15 85 L50 70 L85 85 Z" fill="var(--neon)" stroke="white" stroke-width="1"/>
                     </svg>
                 </div>
             </div>
 
             <div class="absolute bottom-16 w-full px-8 text-center">
-                 <p id="guide-msg" class="font-bold text-sm tracking-wide text-white bg-black/50 py-2 inline-block px-4 border-l-4 border-cyan-400">WAITING FOR SENSOR...</p>
+                 <p id="guide-msg" class="font-bold text-sm tracking-wide text-white bg-black/70 py-3 inline-block px-6 border-l-4 border-cyan-400 backdrop-blur-md transition-all">WAITING FOR SENSOR...</p>
             </div>
         </div>
 
-        <!-- Bottom UI -->
         <div class="flex justify-between items-end border-t border-white/10 pb-10 pt-6 bg-black/80 backdrop-blur-xl -mx-6 px-10">
             <div>
                 <p class="font-modern text-[9px] text-cyan-500 mb-1 tracking-widest font-bold uppercase">Distance</p>
                 <div class="flex items-baseline gap-2">
-                    <span id="dist-remain" class="font-modern text-6xl font-black text-white italic">0</span>
+                    <span id="dist-remain" class="font-modern text-6xl font-black text-white italic transition-all">0</span>
                     <span class="text-lg font-black text-cyan-400 font-modern">M</span>
                 </div>
             </div>
             <div class="text-right pb-1">
                 <div id="status-tag" class="px-3 py-1 bg-cyan-900/50 text-cyan-400 border border-cyan-500/50 text-[10px] font-black uppercase tracking-tighter">Standby</div>
+                <div class="text-[8px] text-slate-500 mt-2 font-modern" id="sensor-debug">HDG: 0°</div>
             </div>
         </div>
     </div>
 
     <script>
+        // 1. รับค่า Parameter จาก URL
         const params = new URLSearchParams(window.location.search);
         const targetAngle = parseFloat(params.get('angle')) || 0;
         const targetId = params.get('target') || "Unknown";
-        const guideText = params.get('guide') ? decodeURIComponent(params.get('guide')) : "เดินไปตามทาง";
+        const initialGuide = params.get('guide') ? decodeURIComponent(params.get('guide')) : "เดินไปตามทางลูกศร";
         let currentDistance = parseFloat(params.get('dist')) || 0;
         
+        // 2. ตั้งค่าสถานะตัวแปร
         let smoothedHeading = 0;
         let lastStepTime = 0;
+        let isReached = false;
 
         const roomNames = {
-            "DEPT_LABEL_3": "หน้าแผนกไอที (ชั้น 3)", "DEPT_LABEL_4": "หน้าแผนกไอที (ชั้น 4)",
+            "DEPT_LABEL_3": "หน้าแผนกไอที (ชั้น 3)", 
+            "DEPT_LABEL_4": "หน้าแผนกไอที (ชั้น 4)",
             "631": "ห้อง 631", "632": "ห้อง 632", "633": "ห้อง 633",
             "634": "ห้อง 634", "635": "ห้อง 635", "TEACHER_ROOM": "ห้องพักครู",
             "LECTURE": "ห้องบรรยาย", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2",
-            "LAB3": "ห้องแลป 3", "TO_IT_BUILDING": "อาคารแผนกไอที"
+            "LAB3": "ห้องแลป 3", "TO_IT_BUILDING": "อาคารแผนกไอที",
+            "ENTRANCE": "ประตูทางเข้า", "LOBBY": "โถงทางเดิน"
         };
 
+        // 3. เริ่มต้นแสดงผล UI
         const displayName = roomNames[targetId] || targetId;
         document.getElementById('target-display-name').innerText = displayName;
         document.getElementById('floating-room-name').innerText = displayName;
         document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
-        document.getElementById('guide-msg').innerText = guideText;
+        document.getElementById('guide-msg').innerText = initialGuide;
 
-        // --- แก้ไขจุดสำคัญ: ฟังก์ชันขอสิทธิ์ที่ห้ามติดขัด (User Gesture) ---
+        // 4. ฟังก์ชันเริ่มแอป (รองรับ User Gesture สำหรับ iOS)
         async function startApp() {
-            // 1. ขอสิทธิ์ DeviceOrientation ทันที (ต้องทำเป็นลำดับแรกสุดใน click event)
+            // ขอสิทธิ์ Orientation
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 try {
                     const status = await DeviceOrientationEvent.requestPermission();
                     if (status !== 'granted') {
-                        alert("ต้องขออนุญาตเซนเซอร์เข็มทิศเพื่อนำทาง");
+                        alert("ระบบต้องการสิทธิ์เข็มทิศเพื่อใช้ในการนำทาง AR");
                         return;
                     }
                 } catch (e) {
-                    alert("Error: " + e.message);
-                    return;
+                    console.error(e);
                 }
             }
 
-            // 2. ซ่อน Overlay
             document.getElementById('sensor-auth-overlay').style.display = 'none';
-
-            // 3. เริ่มระบบเซนเซอร์
             setupNavSystems();
 
-            // 4. เริ่มระบบกล้อง (ทำทีหลังสุด)
+            // เริ่มกล้อง
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' } 
+                    video: { facingMode: 'environment', focusMode: 'continuous' } 
                 });
                 document.getElementById('video-preview').srcObject = stream;
                 document.getElementById('status-tag').innerText = "Active_Nav";
+                document.getElementById('status-tag').classList.replace('bg-cyan-900/50', 'bg-green-900/50');
             } catch (err) {
                 console.error("Camera error:", err);
+                document.getElementById('guide-msg').innerText = "ERROR: CAMERA_NOT_FOUND";
             }
         }
 
@@ -203,62 +205,94 @@
             window.addEventListener('devicemotion', handleMotion, true);
         }
 
+        // 5. จัดการทิศทาง (Compass Logic)
         function handleOrientation(event) {
             let heading = event.webkitCompassHeading || (360 - event.alpha);
-            if (!heading) return;
+            if (heading === undefined) return;
 
+            // ทำให้การหมุนเข็มทิศลื่นไหล (Smoothing)
             let diffHeading = heading - smoothedHeading;
             if (diffHeading > 180) diffHeading -= 360;
             if (diffHeading < -180) diffHeading += 360;
-            smoothedHeading = (smoothedHeading + diffHeading * 0.15 + 360) % 360;
+            smoothedHeading = (smoothedHeading + diffHeading * 0.2 + 360) % 360;
 
+            // คำนวณมุมลูกศร
             let arrowAngle = targetAngle - smoothedHeading;
             document.getElementById('arrow-container').style.transform = `rotate(${arrowAngle}deg)`;
-            
+            document.getElementById('sensor-debug').innerText = `HDG: ${Math.round(smoothedHeading)}° | TGT: ${targetAngle}°`;
+
+            // ปรับแต่ง UI ตามความแม่นยำในการหันหน้า
             const box = document.getElementById('ar-target-box');
-            if (Math.abs(arrowAngle) < 20) {
-                box.style.transform = "scale(1.2)";
+            const guide = document.getElementById('guide-msg');
+            const absAngle = Math.abs(arrowAngle % 360);
+            
+            // Logic การแจ้งเตือนทิศทาง
+            if (absAngle < 25 || absAngle > 335) {
+                box.style.transform = "scale(1.15)";
                 box.style.opacity = "1";
                 box.style.borderColor = "var(--neon)";
+                if(!isReached) guide.innerText = initialGuide; 
+            } else if (absAngle > 160 && absAngle < 200) {
+                guide.innerText = "⚠️ กลับหลังหัน: จุดหมายอยู่ด้านหลังคุณ";
+                box.style.opacity = "0.2";
             } else {
-                box.style.transform = "scale(0.85)";
-                box.style.opacity = "0.35";
+                box.style.transform = "scale(0.9)";
+                box.style.opacity = "0.4";
                 box.style.borderColor = "rgba(255,255,255,0.2)";
+                if(!isReached) guide.innerText = "หันโทรศัพท์ไปตามลูกศร";
             }
         }
 
+        // 6. ระบบตรวจจับการเดิน (Pedometer Logic)
         function handleMotion(event) {
             const acc = event.accelerationIncludingGravity;
             if (!acc) return;
+            
+            // คำนวณแรงเหวี่ยงรวม
             const totalAcc = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
             const now = Date.now();
-            if (totalAcc > 12.5 && (now - lastStepTime) > 600) {
+            
+            // Threshold สำหรับตรวจจับก้าวเดิน (12.5 คือค่ามาตรฐานที่ค่อนข้างแม่นยำ)
+            if (totalAcc > 12.5 && (now - lastStepTime) > 650) {
                 processStep();
                 lastStepTime = now;
             }
         }
 
         function processStep() {
-            if (currentDistance <= 0) return;
+            if (currentDistance <= 0 || isReached) return;
+
+            // ลดระยะทางลงทีละ 0.7 เมตร (ระยะก้าวเฉลี่ย)
             currentDistance = Math.max(0, currentDistance - 0.7);
-            document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
+            const distElement = document.getElementById('dist-remain');
+            distElement.innerText = Math.ceil(currentDistance);
             
+            // เอฟเฟกต์ Glitch เมื่อเดิน
             document.body.classList.add('step-glitch');
             setTimeout(() => document.body.classList.remove('step-glitch'), 150);
 
-            if (currentDistance <= 3.5) {
+            // เมื่อใกล้ถึง (3 เมตร)
+            if (currentDistance <= 3) {
+                distElement.classList.add('distance-critical');
                 document.getElementById('ar-floating-tag').classList.add('visible');
-                document.getElementById('guide-msg').innerText = "เป้าหมายอยู่ข้างหน้าท่าน";
+                document.getElementById('guide-msg').innerText = "ถึงที่หมายแล้ว: " + displayName;
+                document.getElementById('guide-msg').style.borderColor = "#ff0055";
             }
+
+            // เมื่อถึงจุดหมาย
             if (currentDistance <= 0) {
-                document.getElementById('status-tag').innerText = "Reached";
+                isReached = true;
+                document.getElementById('status-tag').innerText = "ARRIVED";
+                document.getElementById('status-tag').classList.replace('bg-green-900/50', 'bg-amber-600');
                 if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
             }
         }
 
-        // เชื่อมโยงปุ่มเข้ากับฟังก์ชันขอสิทธิ์
+        // เชื่อมปุ่มเริ่มเข้ากับฟังก์ชัน
         document.getElementById('start-nav-btn').addEventListener('click', startApp);
 
+        // ป้องกันการกวาดนิ้วเพื่อรีเฟรชหน้าบนมือถือ
+        document.addEventListener('touchmove', (e) => { if (e.scale !== 1) e.preventDefault(); }, { passive: false });
     </script>
 </body>
 </html>
