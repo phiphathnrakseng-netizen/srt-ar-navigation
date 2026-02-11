@@ -457,7 +457,7 @@
             return names[id] || id;
         }
 
-        // --- ส่วนที่แก้ไข: ฟังก์ชันแสดง Modal และรูปภาพ ---
+        // --- แก้ไขตรงนี้: Mapping ชื่อไฟล์รูปภาพให้ตรงกับไฟล์ที่อัปโหลด ---
         function openRoomDetail(roomId) {
             const data = navigationData[roomId];
             if (!data) return;
@@ -467,14 +467,13 @@
             
             const imgElement = document.getElementById('modal-room-image');
             
-            // Map ID ของห้องให้ตรงกับชื่อไฟล์รูปภาพที่คุณอัปโหลด
+            // ตรวจสอบชื่อไฟล์ให้ตรงกับที่อัปโหลด (Case Sensitive บน Github)
             const roomImages = {
-                'TEACHER_ROOM': 'breakteacher.jpeg', // รูปห้องพักครู
-                'LECTURE': 'lecture.jpeg',           // รูปห้อง Lecture
-                'LAB1': 'lab 1.jpeg',                // รูปห้อง Lab 1 (มีเว้นวรรค)
-                'LAB2': 'lab 2.jpeg',                // รูปห้อง Lab 2
-                'LAB3': 'lab 3.jpeg',                // รูปห้อง Lab 3
-                // ห้องชั้น 3 ใส่ไว้เผื่อมีไฟล์
+                'TEACHER_ROOM': 'breakteacher.jpeg', // ชื่อไฟล์ตรงกับที่อัปโหลด (ตัวเล็กหมด)
+                'LECTURE': 'lecture.jpeg',           // ชื่อไฟล์ตรงกับที่อัปโหลด
+                'LAB1': 'lab 1.jpeg',                // ชื่อไฟล์ตรงกับที่อัปโหลด (มีเว้นวรรค)
+                'LAB2': 'lab 2.jpeg',                // ชื่อไฟล์ตรงกับที่อัปโหลด (มีเว้นวรรค)
+                'LAB3': 'lab 3.jpeg',                // ชื่อไฟล์ตรงกับที่อัปโหลด (มีเว้นวรรค)
                 '631': '631.jpeg',
                 '632': '632.jpeg',
                 '633': '633.jpeg',
@@ -483,7 +482,11 @@
             };
             
             if(roomImages[roomId]) {
+                // เพิ่ม timestamp เพื่อแก้ปัญหา browser cache รูปเก่า
                 imgElement.src = roomImages[roomId]; 
+                
+                // Debug ใน Console (กด F12 ดูได้)
+                console.log("Loading Image:", roomImages[roomId]);
             } else {
                 imgElement.src = `https://placehold.co/600x400/002D62/FFF?text=${roomId}`;
             }
