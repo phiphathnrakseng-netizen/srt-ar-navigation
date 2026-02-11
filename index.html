@@ -198,6 +198,23 @@
             color: white;
         }
 
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+
         .badge-beige {
             background: rgba(139, 115, 85, 0.08);
             color: var(--stc-brown);
@@ -504,6 +521,207 @@
             display: inline-block;
             border: 1px solid rgba(139, 115, 85, 0.2);
         }
+
+        /* Admin Panel Styles */
+        .admin-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--stc-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--stc-brown);
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-family: inherit;
+            min-height: 120px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--stc-brown);
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            background: var(--stc-beige);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--stc-brown-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: var(--stc-brown);
+            color: white;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: var(--stc-beige-dark);
+            color: var(--stc-text);
+        }
+
+        .admin-edit-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            color: var(--stc-brown);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+
+        .admin-edit-btn:hover {
+            background: var(--stc-brown);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .feature-item {
+            position: relative;
+        }
+
+        .feature-item:hover .admin-edit-btn {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Login Modal */
+        .login-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .login-error {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        /* Admin Controls */
+        .admin-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .admin-control-btn {
+            background: var(--stc-brown);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .admin-control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(139, 115, 85, 0.4);
+        }
+
+        .admin-control-btn.logout {
+            background: #dc2626;
+        }
+
+        .admin-control-btn.save {
+            background: #10b981;
+        }
+
+        .admin-control-btn.admin {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
     </style>
 </head>
 <body>
@@ -521,19 +739,32 @@
         <p id="speed-text" class="text-sm font-medium text-var(--stc-brown-light) mt-6">กำลังเตรียมระบบนำทาง...</p>
     </div>
 
-    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
-        <div class="relative modal-content w-full p-6 max-w-md">
-            <div class="w-16 h-16 bg-var(--stc-beige) text-var(--stc-brown) rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl">
-                <i class="fa-solid fa-map-location-dot"></i>
+    <!-- Login Modal -->
+    <div id="login-modal" class="login-modal">
+        <div class="login-modal-content">
+            <button class="upload-modal-close" onclick="closeLoginModal()">&times;</button>
+            <h3 class="text-xl font-bold text-var(--stc-text) mb-2 text-center">เข้าสู่ระบบ Admin</h3>
+            <p class="text-sm text-var(--stc-brown-light) mb-6 text-center">กรุณาใส่ username และ password สำหรับผู้ดูแลระบบ</p>
+            
+            <div id="login-error" class="login-error">
+                <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+                <span id="error-message">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</span>
             </div>
-            <h3 class="text-xl font-bold text-var(--stc-text) mb-4 text-center">ยินดีต้อนรับสู่ระบบนำทาง</h3>
-            <p class="text-var(--stc-brown-light) mb-8 leading-relaxed text-center text-sm">
-                เพื่อความแม่นยำในการนำทาง <strong>โปรดเริ่มต้นที่ป้อมยามประตู 1</strong> ระบบจะช่วยนำทางคุณไปยังจุดหมายด้วยเทคโนโลยี Augmented Reality
-            </p>
-            <button onclick="closeModal()" class="w-full btn-primary flex justify-center items-center gap-2 py-3 text-sm">
-                เริ่มต้นใช้งาน <i class="fa-solid fa-arrow-right text-xs"></i>
-            </button>
+            
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="กรอก username" autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="กรอก password">
+            </div>
+            
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeLoginModal()" class="btn-secondary flex-1">ยกเลิก</button>
+                <button onclick="adminLogin()" class="btn-primary flex-1">เข้าสู่ระบบ</button>
+            </div>
         </div>
     </div>
 
@@ -564,6 +795,24 @@
         </div>
     </div>
 
+    <!-- Admin Edit Modal -->
+    <div id="admin-edit-modal" class="upload-modal">
+        <div class="upload-modal-content" style="max-width: 600px;">
+            <button class="upload-modal-close" onclick="closeAdminEditModal()">&times;</button>
+            <h3 class="text-xl font-bold text-var(--stc-text) mb-2" id="admin-modal-title">แก้ไขข้อมูลเว็บไซต์</h3>
+            <p class="text-sm text-var(--stc-brown-light) mb-6" id="admin-modal-description"></p>
+            
+            <div id="admin-modal-content">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeAdminEditModal()" class="btn-secondary flex-1">ยกเลิก</button>
+                <button onclick="saveAdminChanges()" class="btn-primary flex-1">บันทึกการเปลี่ยนแปลง</button>
+            </div>
+        </div>
+    </div>
+
     <div id="app-container">
         <nav class="glass-nav sticky top-0 z-50 px-4 py-3">
             <div class="flex justify-between items-center w-full">
@@ -578,10 +827,16 @@
                     </div>
                 </div>
                 
-                <div class="flex bg-var(--stc-beige-dark) p-1 rounded-xl">
-                    <a href="index.html" id="nav-home" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">หน้าหลัก</a>
-                    <a href="?floor=3" id="nav-f3" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">ชั้น 3</a>
-                    <a href="?floor=4" id="nav-f4" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">ชั้น 4</a>
+                <div class="flex items-center gap-4">
+                    <div class="flex bg-var(--stc-beige-dark) p-1 rounded-xl">
+                        <a href="index.html" id="nav-home" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">หน้าหลัก</a>
+                        <a href="?floor=3" id="nav-f3" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">ชั้น 3</a>
+                        <a href="?floor=4" id="nav-f4" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">ชั้น 4</a>
+                    </div>
+                    
+                    <button id="admin-login-btn" onclick="openLoginModal()" class="btn-secondary text-xs px-4 py-2 flex items-center gap-2">
+                        <i class="fa-solid fa-user-lock"></i> Admin
+                    </button>
                 </div>
             </div>
         </nav>
@@ -593,9 +848,9 @@
                         <div class="text-center">
                             <span class="badge-beige mb-4 inline-block text-xs">Augmented Reality Navigation</span>
                             <h2 class="text-3xl md:text-4xl font-bold text-var(--stc-text) mb-4 leading-tight">
-                                ระบบนำทางแผนก<br><span class="text-var(--stc-brown)">เทคโนโลยีสารสนเทศ</span>
+                                <span id="main-title">ระบบนำทางแผนก<br><span class="text-var(--stc-brown)">เทคโนโลยีสารสนเทศ</span></span>
                             </h2>
-                            <p class="text-var(--stc-brown-light) max-w-xl mx-auto text-sm leading-relaxed">
+                            <p class="text-var(--stc-brown-light) max-w-xl mx-auto text-sm leading-relaxed" id="main-description">
                                 ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์
                             </p>
                         </div>
@@ -611,10 +866,13 @@
 
                     <div id="start-phase" class="hidden">
                         <div class="card-modern p-6 mb-6 relative overflow-hidden">
+                            <button class="admin-edit-btn" onclick="editContent('start_navigation')" style="opacity: 0; visibility: hidden;">
+                                <i class="fa-solid fa-pen"></i> แก้ไข
+                            </button>
                             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                                 <div class="text-center md:text-left mb-4 md:mb-0">
-                                    <h3 class="text-xl font-bold text-var(--stc-text) mb-2">เริ่มต้นการนำทาง</h3>
-                                    <p class="text-var(--stc-brown-light) text-sm">เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ</p>
+                                    <h3 class="text-xl font-bold text-var(--stc-text) mb-2" id="start-title">เริ่มต้นการนำทาง</h3>
+                                    <p class="text-var(--stc-brown-light) text-sm" id="start-description">เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ</p>
                                 </div>
                                 <button onclick="navigate('TO_IT_BUILDING')" class="btn-primary text-sm px-6 py-3 rounded-[16px] flex items-center gap-2 whitespace-nowrap">
                                     <i class="fa-solid fa-location-arrow"></i> เริ่มนำทางทันที
@@ -625,7 +883,7 @@
 
                         <div class="divider my-6"></div>
 
-                        <h4 class="text-lg font-bold text-var(--stc-text) mb-4 text-center">สำรวจตามชั้นเรียน</h4>
+                        <h4 class="text-lg font-bold text-var(--stc-text) mb-4 text-center" id="explore-title">สำรวจตามชั้นเรียน</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
                             <a href="?floor=3" class="card-modern p-5 flex items-center justify-between group hover:bg-var(--stc-beige) border-2 border-transparent hover:border-var(--stc-beige-dark)">
                                 <div class="flex items-center gap-4">
@@ -657,30 +915,39 @@
                         </div>
 
                         <div class="mt-8 text-center">
-                            <h4 class="text-lg font-bold text-var(--stc-text) mb-4">คุณสมบัติของระบบ</h4>
+                            <h4 class="text-lg font-bold text-var(--stc-text) mb-4" id="features-title">คุณสมบัติของระบบ</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 grid-cols-responsive">
-                                <div class="card-modern p-5 text-center">
+                                <div class="card-modern p-5 text-center feature-item">
+                                    <button class="admin-edit-btn" onclick="editContent('feature1')" style="opacity: 0; visibility: hidden;">
+                                        <i class="fa-solid fa-pen"></i> แก้ไข
+                                    </button>
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-map-location-dot"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2">นำทางแบบเรียลไทม์</h5>
-                                    <p class="text-xs text-var(--stc-brown-light)">แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง</p>
+                                    <h5 class="text-base font-semibold mb-2" id="feature1-title">นำทางแบบเรียลไทม์</h5>
+                                    <p class="text-xs text-var(--stc-brown-light)" id="feature1-description">แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง</p>
                                 </div>
                                 
-                                <div class="card-modern p-5 text-center">
+                                <div class="card-modern p-5 text-center feature-item">
+                                    <button class="admin-edit-btn" onclick="editContent('feature2')" style="opacity: 0; visibility: hidden;">
+                                        <i class="fa-solid fa-pen"></i> แก้ไข
+                                    </button>
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-location-crosshairs"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2">ค้นหาห้องเรียน</h5>
-                                    <p class="text-xs text-var(--stc-brown-light)">ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว</p>
+                                    <h5 class="text-base font-semibold mb-2" id="feature2-title">ค้นหาห้องเรียน</h5>
+                                    <p class="text-xs text-var(--stc-brown-light)" id="feature2-description">ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว</p>
                                 </div>
                                 
-                                <div class="card-modern p-5 text-center">
+                                <div class="card-modern p-5 text-center feature-item">
+                                    <button class="admin-edit-btn" onclick="editContent('feature3')" style="opacity: 0; visibility: hidden;">
+                                        <i class="fa-solid fa-pen"></i> แก้ไข
+                                    </button>
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-compass"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2">ใช้งานง่าย</h5>
-                                    <p class="text-xs text-var(--stc-brown-light)">อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน</p>
+                                    <h5 class="text-base font-semibold mb-2" id="feature3-title">ใช้งานง่าย</h5>
+                                    <p class="text-xs text-var(--stc-brown-light)" id="feature3-description">อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน</p>
                                 </div>
                             </div>
                         </div>
@@ -752,7 +1019,26 @@
         </footer>
     </div>
 
+    <!-- Admin Controls Floating Buttons -->
+    <div id="admin-controls" class="admin-controls" style="display: none;">
+        <button class="admin-control-btn save" onclick="saveAllData()" title="บันทึกทั้งหมด">
+            <i class="fa-solid fa-floppy-disk"></i>
+        </button>
+        <button class="admin-control-btn admin" onclick="openAdminPanel()" title="แผงควบคุม Admin">
+            <i class="fa-solid fa-gear"></i>
+        </button>
+        <button class="admin-control-btn logout" onclick="adminLogout()" title="ออกจากระบบ">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </div>
+
     <script>
+        // Admin Configuration
+        const ADMIN_CREDENTIALS = {
+            username: "admin",
+            password: "admin123"
+        };
+
         // Data & Logic
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
@@ -767,9 +1053,27 @@
             "LAB3": { angle: 5, dist: 240, guide: "ขึ้นชั้น 4 ห้องปฏิบัติการ 3" }
         };
 
-        // เก็บข้อมูลรูปภาพห้องเรียน (จะเก็บใน localStorage)
+        // เก็บข้อมูลรูปภาพห้องเรียนและเนื้อหาเว็บไซต์
         let roomImages = JSON.parse(localStorage.getItem('roomImages')) || {};
+        let websiteContent = JSON.parse(localStorage.getItem('websiteContent')) || {
+            main_title: "ระบบนำทางแผนก<br><span class='text-var(--stc-brown)'>เทคโนโลยีสารสนเทศ</span>",
+            main_description: "ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์",
+            start_title: "เริ่มต้นการนำทาง",
+            start_description: "เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ",
+            explore_title: "สำรวจตามชั้นเรียน",
+            features_title: "คุณสมบัติของระบบ",
+            feature1_title: "นำทางแบบเรียลไทม์",
+            feature1_description: "แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง",
+            feature2_title: "ค้นหาห้องเรียน",
+            feature2_description: "ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว",
+            feature3_title: "ใช้งานง่าย",
+            feature3_description: "อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน"
+        };
 
+        // ตรวจสอบสถานะการล็อกอิน
+        let isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
+
+        // Room Management
         function getRoomName(id) {
             const names = {
                 "631": "ห้องเรียน 631", "632": "ห้องเรียน 632", "633": "ห้องเรียน 633",
@@ -839,9 +1143,29 @@
             } else if (!floor) {
                 sections.home.classList.remove('hidden');
                 document.getElementById('nav-home').className = "nav-tab active px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-var(--stc-text) bg-white shadow-sm";
+                loadWebsiteContent();
             } else {
                 document.getElementById('empty-state').classList.remove('hidden');
             }
+
+            // Show admin controls if logged in
+            updateAdminUI();
+        }
+
+        function loadWebsiteContent() {
+            // โหลดเนื้อหาเว็บไซต์จาก localStorage
+            document.getElementById('main-title').innerHTML = websiteContent.main_title;
+            document.getElementById('main-description').textContent = websiteContent.main_description;
+            document.getElementById('start-title').textContent = websiteContent.start_title;
+            document.getElementById('start-description').textContent = websiteContent.start_description;
+            document.getElementById('explore-title').textContent = websiteContent.explore_title;
+            document.getElementById('features-title').textContent = websiteContent.features_title;
+            document.getElementById('feature1-title').textContent = websiteContent.feature1_title;
+            document.getElementById('feature1-description').textContent = websiteContent.feature1_description;
+            document.getElementById('feature2-title').textContent = websiteContent.feature2_title;
+            document.getElementById('feature2-description').textContent = websiteContent.feature2_description;
+            document.getElementById('feature3-title').textContent = websiteContent.feature3_title;
+            document.getElementById('feature3-description').textContent = websiteContent.feature3_description;
         }
 
         function renderRooms(floor) {
@@ -892,12 +1216,80 @@
             });
         }
 
+        // Admin Login Functions
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+            document.getElementById('login-error').classList.remove('show');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.remove('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function adminLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                isAdminLoggedIn = true;
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                showNotification('เข้าสู่ระบบ Admin สำเร็จ');
+                updateAdminUI();
+                closeLoginModal();
+            } else {
+                document.getElementById('login-error').classList.add('show');
+            }
+        }
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            localStorage.setItem('isAdminLoggedIn', 'false');
+            showNotification('ออกจากระบบ Admin สำเร็จ');
+            updateAdminUI();
+        }
+
+        function updateAdminUI() {
+            const adminControls = document.getElementById('admin-controls');
+            const adminLoginBtn = document.getElementById('admin-login-btn');
+            const editButtons = document.querySelectorAll('.admin-edit-btn');
+            
+            if (isAdminLoggedIn) {
+                adminControls.style.display = 'flex';
+                adminLoginBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Admin <span class="admin-badge">ON</span>';
+                adminLoginBtn.onclick = () => showNotification('คุณอยู่ในระบบ Admin แล้ว');
+                
+                // แสดงปุ่มแก้ไข
+                editButtons.forEach(btn => {
+                    btn.style.opacity = '1';
+                    btn.style.visibility = 'visible';
+                });
+            } else {
+                adminControls.style.display = 'none';
+                adminLoginBtn.innerHTML = '<i class="fa-solid fa-user-lock"></i> Admin';
+                adminLoginBtn.onclick = openLoginModal;
+                
+                // ซ่อนปุ่มแก้ไข
+                editButtons.forEach(btn => {
+                    btn.style.opacity = '0';
+                    btn.style.visibility = 'hidden';
+                });
+            }
+        }
+
         // Upload Image Functions
         let currentUploadRoom = null;
         let selectedFile = null;
 
         function openUploadModal(roomId) {
             event.stopPropagation();
+            if (!isAdminLoggedIn) {
+                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน');
+                openLoginModal();
+                return;
+            }
+            
             currentUploadRoom = roomId;
             document.getElementById('upload-room-name').textContent = getRoomName(roomId);
             document.getElementById('upload-modal').classList.add('active');
@@ -953,8 +1345,290 @@
             closeUploadModal();
         }
 
+        // Admin Edit Content Functions
+        let currentEditType = null;
+
+        function editContent(type) {
+            if (!isAdminLoggedIn) {
+                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน');
+                openLoginModal();
+                return;
+            }
+            
+            currentEditType = type;
+            const modal = document.getElementById('admin-edit-modal');
+            const title = document.getElementById('admin-modal-title');
+            const description = document.getElementById('admin-modal-description');
+            const content = document.getElementById('admin-modal-content');
+            
+            switch(type) {
+                case 'start_navigation':
+                    title.textContent = 'แก้ไขหัวข้อเริ่มต้นการนำทาง';
+                    description.textContent = 'แก้ไขหัวข้อและคำอธิบายสำหรับส่วนเริ่มต้นการนำทาง';
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label" for="edit-start-title">หัวข้อ</label>
+                            <input type="text" id="edit-start-title" class="form-input" value="${websiteContent.start_title}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-start-description">คำอธิบาย</label>
+                            <textarea id="edit-start-description" class="form-textarea">${websiteContent.start_description}</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'feature1':
+                    title.textContent = 'แก้ไขคุณสมบัติที่ 1';
+                    description.textContent = 'แก้ไขหัวข้อและคำอธิบายสำหรับคุณสมบัติแรกของระบบ';
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label" for="edit-feature-title">หัวข้อ</label>
+                            <input type="text" id="edit-feature-title" class="form-input" value="${websiteContent.feature1_title}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-feature-description">คำอธิบาย</label>
+                            <textarea id="edit-feature-description" class="form-textarea">${websiteContent.feature1_description}</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'feature2':
+                    title.textContent = 'แก้ไขคุณสมบัติที่ 2';
+                    description.textContent = 'แก้ไขหัวข้อและคำอธิบายสำหรับคุณสมบัติที่สองของระบบ';
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label" for="edit-feature-title">หัวข้อ</label>
+                            <input type="text" id="edit-feature-title" class="form-input" value="${websiteContent.feature2_title}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-feature-description">คำอธิบาย</label>
+                            <textarea id="edit-feature-description" class="form-textarea">${websiteContent.feature2_description}</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'feature3':
+                    title.textContent = 'แก้ไขคุณสมบัติที่ 3';
+                    description.textContent = 'แก้ไขหัวข้อและคำอธิบายสำหรับคุณสมบัติที่สามของระบบ';
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label" for="edit-feature-title">หัวข้อ</label>
+                            <input type="text" id="edit-feature-title" class="form-input" value="${websiteContent.feature3_title}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-feature-description">คำอธิบาย</label>
+                            <textarea id="edit-feature-description" class="form-textarea">${websiteContent.feature3_description}</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    title.textContent = 'แก้ไขเนื้อหาเว็บไซต์';
+                    description.textContent = 'เลือกส่วนที่ต้องการแก้ไข';
+                    content.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button class="tab-button active" onclick="loadEditTab('main')">หน้าแรก</button>
+                            <button class="tab-button" onclick="loadEditTab('features')">คุณสมบัติ</button>
+                        </div>
+                        <div id="edit-tab-content" class="mt-6"></div>
+                    `;
+                    loadEditTab('main');
+                    return;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function loadEditTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const content = document.getElementById('edit-tab-content');
+            
+            if (tab === 'main') {
+                content.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label" for="edit-main-title">หัวข้อหลัก</label>
+                        <input type="text" id="edit-main-title" class="form-input" value="${websiteContent.main_title.replace('<br>', '\n').replace(/<[^>]*>/g, '')}">
+                        <p class="text-xs text-var(--stc-brown-light) mt-1">ใช้ &lt;br&gt; สำหรับขึ้นบรรทัดใหม่, ใช้ &lt;span class='text-var(--stc-brown)'&gt;...&lt;/span&gt; สำหรับเน้นข้อความสีน้ำตาล</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-main-description">คำอธิบายหลัก</label>
+                        <textarea id="edit-main-description" class="form-textarea">${websiteContent.main_description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-start-title">หัวข้อเริ่มต้นการนำทาง</label>
+                        <input type="text" id="edit-start-title" class="form-input" value="${websiteContent.start_title}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-start-description">คำอธิบายเริ่มต้นการนำทาง</label>
+                        <textarea id="edit-start-description" class="form-textarea">${websiteContent.start_description}</textarea>
+                    </div>
+                `;
+            } else if (tab === 'features') {
+                content.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label" for="edit-features-title">หัวข้อคุณสมบัติ</label>
+                        <input type="text" id="edit-features-title" class="form-input" value="${websiteContent.features_title}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-explore-title">หัวข้อสำรวจชั้นเรียน</label>
+                        <input type="text" id="edit-explore-title" class="form-input" value="${websiteContent.explore_title}">
+                    </div>
+                    <div class="form-group">
+                        <h4 class="font-semibold text-var(--stc-text) mb-3">คุณสมบัติที่ 1</h4>
+                        <input type="text" id="edit-feature1-title" class="form-input mb-3" value="${websiteContent.feature1_title}">
+                        <textarea id="edit-feature1-description" class="form-textarea mb-6">${websiteContent.feature1_description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <h4 class="font-semibold text-var(--stc-text) mb-3">คุณสมบัติที่ 2</h4>
+                        <input type="text" id="edit-feature2-title" class="form-input mb-3" value="${websiteContent.feature2_title}">
+                        <textarea id="edit-feature2-description" class="form-textarea mb-6">${websiteContent.feature2_description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <h4 class="font-semibold text-var(--stc-text) mb-3">คุณสมบัติที่ 3</h4>
+                        <input type="text" id="edit-feature3-title" class="form-input mb-3" value="${websiteContent.feature3_title}">
+                        <textarea id="edit-feature3-description" class="form-textarea">${websiteContent.feature3_description}</textarea>
+                    </div>
+                `;
+            }
+        }
+
+        function closeAdminEditModal() {
+            document.getElementById('admin-edit-modal').classList.remove('active');
+            currentEditType = null;
+        }
+
+        function saveAdminChanges() {
+            if (currentEditType === 'start_navigation') {
+                websiteContent.start_title = document.getElementById('edit-start-title').value;
+                websiteContent.start_description = document.getElementById('edit-start-description').value;
+            } else if (currentEditType === 'feature1') {
+                websiteContent.feature1_title = document.getElementById('edit-feature-title').value;
+                websiteContent.feature1_description = document.getElementById('edit-feature-description').value;
+            } else if (currentEditType === 'feature2') {
+                websiteContent.feature2_title = document.getElementById('edit-feature-title').value;
+                websiteContent.feature2_description = document.getElementById('edit-feature-description').value;
+            } else if (currentEditType === 'feature3') {
+                websiteContent.feature3_title = document.getElementById('edit-feature-title').value;
+                websiteContent.feature3_description = document.getElementById('edit-feature-description').value;
+            } else {
+                // Save from tabs
+                if (document.getElementById('edit-main-title')) {
+                    websiteContent.main_title = document.getElementById('edit-main-title').value.replace(/\n/g, '<br>');
+                    websiteContent.main_description = document.getElementById('edit-main-description').value;
+                    websiteContent.start_title = document.getElementById('edit-start-title').value;
+                    websiteContent.start_description = document.getElementById('edit-start-description').value;
+                    websiteContent.features_title = document.getElementById('edit-features-title').value;
+                    websiteContent.explore_title = document.getElementById('edit-explore-title').value;
+                    websiteContent.feature1_title = document.getElementById('edit-feature1-title').value;
+                    websiteContent.feature1_description = document.getElementById('edit-feature1-description').value;
+                    websiteContent.feature2_title = document.getElementById('edit-feature2-title').value;
+                    websiteContent.feature2_description = document.getElementById('edit-feature2-description').value;
+                    websiteContent.feature3_title = document.getElementById('edit-feature3-title').value;
+                    websiteContent.feature3_description = document.getElementById('edit-feature3-description').value;
+                }
+            }
+            
+            localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
+            loadWebsiteContent();
+            closeAdminEditModal();
+            showNotification('บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว');
+        }
+
+        function openAdminPanel() {
+            currentEditType = 'admin_panel';
+            const modal = document.getElementById('admin-edit-modal');
+            const title = document.getElementById('admin-modal-title');
+            const description = document.getElementById('admin-modal-description');
+            const content = document.getElementById('admin-modal-content');
+            
+            title.textContent = 'แผงควบคุม Admin';
+            description.textContent = 'จัดการเนื้อหาและรูปภาพทั้งหมดในเว็บไซต์';
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <button class="tab-button active" onclick="loadAdminTab('content')">เนื้อหาเว็บ</button>
+                    <button class="tab-button" onclick="loadAdminTab('images')">รูปภาพห้อง</button>
+                </div>
+                <div id="admin-tab-content"></div>
+            `;
+            loadAdminTab('content');
+            modal.classList.add('active');
+        }
+
+        function loadAdminTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const content = document.getElementById('admin-tab-content');
+            
+            if (tab === 'content') {
+                content.innerHTML = `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-semibold text-var(--stc-text) mb-3">เนื้อหาหลัก</h4>
+                            <div class="form-group">
+                                <label class="form-label">หัวข้อหลัก</label>
+                                <input type="text" class="form-input" value="${websiteContent.main_title.replace(/<[^>]*>/g, '')}" onchange="updateContent('main_title', this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">คำอธิบายหลัก</label>
+                                <textarea class="form-textarea" onchange="updateContent('main_description', this.value)">${websiteContent.main_description}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-var(--stc-text) mb-3">เริ่มต้นการนำทาง</h4>
+                            <div class="form-group">
+                                <label class="form-label">หัวข้อ</label>
+                                <input type="text" class="form-input" value="${websiteContent.start_title}" onchange="updateContent('start_title', this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">คำอธิบาย</label>
+                                <textarea class="form-textarea" onchange="updateContent('start_description', this.value)">${websiteContent.start_description}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (tab === 'images') {
+                let imagesHTML = '<h4 class="font-semibold text-var(--stc-text) mb-3">รูปภาพห้องเรียนทั้งหมด</h4>';
+                imagesHTML += '<div class="space-y-4">';
+                
+                Object.keys(navigationData).forEach(key => {
+                    if (key === "TO_IT_BUILDING") return;
+                    const hasImage = roomImages[key] ? '✓' : '✗';
+                    imagesHTML += `
+                        <div class="flex items-center justify-between p-3 bg-var(--stc-beige) rounded-lg">
+                            <div>
+                                <span class="font-medium">${key}</span>
+                                <span class="text-sm text-var(--stc-brown-light) ml-2">${getRoomName(key)}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm ${hasImage === '✓' ? 'text-green-600' : 'text-red-600'}">${hasImage}</span>
+                                <button onclick="openUploadModal('${key}')" class="btn-secondary text-xs">${hasImage === '✓' ? 'เปลี่ยนรูป' : 'เพิ่มรูป'}</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                imagesHTML += '</div>';
+                content.innerHTML = imagesHTML;
+            }
+        }
+
+        function updateContent(key, value) {
+            websiteContent[key] = value;
+            localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
+            loadWebsiteContent();
+        }
+
+        function saveAllData() {
+            localStorage.setItem('roomImages', JSON.stringify(roomImages));
+            localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
+            showNotification('บันทึกข้อมูลทั้งหมดเรียบร้อยแล้ว');
+        }
+
         function showNotification(message) {
-            // สร้าง notification element
             const notification = document.createElement('div');
             notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-[1000] animate-slide-in';
             notification.innerHTML = `
@@ -1034,10 +1708,22 @@
             }
         }, { passive: false });
 
-        // Close upload modal when clicking outside
+        // Close modals when clicking outside
         document.getElementById('upload-modal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeUploadModal();
+            }
+        });
+
+        document.getElementById('login-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginModal();
+            }
+        });
+
+        document.getElementById('admin-edit-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAdminEditModal();
             }
         });
     </script>
