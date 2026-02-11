@@ -37,18 +37,24 @@
         header {
             background-color: rgba(250, 247, 242, 0.85);
             backdrop-filter: blur(20px);
-            padding: 1rem 5%;
+            padding: 0.8rem 5%;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0; z-index: 1000;
             border-bottom: 1px solid rgba(125, 110, 93, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
         }
 
-        .logo-area { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .logo-area img { height: 40px; border-radius: 10px; }
-        .logo-text h1 { font-size: 0.95rem; color: var(--primary-color); font-weight: 600; }
+        .logo-area { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        /* ปรับขนาดโลโก้ใน Header */
+        .logo-area img { 
+            height: 55px; 
+            width: auto;
+            object-fit: contain;
+        }
+        .logo-text h1 { font-size: 0.95rem; color: var(--primary-color); font-weight: 600; line-height: 1.2; }
 
         nav { display: flex; gap: 5px; }
         nav button {
@@ -71,66 +77,44 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- New Home Hero --- */
-        .hero-container {
-            padding: 60px 0;
-            text-align: center;
-        }
+        /* --- Home Hero --- */
+        .hero-container { padding: 60px 0; text-align: center; }
         .hero-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            background: rgba(125, 110, 93, 0.1);
-            color: var(--primary-color);
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 20px;
+            display: inline-block; padding: 6px 16px;
+            background: rgba(125, 110, 93, 0.1); color: var(--primary-color);
+            border-radius: 50px; font-size: 0.85rem; font-weight: 500; margin-bottom: 20px;
         }
         .hero-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            line-height: 1.2;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-weight: 600;
+            font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.2;
+            color: var(--primary-color); margin-bottom: 20px; font-weight: 600;
         }
         .hero-subtitle {
-            font-size: 1.1rem;
-            color: var(--secondary-color);
-            max-width: 700px;
-            margin: 0 auto 40px;
+            font-size: 1.1rem; color: var(--secondary-color);
+            max-width: 700px; margin: 0 auto 40px;
         }
 
-        /* --- Feature Highlights --- */
+        /* --- Feature Grid --- */
         .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 60px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; margin-bottom: 60px;
         }
         .feature-box {
-            background: var(--card-bg);
-            padding: 35px;
-            border-radius: var(--radius-lg);
-            text-align: left;
-            transition: var(--transition);
-            border: 1px solid rgba(125, 110, 93, 0.05);
+            background: var(--card-bg); padding: 35px;
+            border-radius: var(--radius-lg); text-align: left;
+            transition: var(--transition); border: 1px solid rgba(125, 110, 93, 0.05);
         }
         .feature-box:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(125, 110, 93, 0.08); }
         .feature-icon {
-            width: 50px; height: 50px;
-            background: var(--bg-color);
-            color: var(--primary-color);
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 12px; font-size: 1.5rem; margin-bottom: 20px;
+            width: 55px; height: 55px; background: var(--bg-color);
+            color: var(--primary-color); display: flex; align-items: center; justify-content: center;
+            border-radius: 15px; font-size: 1.5rem; margin-bottom: 20px;
         }
         .feature-box h4 { margin-bottom: 10px; color: var(--primary-color); font-size: 1.2rem; }
         .feature-box p { font-size: 0.9rem; color: #888; }
 
         /* --- Room Cards --- */
         .room-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;
         }
         .room-card {
             background: var(--card-bg); border-radius: var(--radius-lg);
@@ -140,9 +124,17 @@
         .room-card:hover { transform: scale(1.02); box-shadow: 0 15px 35px rgba(125, 110, 93, 0.1); }
         .room-thumb { height: 200px; background-size: cover; background-position: center; transition: 0.5s; }
         .room-card:hover .room-thumb { transform: scale(1.1); }
-        .room-info { padding: 25px; background: white; position: relative; z-index: 1; }
+        .room-info { padding: 25px; background: white; position: relative; z-index: 1; text-align: center; }
         .room-info h3 { font-size: 1.25rem; color: var(--primary-color); margin-bottom: 5px; }
         .room-info p { font-size: 0.85rem; color: #999; }
+
+        /* --- Footer --- */
+        footer {
+            background: white; padding: 60px 5%; text-align: center;
+            border-top: 1px solid rgba(125, 110, 93, 0.1);
+        }
+        .footer-logo { height: 80px; margin-bottom: 20px; opacity: 0.8; }
+        .footer-text { font-size: 0.9rem; color: var(--secondary-color); }
 
         /* --- Modal --- */
         .modal {
@@ -172,7 +164,7 @@
         @media (max-width: 850px) {
             .modal-content { grid-template-columns: 1fr; }
             .modal-img { height: 250px; min-height: 250px; }
-            header { flex-direction: column; gap: 15px; }
+            header { flex-direction: column; gap: 15px; padding: 1.5rem 5%; }
             .hero-title { font-size: 2.2rem; }
         }
     </style>
@@ -181,9 +173,9 @@
 
     <header>
         <div class="logo-area" onclick="showPage('home')">
-            <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a5f93a&oh=00_Afs1PcbP-3mGjRGcvRqj59ulgKnCTG_9reS4t0L_yT4tfQ&oe=6991FAFA" alt="Logo">
+            <img src="https://scontent-bkk1-2.xx.fbcdn.net/v/t1.6435-9/124571575_750142568916394_6898155299249385591_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6OcHB6DIg0R14iWqq_ppBRRhe7dki1MhFGF7t2SLUyDUOuNiP3cn8cXIGyDxsLp0XJlvYjPzjKDZteCHz4Hm6&_nc_ohc=B8_Z-ZM0t44Q7kNvwG0tyI4&_nc_oc=AdkZrTzH_kMVnVr2zO8Kx9UfVVTMbYpLy9eENfbQUyGYlOoQ7egBVe0mqXGfwy7M628&_nc_zt=23&_nc_ht=scontent-bkk1-2.xx&_nc_gid=ZTPnADG5oO05z-1LVxQ1_Q&oh=00_AfvgL5xm0F0k787mTfEjdyDppDa78wvDlTiznqkHY_FYsQ&oe=69B3BB04" alt="แผนก IT วิทยาลัยเทคนิคสุราษฎร์ธานี">
             <div class="logo-text">
-                <h1>แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
+                <h1>แผนกเทคโนโลยีสารสนเทศ<br>วิทยาลัยเทคนิคสุราษฎร์ธานี</h1>
             </div>
         </div>
         <nav>
@@ -217,13 +209,13 @@
                 </div>
             </div>
 
-            <h3 style="color: var(--primary-color); margin-bottom: 30px;">เริ่มการสำรวจได้เลย</h3>
+            <h3 style="color: var(--primary-color); margin-bottom: 30px; font-weight: 500;">เลือกชั้นที่ต้องการสำรวจ</h3>
             <div class="room-grid">
                 <div class="room-card" onclick="showPage('floor3')">
                     <div class="room-thumb" style="background-image: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800')"></div>
                     <div class="room-info">
                         <h3>สำรวจชั้น 3</h3>
-                        <p>ห้องบรรยายและศูนย์การเรียนรู้ทฤษฎี</p>
+                        <p>ห้องบรรยายและโซนทฤษฎี</p>
                     </div>
                 </div>
                 <div class="room-card" onclick="showPage('floor4')">
@@ -252,6 +244,11 @@
             <div class="room-grid" id="grid-floor4"></div>
         </div>
     </section>
+
+    <footer>
+        <img class="footer-logo" src="https://scontent-bkk1-2.xx.fbcdn.net/v/t1.6435-9/124571575_750142568916394_6898155299249385591_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6OcHB6DIg0R14iWqq_ppBRRhe7dki1MhFGF7t2SLUyDUOuNiP3cn8cXIGyDxsLp0XJlvYjPzjKDZteCHz4Hm6&_nc_ohc=B8_Z-ZM0t44Q7kNvwG0tyI4&_nc_oc=AdkZrTzH_kMVnVr2zO8Kx9UfVVTMbYpLy9eENfbQUyGYlOoQ7egBVe0mqXGfwy7M628&_nc_zt=23&_nc_ht=scontent-bkk1-2.xx&_nc_gid=ZTPnADG5oO05z-1LVxQ1_Q&oh=00_AfvgL5xm0F0k787mTfEjdyDppDa78wvDlTiznqkHY_FYsQ&oe=69B3BB04" alt="IT Logo">
+        <p class="footer-text">© 2026 แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี<br>Surat Thani Technical College</p>
+    </footer>
 
     <div id="roomModal" class="modal">
         <div class="modal-content">
@@ -285,17 +282,19 @@
         function initGrids() {
             ['floor3', 'floor4'].forEach(floor => {
                 const container = document.getElementById(`grid-${floor}`);
-                roomData[floor].forEach(room => {
-                    container.innerHTML += `
-                        <div class="room-card" onclick="openRoom('${floor}', '${room.id}')">
-                            <div class="room-thumb" style="background-image: url('${room.img}')"></div>
-                            <div class="room-info">
-                                <h3>${room.name}</h3>
-                                <p>ดูรายละเอียดและนำทาง</p>
+                if (container) {
+                    roomData[floor].forEach(room => {
+                        container.innerHTML += `
+                            <div class="room-card" onclick="openRoom('${floor}', '${room.id}')">
+                                <div class="room-thumb" style="background-image: url('${room.img}')"></div>
+                                <div class="room-info">
+                                    <h3>${room.name}</h3>
+                                    <p>คลิกเพื่อดูรายละเอียด</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                });
+                        `;
+                    });
+                }
             });
         }
 
@@ -323,7 +322,7 @@
         }
 
         function startAR() {
-            alert("✨ ระบบ AR กำลังเริ่มต้น...\nกรุณาอนุญาตการเข้าถึงกล้องและเดินไปยังจุดมาร์คเกอร์หน้าอาคารเพื่อนำทาง");
+            alert("✨ ระบบ AR กำลังเริ่มต้น...\nกรุณาอนุญาตการเข้าถึงกล้องเพื่อเริ่มการนำทาง");
         }
 
         window.onclick = (e) => { if(e.target.id === 'roomModal') closeModal(); }
