@@ -270,10 +270,10 @@
                 <button onclick="closeRoomDetail()" class="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-red-500 hover:text-white transition-all rounded-none"><i class="fa-solid fa-times"></i></button>
             </div>
             
-            <div class="relative w-full aspect-video bg-slate-100 border-b border-slate-200 shrink-0">
+            <div class="relative w-full h-60 bg-slate-100 border-b border-slate-200 shrink-0">
                 <img id="modal-room-image" src="" class="w-full h-full object-cover" alt="Room Image" onerror="this.src='https://placehold.co/600x400/002D62/FFF?text=No+Image'">
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <h3 id="modal-room-name" class="text-white text-2xl font-bold drop-shadow-md">ชื่อห้องเรียน</h3>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                    <h3 id="modal-room-name" class="text-white text-xl font-bold drop-shadow-md">ชื่อห้องเรียน</h3>
                 </div>
             </div>
 
@@ -488,8 +488,6 @@
             document.getElementById('modal-room-guide').innerText = data.guide;
             
             // 2. Set Image based on ID (Using uploaded file naming convention)
-            // Note: Assuming images are in the same folder or an images/ subfolder. 
-            // Since user uploaded '631.jpeg', we use that directly.
             const imgElement = document.getElementById('modal-room-image');
             
             if(['631','632','633','634','635'].includes(roomId)) {
