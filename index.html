@@ -238,7 +238,7 @@
 
     <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity"></div>
-        <div class="relative bg-white border-4 border-[#002D62] max-w-[500px] w-full shadow-2xl overflow-hidden scale-in-center">
+        <div class="relative bg-white border-4 border-[#002D62] max-w-[500px] w-full shadow-2xl overflow-hidden">
             <div class="bg-[#002D62] p-5 text-white flex justify-between items-center">
                 <span class="font-bold tracking-[0.2em] text-xs uppercase">Official Navigation Guideline</span>
                 <button onclick="closeModal()" class="hover:text-amber-400 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -457,6 +457,7 @@
             return names[id] || id;
         }
 
+        // --- ฟังก์ชันที่แก้ไขส่วนแสดงรูปภาพ ---
         function openRoomDetail(roomId) {
             const data = navigationData[roomId];
             if (!data) return;
@@ -464,11 +465,15 @@
             document.getElementById('modal-room-name').innerText = getRoomName(roomId);
             document.getElementById('modal-room-guide').innerText = data.guide;
             
-            // Logic ดึงรูปภาพตาม ID ห้อง
             const imgElement = document.getElementById('modal-room-image');
-            const roomImages = ['631','632','633','634','635','TEACHER_ROOM','LECTURE','LAB1','LAB2','LAB3'];
             
-            if(roomImages.includes(roomId)) {
+            // เพิ่มรายชื่อ ID ห้องในชั้น 4 เข้าไปเพื่อให้ดึงไฟล์ .jpeg มาใช้
+            const roomWithImages = [
+                '631','632','633','634','635',
+                'TEACHER_ROOM','LECTURE','LAB1','LAB2','LAB3'
+            ];
+            
+            if(roomWithImages.includes(roomId)) {
                 imgElement.src = `${roomId}.jpeg`; 
             } else {
                 imgElement.src = `https://placehold.co/600x400/002D62/FFF?text=${roomId}`;
