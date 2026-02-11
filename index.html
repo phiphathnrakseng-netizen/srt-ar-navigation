@@ -327,29 +327,7 @@
         }
 
         .upload-image-btn {
-            position: absolute;
-            bottom: 0.75rem;
-            right: 0.75rem;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(139, 115, 85, 0.2);
-            color: var(--stc-brown);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            z-index: 2;
-        }
-
-        .upload-image-btn:hover {
-            background: var(--stc-brown);
-            color: white;
-            transform: translateY(-2px);
+            display: none; /* ซ่อนปุ่มอัพโหลดภาพ */
         }
 
         /* Responsive Typography */
@@ -428,87 +406,7 @@
 
         /* Upload Modal */
         .upload-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        .upload-modal.active {
-            display: flex;
-        }
-
-        .upload-modal-content {
-            background: white;
-            border-radius: var(--radius-lg);
-            width: 90%;
-            max-width: 500px;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .upload-modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--stc-brown-light);
-            cursor: pointer;
-        }
-
-        .upload-preview {
-            width: 100%;
-            height: 200px;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            margin: 1rem 0;
-            background: var(--stc-beige);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .upload-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .file-input {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-input-label {
-            display: block;
-            width: 100%;
-            padding: 1.5rem;
-            background: var(--stc-beige);
-            border: 2px dashed var(--stc-brown-light);
-            border-radius: var(--radius-md);
-            text-align: center;
-            color: var(--stc-brown);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .file-input-label:hover {
-            background: var(--stc-beige-dark);
-            border-color: var(--stc-brown);
+            display: none; /* ซ่อน modal ทั้งหมด */
         }
 
         .room-code-badge {
@@ -522,351 +420,65 @@
             border: 1px solid rgba(139, 115, 85, 0.2);
         }
 
-        /* Admin Panel Styles */
-        .admin-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--stc-text);
-            margin-bottom: 0.5rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid rgba(139, 115, 85, 0.2);
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--stc-brown);
-            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
-        }
-
-        .form-textarea {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid rgba(139, 115, 85, 0.2);
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            font-family: inherit;
-            min-height: 120px;
-            resize: vertical;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--stc-brown);
-            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
-        }
-
-        .tab-button {
-            padding: 0.75rem 1.5rem;
-            background: var(--stc-beige);
-            border: none;
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--stc-brown-light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab-button.active {
-            background: var(--stc-brown);
-            color: white;
-        }
-
-        .tab-button:hover:not(.active) {
-            background: var(--stc-beige-dark);
-            color: var(--stc-text);
-        }
-
-        .admin-edit-btn {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(139, 115, 85, 0.2);
-            color: var(--stc-brown);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
-
-        .admin-edit-btn:hover {
-            background: var(--stc-brown);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .feature-item {
-            position: relative;
-        }
-
-        .feature-item:hover .admin-edit-btn {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Login Modal */
-        .login-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        .login-modal.active {
-            display: flex;
-        }
-
-        .login-modal-content {
-            background: white;
-            border-radius: var(--radius-lg);
-            width: 90%;
-            max-width: 400px;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .login-error {
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 0.75rem;
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .login-error.show {
-            display: block;
-        }
-
-        /* Admin Controls */
-        .admin-controls {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            align-items: flex-end;
-        }
-
-        .admin-control-btn {
-            background: var(--stc-brown);
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
-            font-size: 1.25rem;
-            box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .admin-control-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(139, 115, 85, 0.4);
-        }
-
-        .admin-control-btn.logout {
-            background: #dc2626;
-        }
-
-        .admin-control-btn.save {
-            background: #10b981;
-        }
-
-        .admin-control-btn.admin {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        /* Enhanced Admin Styles */
-        .admin-stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .admin-table th {
-            background: var(--stc-beige);
-            padding: 0.75rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: var(--stc-text);
-            border-bottom: 2px solid var(--stc-beige-dark);
-        }
-
-        .admin-table td {
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--stc-beige-dark);
-            font-size: 0.875rem;
-        }
-
-        .admin-table tr:hover {
-            background: var(--stc-beige);
-        }
-
-        .delete-image-btn {
-            background: #dc2626;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--radius-sm);
-            border: none;
-            cursor: pointer;
-            font-size: 0.75rem;
-            transition: all 0.3s ease;
-        }
-
-        .delete-image-btn:hover {
-            background: #b91c1c;
-        }
-
-        .image-preview-small {
-            width: 80px;
-            height: 60px;
-            border-radius: var(--radius-sm);
-            object-fit: cover;
-            border: 2px solid var(--stc-beige);
-        }
-
-        .admin-action-buttons {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: flex-end;
-            margin-top: 1rem;
-        }
-
-        .admin-editable {
-            position: relative;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .admin-editable:hover {
-            outline: 2px dashed var(--stc-brown-light);
-            border-radius: var(--radius-sm);
-        }
-
-        .admin-edit-icon {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: var(--stc-brown);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            cursor: pointer;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 5;
-        }
-
-        .admin-editable:hover .admin-edit-icon {
-            opacity: 1;
-        }
-
-        /* Notification Styles */
+        /* Delete all admin-related styles */
+        .admin-badge,
+        .form-group,
+        .form-label,
+        .form-input,
+        .form-textarea,
+        .tab-button,
+        .admin-edit-btn,
+        .feature-item,
+        .login-modal,
+        .login-error,
+        .admin-controls,
+        .admin-control-btn,
+        .admin-stat-card,
+        .admin-table,
+        .delete-image-btn,
+        .image-preview-small,
+        .admin-action-buttons,
+        .admin-editable,
+        .admin-edit-icon,
         .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-md);
-            background: white;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            z-index: 9999;
-            animation: slideInRight 0.3s ease-out;
+            display: none !important;
         }
 
-        .notification.success {
-            border-left: 4px solid #10b981;
+        /* Responsive Typography */
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
         }
 
-        .notification.error {
-            border-left: 4px solid #dc2626;
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
         }
 
-        .notification.info {
-            border-left: 4px solid #3b82f6;
+        h4 {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
         }
 
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
+        p {
+            font-size: clamp(0.875rem, 2vw, 1rem);
+        }
+
+        /* Grid Adjustments for Mobile */
+        @media (max-width: 640px) {
+            .grid-cols-responsive {
+                grid-template-columns: 1fr !important;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
+            
+            .card-modern {
+                padding: 1.25rem !important;
             }
-        }
+            
+            .room-icon {
+                width: 40px;
+                height: 40px;
+            }
 
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
+            .room-image-container {
+                height: 150px;
             }
         }
     </style>
@@ -884,111 +496,6 @@
             <div id="progress-fill" class="progress-fill"></div>
         </div>
         <p id="speed-text" class="text-sm font-medium text-var(--stc-brown-light) mt-6">กำลังเตรียมระบบนำทาง...</p>
-    </div>
-
-    <!-- Login Modal -->
-    <div id="login-modal" class="login-modal">
-        <div class="login-modal-content">
-            <button class="upload-modal-close" onclick="closeLoginModal()">&times;</button>
-            <h3 class="text-xl font-bold text-var(--stc-text) mb-2 text-center">เข้าสู่ระบบ Admin</h3>
-            <p class="text-sm text-var(--stc-brown-light) mb-6 text-center">กรุณาใส่ username และ password สำหรับผู้ดูแลระบบ</p>
-            
-            <div id="login-error" class="login-error">
-                <i class="fa-solid fa-triangle-exclamation mr-2"></i>
-                <span id="error-message">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</span>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="username">Username</label>
-                <input type="text" id="username" class="form-input" placeholder="กรอก username" autocomplete="off">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <input type="password" id="password" class="form-input" placeholder="กรอก password">
-            </div>
-            
-            <div class="flex gap-3 mt-6">
-                <button onclick="closeLoginModal()" class="btn-secondary flex-1">ยกเลิก</button>
-                <button onclick="adminLogin()" class="btn-primary flex-1">เข้าสู่ระบบ</button>
-            </div>
-            
-            <div class="mt-4 text-center text-sm text-var(--stc-brown-light)">
-                <p>Admin Users: tiger (099406), phiphat (25054), tonnam (88854)</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upload Image Modal -->
-    <div id="upload-modal" class="upload-modal">
-        <div class="upload-modal-content">
-            <button class="upload-modal-close" onclick="closeUploadModal()">&times;</button>
-            <h3 class="text-xl font-bold text-var(--stc-text) mb-2">อัพโหลดรูปภาพห้อง</h3>
-            <p class="text-sm text-var(--stc-brown-light) mb-6">เลือกรูปภาพสำหรับห้อง <span id="upload-room-name"></span></p>
-            
-            <div class="file-input-wrapper mb-4">
-                <input type="file" id="image-upload" class="file-input" accept="image/*" onchange="previewImage(event)">
-                <label for="image-upload" class="file-input-label">
-                    <i class="fa-solid fa-cloud-arrow-up text-2xl mb-2"></i>
-                    <p class="font-medium">คลิกเพื่อเลือกรูปภาพ</p>
-                    <p class="text-xs text-var(--stc-brown-light) mt-1">รองรับไฟล์ JPG, PNG, GIF</p>
-                </label>
-            </div>
-            
-            <div id="upload-preview" class="upload-preview hidden">
-                <img id="preview-image" alt="Preview">
-            </div>
-
-            <div class="flex justify-between items-center mt-4">
-                <div id="current-image-info" class="text-sm text-var(--stc-brown-light) hidden">
-                    <i class="fa-solid fa-image mr-2"></i>
-                    <span>มีรูปภาพอยู่แล้ว</span>
-                </div>
-                <button onclick="deleteCurrentImage()" id="delete-image-btn" class="btn-danger hidden">
-                    <i class="fa-solid fa-trash mr-2"></i>ลบรูปภาพปัจจุบัน
-                </button>
-            </div>
-            
-            <div class="flex gap-3 mt-6">
-                <button onclick="closeUploadModal()" class="btn-secondary flex-1">ยกเลิก</button>
-                <button onclick="saveRoomImage()" id="save-image-btn" class="btn-primary flex-1" disabled>บันทึกรูปภาพ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Edit Modal -->
-    <div id="admin-edit-modal" class="upload-modal">
-        <div class="upload-modal-content" style="max-width: 600px;">
-            <button class="upload-modal-close" onclick="closeAdminEditModal()">&times;</button>
-            <h3 class="text-xl font-bold text-var(--stc-text) mb-2" id="admin-modal-title">แผงควบคุม Admin</h3>
-            <p class="text-sm text-var(--stc-brown-light) mb-6" id="admin-modal-description">จัดการเนื้อหาและรูปภาพทั้งหมดในเว็บไซต์</p>
-            
-            <div id="admin-modal-content">
-                <!-- Content will be loaded dynamically -->
-            </div>
-            
-            <div class="flex gap-3 mt-6">
-                <button onclick="closeAdminEditModal()" class="btn-secondary flex-1">ยกเลิก</button>
-                <button onclick="saveAdminChanges()" class="btn-primary flex-1">บันทึกการเปลี่ยนแปลง</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Content Edit Modal -->
-    <div id="admin-content-modal" class="upload-modal">
-        <div class="upload-modal-content" style="max-width: 500px;">
-            <button class="upload-modal-close" onclick="closeContentEditModal()">&times;</button>
-            <h3 class="text-xl font-bold text-var(--stc-text) mb-2" id="content-modal-title">แก้ไขเนื้อหา</h3>
-            
-            <div id="content-modal-body">
-                <!-- Content will be loaded dynamically -->
-            </div>
-            
-            <div class="flex gap-3 mt-6">
-                <button onclick="closeContentEditModal()" class="btn-secondary flex-1">ยกเลิก</button>
-                <button onclick="saveContentEdit()" class="btn-primary flex-1">บันทึก</button>
-            </div>
-        </div>
     </div>
 
     <div id="app-container">
@@ -1012,9 +519,7 @@
                         <a href="?floor=4" id="nav-f4" class="nav-tab px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap">ชั้น 4</a>
                     </div>
                     
-                    <button id="admin-login-btn" onclick="openLoginModal()" class="btn-secondary text-xs px-4 py-2 flex items-center gap-2">
-                        <i class="fa-solid fa-user-lock"></i> Admin
-                    </button>
+                    <!-- ลบปุ่ม Admin -->
                 </div>
             </div>
         </nav>
@@ -1025,13 +530,11 @@
                     <header class="header-section">
                         <div class="text-center">
                             <span class="badge-beige mb-4 inline-block text-xs">Augmented Reality Navigation</span>
-                            <h2 class="text-3xl md:text-4xl font-bold text-var(--stc-text) mb-4 leading-tight admin-editable" id="main-title" onclick="editContentDirectly('main_title')">
+                            <h2 class="text-3xl md:text-4xl font-bold text-var(--stc-text) mb-4 leading-tight" id="main-title">
                                 <span id="main-title-text">ระบบนำทางแผนก<br><span class="text-var(--stc-brown)">เทคโนโลยีสารสนเทศ</span></span>
-                                <span class="admin-edit-icon" onclick="editContentDirectly('main_title', event)">✏️</span>
                             </h2>
-                            <p class="text-var(--stc-brown-light) max-w-xl mx-auto text-sm leading-relaxed admin-editable" id="main-description" onclick="editContentDirectly('main_description')">
+                            <p class="text-var(--stc-brown-light) max-w-xl mx-auto text-sm leading-relaxed" id="main-description">
                                 ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์
-                                <span class="admin-edit-icon" onclick="editContentDirectly('main_description', event)">✏️</span>
                             </p>
                         </div>
                     </header>
@@ -1046,18 +549,13 @@
 
                     <div id="start-phase" class="hidden">
                         <div class="card-modern p-6 mb-6 relative overflow-hidden">
-                            <button class="admin-edit-btn" onclick="editContent('start_navigation')" style="opacity: 0; visibility: hidden;">
-                                <i class="fa-solid fa-pen"></i> แก้ไข
-                            </button>
                             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                                 <div class="text-center md:text-left mb-4 md:mb-0">
-                                    <h3 class="text-xl font-bold text-var(--stc-text) mb-2 admin-editable" id="start-title" onclick="editContentDirectly('start_title')">
+                                    <h3 class="text-xl font-bold text-var(--stc-text) mb-2" id="start-title">
                                         เริ่มต้นการนำทาง
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('start_title', event)">✏️</span>
                                     </h3>
-                                    <p class="text-var(--stc-brown-light) text-sm admin-editable" id="start-description" onclick="editContentDirectly('start_description')">
+                                    <p class="text-var(--stc-brown-light) text-sm" id="start-description">
                                         เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('start_description', event)">✏️</span>
                                     </p>
                                 </div>
                                 <button onclick="navigate('TO_IT_BUILDING')" class="btn-primary text-sm px-6 py-3 rounded-[16px] flex items-center gap-2 whitespace-nowrap">
@@ -1069,9 +567,8 @@
 
                         <div class="divider my-6"></div>
 
-                        <h4 class="text-lg font-bold text-var(--stc-text) mb-4 text-center admin-editable" id="explore-title" onclick="editContentDirectly('explore_title')">
+                        <h4 class="text-lg font-bold text-var(--stc-text) mb-4 text-center" id="explore-title">
                             สำรวจตามชั้นเรียน
-                            <span class="admin-edit-icon" onclick="editContentDirectly('explore_title', event)">✏️</span>
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
                             <a href="?floor=3" class="card-modern p-5 flex items-center justify-between group hover:bg-var(--stc-beige) border-2 border-transparent hover:border-var(--stc-beige-dark)">
@@ -1104,59 +601,43 @@
                         </div>
 
                         <div class="mt-8 text-center">
-                            <h4 class="text-lg font-bold text-var(--stc-text) mb-4 admin-editable" id="features-title" onclick="editContentDirectly('features_title')">
+                            <h4 class="text-lg font-bold text-var(--stc-text) mb-4" id="features-title">
                                 คุณสมบัติของระบบ
-                                <span class="admin-edit-icon" onclick="editContentDirectly('features_title', event)">✏️</span>
                             </h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 grid-cols-responsive">
-                                <div class="card-modern p-5 text-center feature-item">
-                                    <button class="admin-edit-btn" onclick="editContent('feature1')" style="opacity: 0; visibility: hidden;">
-                                        <i class="fa-solid fa-pen"></i> แก้ไข
-                                    </button>
+                                <div class="card-modern p-5 text-center">
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-map-location-dot"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2 admin-editable" id="feature1-title" onclick="editContentDirectly('feature1_title')">
+                                    <h5 class="text-base font-semibold mb-2" id="feature1-title">
                                         นำทางแบบเรียลไทม์
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature1_title', event)">✏️</span>
                                     </h5>
-                                    <p class="text-xs text-var(--stc-brown-light) admin-editable" id="feature1-description" onclick="editContentDirectly('feature1_description')">
+                                    <p class="text-xs text-var(--stc-brown-light)" id="feature1-description">
                                         แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature1_description', event)">✏️</span>
                                     </p>
                                 </div>
                                 
-                                <div class="card-modern p-5 text-center feature-item">
-                                    <button class="admin-edit-btn" onclick="editContent('feature2')" style="opacity: 0; visibility: hidden;">
-                                        <i class="fa-solid fa-pen"></i> แก้ไข
-                                    </button>
+                                <div class="card-modern p-5 text-center">
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-location-crosshairs"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2 admin-editable" id="feature2-title" onclick="editContentDirectly('feature2_title')">
+                                    <h5 class="text-base font-semibold mb-2" id="feature2-title">
                                         ค้นหาห้องเรียน
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature2_title', event)">✏️</span>
                                     </h5>
-                                    <p class="text-xs text-var(--stc-brown-light) admin-editable" id="feature2-description" onclick="editContentDirectly('feature2_description')">
+                                    <p class="text-xs text-var(--stc-brown-light)" id="feature2-description">
                                         ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature2_description', event)">✏️</span>
                                     </p>
                                 </div>
                                 
-                                <div class="card-modern p-5 text-center feature-item">
-                                    <button class="admin-edit-btn" onclick="editContent('feature3')" style="opacity: 0; visibility: hidden;">
-                                        <i class="fa-solid fa-pen"></i> แก้ไข
-                                    </button>
+                                <div class="card-modern p-5 text-center">
                                     <div class="room-icon mx-auto mb-4">
                                         <i class="fa-solid fa-compass"></i>
                                     </div>
-                                    <h5 class="text-base font-semibold mb-2 admin-editable" id="feature3-title" onclick="editContentDirectly('feature3_title')">
+                                    <h5 class="text-base font-semibold mb-2" id="feature3-title">
                                         ใช้งานง่าย
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature3_title', event)">✏️</span>
                                     </h5>
-                                    <p class="text-xs text-var(--stc-brown-light) admin-editable" id="feature3-description" onclick="editContentDirectly('feature3_description')">
+                                    <p class="text-xs text-var(--stc-brown-light)" id="feature3-description">
                                         อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน
-                                        <span class="admin-edit-icon" onclick="editContentDirectly('feature3_description', event)">✏️</span>
                                     </p>
                                 </div>
                             </div>
@@ -1229,68 +710,11 @@
         </footer>
     </div>
 
-    <!-- Admin Controls Floating Buttons -->
-    <div id="admin-controls" class="admin-controls" style="display: none;">
-        <button class="admin-control-btn save" onclick="saveAllData()" title="บันทึกทั้งหมด">
-            <i class="fa-solid fa-floppy-disk"></i>
-        </button>
-        <button class="admin-control-btn admin" onclick="openAdminPanel()" title="แผงควบคุม Admin">
-            <i class="fa-solid fa-gear"></i>
-        </button>
-        <button class="admin-control-btn logout" onclick="adminLogout()" title="ออกจากระบบ">
-            <i class="fa-solid fa-right-from-bracket"></i>
-        </button>
-    </div>
-
     <script>
-        // ============================================
-        // ADMIN CONFIGURATION - ผู้ใช้ Admin 3 คน
-        // ============================================
-        const ADMIN_USERS = [
-            {
-                username: "tiger",
-                password: "099406",
-                name: "Tiger",
-                role: "admin",
-                lastLogin: null
-            },
-            {
-                username: "phiphat",
-                password: "25054",
-                name: "Phiphat",
-                role: "admin",
-                lastLogin: null
-            },
-            {
-                username: "tonnam",
-                password: "88854",
-                name: "Tonnam",
-                role: "admin",
-                lastLogin: null
-            }
-        ];
-
         // ============================================
         // GLOBAL VARIABLES
         // ============================================
-        let currentAdminUser = null;
-        let isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
         
-        // ตรวจสอบข้อมูลผู้ใช้จาก localStorage
-        if (isAdminLoggedIn) {
-            const savedUser = localStorage.getItem('currentAdminUser');
-            if (savedUser) {
-                try {
-                    currentAdminUser = JSON.parse(savedUser);
-                } catch (e) {
-                    console.error("Error parsing user data:", e);
-                    currentAdminUser = null;
-                    isAdminLoggedIn = false;
-                    localStorage.setItem('isAdminLoggedIn', 'false');
-                }
-            }
-        }
-
         // ============================================
         // NAVIGATION DATA
         // ============================================
@@ -1308,61 +732,15 @@
         };
 
         // ============================================
-        // LOCAL STORAGE DATA
+        // ROOM IMAGE DATA - เพิ่มรูปภาพห้องเรียน 631-635
         // ============================================
-        let roomImages = {};
-        let websiteContent = {};
-        let editHistory = [];
-
-        // โหลดข้อมูลจาก localStorage
-        function loadLocalStorageData() {
-            try {
-                roomImages = JSON.parse(localStorage.getItem('roomImages')) || {};
-            } catch (e) {
-                roomImages = {};
-                console.error("Error loading roomImages:", e);
-            }
-            
-            try {
-                websiteContent = JSON.parse(localStorage.getItem('websiteContent')) || {
-                    main_title: "ระบบนำทางแผนก<br><span class='text-var(--stc-brown)'>เทคโนโลยีสารสนเทศ</span>",
-                    main_description: "ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์",
-                    start_title: "เริ่มต้นการนำทาง",
-                    start_description: "เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ",
-                    explore_title: "สำรวจตามชั้นเรียน",
-                    features_title: "คุณสมบัติของระบบ",
-                    feature1_title: "นำทางแบบเรียลไทม์",
-                    feature1_description: "แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง",
-                    feature2_title: "ค้นหาห้องเรียน",
-                    feature2_description: "ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว",
-                    feature3_title: "ใช้งานง่าย",
-                    feature3_description: "อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน"
-                };
-            } catch (e) {
-                websiteContent = {
-                    main_title: "ระบบนำทางแผนก<br><span class='text-var(--stc-brown)'>เทคโนโลยีสารสนเทศ</span>",
-                    main_description: "ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างแม่นยำด้วยเทคโนโลยี AR พร้อมเส้นทางนำทางแบบเรียลไทม์",
-                    start_title: "เริ่มต้นการนำทาง",
-                    start_description: "เริ่มต้นที่ป้อมยามประตู 1 ระบบจะนำทางคุณไปยังอาคารไอทีและจุดหมายต่าง ๆ",
-                    explore_title: "สำรวจตามชั้นเรียน",
-                    features_title: "คุณสมบัติของระบบ",
-                    feature1_title: "นำทางแบบเรียลไทม์",
-                    feature1_description: "แสดงเส้นทางแบบ AR พร้อมคำแนะนำการเดินทาง",
-                    feature2_title: "ค้นหาห้องเรียน",
-                    feature2_description: "ค้นหาห้องเรียนและห้องปฏิบัติการได้อย่างรวดเร็ว",
-                    feature3_title: "ใช้งานง่าย",
-                    feature3_description: "อินเทอร์เฟซที่เรียบง่าย เข้าใจง่ายสำหรับทุกคน"
-                };
-                console.error("Error loading websiteContent:", e);
-            }
-            
-            try {
-                editHistory = JSON.parse(localStorage.getItem('editHistory')) || [];
-            } catch (e) {
-                editHistory = [];
-                console.error("Error loading editHistory:", e);
-            }
-        }
+        const roomImages = {
+            "631": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEAAQADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABgX/9k=",
+            "632": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEAAQADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABgX/9k=",
+            "633": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEAAQADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABgX/9k=",
+            "634": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEAAQADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABgX/9k=",
+            "635": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEAAQADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABgX/9k="
+        };
 
         // ============================================
         // HELPER FUNCTIONS
@@ -1423,8 +801,6 @@
         // INITIALIZATION
         // ============================================
         function initApp() {
-            loadLocalStorageData();
-            
             const floor = new URLSearchParams(window.location.search).get('floor');
             const sections = {
                 '3': document.getElementById('floor-3'),
@@ -1445,27 +821,9 @@
             } else if (!floor) {
                 sections.home.classList.remove('hidden');
                 document.getElementById('nav-home').className = "nav-tab active px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-var(--stc-text) bg-white shadow-sm";
-                loadWebsiteContent();
             } else {
                 document.getElementById('empty-state').classList.remove('hidden');
             }
-
-            updateAdminUI();
-        }
-
-        function loadWebsiteContent() {
-            document.getElementById('main-title-text').innerHTML = websiteContent.main_title;
-            document.getElementById('main-description').textContent = websiteContent.main_description;
-            document.getElementById('start-title').textContent = websiteContent.start_title;
-            document.getElementById('start-description').textContent = websiteContent.start_description;
-            document.getElementById('explore-title').textContent = websiteContent.explore_title;
-            document.getElementById('features-title').textContent = websiteContent.features_title;
-            document.getElementById('feature1-title').textContent = websiteContent.feature1_title;
-            document.getElementById('feature1-description').textContent = websiteContent.feature1_description;
-            document.getElementById('feature2-title').textContent = websiteContent.feature2_title;
-            document.getElementById('feature2-description').textContent = websiteContent.feature2_description;
-            document.getElementById('feature3-title').textContent = websiteContent.feature3_title;
-            document.getElementById('feature3-description').textContent = websiteContent.feature3_description;
         }
 
         function renderRooms(floor) {
@@ -1484,15 +842,12 @@
                         <div class="card-modern p-5 cursor-pointer group">
                             <div class="room-image-container">
                                 ${roomImage ? 
-                                    `<img src="${roomImage}" class="room-image" alt="${getRoomName(key)}" onerror="handleImageError(this, '${key}')">` :
+                                    `<img src="${roomImage}" class="room-image" alt="${getRoomName(key)}">` :
                                     `<div class="room-image-placeholder">
                                         <i class="fa-solid ${key.startsWith('63') ? 'fa-chalkboard' : 'fa-computer'}"></i>
                                         <span class="text-xs mt-2">ไม่มีรูปภาพ</span>
                                     </div>`
                                 }
-                                <button class="upload-image-btn" onclick="openUploadModal('${key}')">
-                                    <i class="fa-solid fa-camera"></i> ${roomImage ? 'เปลี่ยนรูป' : 'เพิ่มรูป'}
-                                </button>
                             </div>
                             
                             <div class="flex justify-between items-start mb-3">
@@ -1516,821 +871,9 @@
             });
         }
 
-        function handleImageError(img, roomId) {
-            delete roomImages[roomId];
-            localStorage.setItem('roomImages', JSON.stringify(roomImages));
-            img.parentElement.innerHTML = `
-                <div class="room-image-placeholder">
-                    <i class="fa-solid ${roomId.startsWith('63') ? 'fa-chalkboard' : 'fa-computer'}"></i>
-                    <span class="text-xs mt-2">ไม่มีรูปภาพ</span>
-                </div>
-                <button class="upload-image-btn" onclick="openUploadModal('${roomId}')">
-                    <i class="fa-solid fa-camera"></i> เพิ่มรูป
-                </button>
-            `;
-            showNotification(`รูปภาพสำหรับห้อง ${getRoomName(roomId)} โหลดไม่สำเร็จ ถูกลบออกแล้ว`, 'error');
-        }
-
-        // ============================================
-        // ADMIN LOGIN FUNCTIONS
-        // ============================================
-        function openLoginModal() {
-            document.getElementById('login-modal').classList.add('active');
-            document.getElementById('login-error').classList.remove('show');
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.remove('active');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function adminLogin() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            
-            // ตรวจสอบค่าว่าง
-            if (!username || !password) {
-                document.getElementById('login-error').classList.add('show');
-                document.getElementById('error-message').textContent = 'กรุณากรอก username และ password';
-                return;
-            }
-            
-            // ค้นหาผู้ใช้ที่ตรงกับ username และ password
-            const foundUser = ADMIN_USERS.find(user => 
-                user.username === username && user.password === password
-            );
-            
-            if (foundUser) {
-                isAdminLoggedIn = true;
-                currentAdminUser = { 
-                    username: foundUser.username,
-                    name: foundUser.name,
-                    role: foundUser.role,
-                    lastLogin: new Date().toISOString()
-                };
-                
-                // บันทึกข้อมูลลง localStorage
-                try {
-                    localStorage.setItem('isAdminLoggedIn', 'true');
-                    localStorage.setItem('currentAdminUser', JSON.stringify(currentAdminUser));
-                } catch (e) {
-                    console.error("Error saving user data:", e);
-                    showNotification('เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
-                }
-                
-                // บันทึกประวัติการล็อกอิน
-                addToHistory('login', 'เข้าสู่ระบบ', `ผู้ใช้ ${currentAdminUser.name} เข้าสู่ระบบ`);
-                
-                showNotification(`เข้าสู่ระบบสำเร็จ - สวัสดี ${currentAdminUser.name}`, 'success');
-                updateAdminUI();
-                closeLoginModal();
-            } else {
-                document.getElementById('login-error').classList.add('show');
-                document.getElementById('error-message').textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
-            }
-        }
-
-        function adminLogout() {
-            if (currentAdminUser) {
-                addToHistory('logout', 'ออกจากระบบ', `ผู้ใช้ ${currentAdminUser.name} ออกจากระบบ`);
-            }
-            
-            isAdminLoggedIn = false;
-            currentAdminUser = null;
-            
-            try {
-                localStorage.setItem('isAdminLoggedIn', 'false');
-                localStorage.removeItem('currentAdminUser');
-            } catch (e) {
-                console.error("Error removing user data:", e);
-            }
-            
-            showNotification('ออกจากระบบ Admin สำเร็จ', 'info');
-            updateAdminUI();
-        }
-
-        function updateAdminUI() {
-            const adminControls = document.getElementById('admin-controls');
-            const adminLoginBtn = document.getElementById('admin-login-btn');
-            const editButtons = document.querySelectorAll('.admin-edit-btn');
-            const adminEditIcons = document.querySelectorAll('.admin-edit-icon');
-            
-            if (isAdminLoggedIn && currentAdminUser) {
-                // แสดงปุ่มควบคุม Admin
-                adminControls.style.display = 'flex';
-                
-                // อัพเดตปุ่มล็อกอิน
-                adminLoginBtn.innerHTML = `
-                    <i class="fa-solid fa-user-check"></i> 
-                    ${currentAdminUser.name}
-                    <span class="admin-badge">ON</span>
-                `;
-                adminLoginBtn.onclick = () => showNotification(`คุณล็อกอินเป็น ${currentAdminUser.name} อยู่แล้ว`, 'info');
-                
-                // แสดงปุ่มแก้ไข
-                editButtons.forEach(btn => {
-                    btn.style.opacity = '1';
-                    btn.style.visibility = 'visible';
-                });
-                
-                // แสดงไอคอนแก้ไขบนเนื้อหาที่แก้ไขได้
-                adminEditIcons.forEach(icon => {
-                    icon.style.opacity = '1';
-                });
-                
-                // ทำให้เนื้อหาที่แก้ไขได้คลิกได้
-                document.querySelectorAll('.admin-editable').forEach(element => {
-                    element.style.cursor = 'pointer';
-                });
-            } else {
-                // ซ่อนปุ่มควบคุม Admin
-                adminControls.style.display = 'none';
-                
-                // รีเซ็ตปุ่มล็อกอิน
-                adminLoginBtn.innerHTML = '<i class="fa-solid fa-user-lock"></i> Admin';
-                adminLoginBtn.onclick = openLoginModal;
-                
-                // ซ่อนปุ่มแก้ไข
-                editButtons.forEach(btn => {
-                    btn.style.opacity = '0';
-                    btn.style.visibility = 'hidden';
-                });
-                
-                // ซ่อนไอคอนแก้ไขบนเนื้อหาที่แก้ไขได้
-                adminEditIcons.forEach(icon => {
-                    icon.style.opacity = '0';
-                });
-                
-                // ลบการคลิกได้จากเนื้อหาที่แก้ไขได้
-                document.querySelectorAll('.admin-editable').forEach(element => {
-                    element.style.cursor = 'default';
-                });
-            }
-        }
-
-        // ============================================
-        // HISTORY MANAGEMENT
-        // ============================================
-        function addToHistory(type, action, description) {
-            const historyItem = {
-                id: Date.now(),
-                type: type,
-                action: action,
-                description: description,
-                user: currentAdminUser ? currentAdminUser.name : 'ไม่ทราบ',
-                timestamp: new Date().toISOString(),
-                date: new Date().toLocaleString('th-TH')
-            };
-            
-            editHistory.unshift(historyItem);
-            
-            // เก็บเพียง 50 รายการล่าสุด
-            if (editHistory.length > 50) {
-                editHistory = editHistory.slice(0, 50);
-            }
-            
-            try {
-                localStorage.setItem('editHistory', JSON.stringify(editHistory));
-            } catch (e) {
-                console.error("Error saving history:", e);
-            }
-        }
-
-        // ============================================
-        // IMAGE UPLOAD FUNCTIONS
-        // ============================================
-        let currentUploadRoom = null;
-        let selectedFile = null;
-        let currentRoomHasImage = false;
-
-        function openUploadModal(roomId) {
-            if (event) event.stopPropagation();
-            
-            if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            currentUploadRoom = roomId;
-            currentRoomHasImage = roomImages[roomId] ? true : false;
-            document.getElementById('upload-room-name').textContent = getRoomName(roomId);
-            document.getElementById('upload-modal').classList.add('active');
-            resetUploadForm();
-            
-            // แสดงข้อมูลรูปภาพปัจจุบัน (ถ้ามี)
-            const currentImageInfo = document.getElementById('current-image-info');
-            const deleteImageBtn = document.getElementById('delete-image-btn');
-            
-            if (currentRoomHasImage) {
-                currentImageInfo.classList.remove('hidden');
-                deleteImageBtn.classList.remove('hidden');
-            } else {
-                currentImageInfo.classList.add('hidden');
-                deleteImageBtn.classList.add('hidden');
-            }
-        }
-
-        function closeUploadModal() {
-            document.getElementById('upload-modal').classList.remove('active');
-            currentUploadRoom = null;
-            selectedFile = null;
-            currentRoomHasImage = false;
-        }
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // ตรวจสอบขนาดไฟล์ (ไม่เกิน 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                showNotification('ไฟล์ภาพต้องมีขนาดไม่เกิน 5MB', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('preview-image');
-                const previewContainer = document.getElementById('upload-preview');
-                
-                preview.src = e.target.result;
-                previewContainer.classList.remove('hidden');
-                
-                selectedFile = e.target.result;
-                document.getElementById('save-image-btn').disabled = false;
-            }
-            reader.readAsDataURL(file);
-        }
-
-        function resetUploadForm() {
-            document.getElementById('image-upload').value = '';
-            document.getElementById('upload-preview').classList.add('hidden');
-            document.getElementById('save-image-btn').disabled = true;
-        }
-
-        function deleteCurrentImage() {
-            if (!currentUploadRoom || !currentRoomHasImage) return;
-            
-            if (confirm(`คุณแน่ใจหรือไม่ที่จะลบรูปภาพสำหรับห้อง ${getRoomName(currentUploadRoom)}?`)) {
-                delete roomImages[currentUploadRoom];
-                
-                try {
-                    localStorage.setItem('roomImages', JSON.stringify(roomImages));
-                } catch (e) {
-                    console.error("Error deleting image:", e);
-                    showNotification('เกิดข้อผิดพลาดในการลบรูปภาพ', 'error');
-                    return;
-                }
-                
-                // บันทึกประวัติการลบ
-                addToHistory('delete', 'ลบรูปภาพ', `ลบรูปภาพสำหรับห้อง ${getRoomName(currentUploadRoom)} (${currentUploadRoom})`);
-                
-                showNotification(`ลบรูปภาพสำหรับ ${getRoomName(currentUploadRoom)} เรียบร้อยแล้ว`, 'success');
-                
-                // รีเฟรชหน้าจอ
-                const floor = new URLSearchParams(window.location.search).get('floor');
-                if (floor === '3' || floor === '4') {
-                    renderRooms(parseInt(floor));
-                }
-                
-                closeUploadModal();
-            }
-        }
-
-        function saveRoomImage() {
-            if (!currentUploadRoom || !selectedFile) return;
-
-            // บันทึกรูปภาพลงใน localStorage
-            const oldImage = roomImages[currentUploadRoom];
-            roomImages[currentUploadRoom] = selectedFile;
-            
-            try {
-                localStorage.setItem('roomImages', JSON.stringify(roomImages));
-            } catch (e) {
-                console.error("Error saving image:", e);
-                showNotification('เกิดข้อผิดพลาดในการบันทึกรูปภาพ', 'error');
-                return;
-            }
-
-            // บันทึกประวัติการแก้ไข
-            const action = oldImage ? 'แก้ไขรูปภาพ' : 'เพิ่มรูปภาพ';
-            addToHistory('image', action, `${action} สำหรับห้อง ${getRoomName(currentUploadRoom)} (${currentUploadRoom})`);
-
-            // แสดงการแจ้งเตือน
-            showNotification(`${action} สำหรับ ${getRoomName(currentUploadRoom)} เรียบร้อยแล้ว`, 'success');
-
-            // รีเฟรชหน้าจอ
-            const floor = new URLSearchParams(window.location.search).get('floor');
-            if (floor === '3' || floor === '4') {
-                renderRooms(parseInt(floor));
-            }
-
-            closeUploadModal();
-        }
-
-        // ============================================
-        // CONTENT EDITING FUNCTIONS
-        // ============================================
-        let currentEditType = null;
-        let currentEditElementId = null;
-
-        function editContent(type) {
-            if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            currentEditType = type;
-            openAdminPanel();
-        }
-
-        function editContentDirectly(contentId, event) {
-            if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            if (event) {
-                event.stopPropagation();
-            }
-            
-            currentEditElementId = contentId;
-            const modal = document.getElementById('admin-content-modal');
-            const title = document.getElementById('content-modal-title');
-            const body = document.getElementById('content-modal-body');
-            
-            let currentValue = '';
-            let inputType = 'text';
-            let label = '';
-            
-            switch(contentId) {
-                case 'main_title':
-                    label = 'หัวข้อหลัก';
-                    currentValue = websiteContent.main_title.replace(/<br>/g, '\n');
-                    inputType = 'textarea';
-                    break;
-                case 'main_description':
-                    label = 'คำอธิบายหลัก';
-                    currentValue = websiteContent.main_description;
-                    inputType = 'textarea';
-                    break;
-                case 'start_title':
-                    label = 'หัวข้อเริ่มต้นการนำทาง';
-                    currentValue = websiteContent.start_title;
-                    break;
-                case 'start_description':
-                    label = 'คำอธิบายเริ่มต้นการนำทาง';
-                    currentValue = websiteContent.start_description;
-                    inputType = 'textarea';
-                    break;
-                case 'explore_title':
-                    label = 'หัวข้อสำรวจชั้นเรียน';
-                    currentValue = websiteContent.explore_title;
-                    break;
-                case 'features_title':
-                    label = 'หัวข้อคุณสมบัติของระบบ';
-                    currentValue = websiteContent.features_title;
-                    break;
-                case 'feature1_title':
-                    label = 'หัวข้อคุณสมบัติที่ 1';
-                    currentValue = websiteContent.feature1_title;
-                    break;
-                case 'feature1_description':
-                    label = 'คำอธิบายคุณสมบัติที่ 1';
-                    currentValue = websiteContent.feature1_description;
-                    inputType = 'textarea';
-                    break;
-                case 'feature2_title':
-                    label = 'หัวข้อคุณสมบัติที่ 2';
-                    currentValue = websiteContent.feature2_title;
-                    break;
-                case 'feature2_description':
-                    label = 'คำอธิบายคุณสมบัติที่ 2';
-                    currentValue = websiteContent.feature2_description;
-                    inputType = 'textarea';
-                    break;
-                case 'feature3_title':
-                    label = 'หัวข้อคุณสมบัติที่ 3';
-                    currentValue = websiteContent.feature3_title;
-                    break;
-                case 'feature3_description':
-                    label = 'คำอธิบายคุณสมบัติที่ 3';
-                    currentValue = websiteContent.feature3_description;
-                    inputType = 'textarea';
-                    break;
-            }
-            
-            title.textContent = `แก้ไข: ${label}`;
-            
-            if (inputType === 'textarea') {
-                body.innerHTML = `
-                    <div class="form-group">
-                        <label class="form-label">${label}</label>
-                        <textarea id="content-edit-input" class="form-textarea" rows="6">${currentValue}</textarea>
-                        ${contentId === 'main_title' ? 
-                            '<p class="text-xs text-var(--stc-brown-light) mt-2">ใช้ &lt;br&gt; สำหรับขึ้นบรรทัดใหม่, ใช้ &lt;span class="text-var(--stc-brown)"&gt;...&lt;/span&gt; สำหรับเน้นข้อความสีน้ำตาล</p>' : 
-                            ''
-                        }
-                    </div>
-                `;
-            } else {
-                body.innerHTML = `
-                    <div class="form-group">
-                        <label class="form-label">${label}</label>
-                        <input type="text" id="content-edit-input" class="form-input" value="${currentValue}">
-                    </div>
-                `;
-            }
-            
-            modal.classList.add('active');
-        }
-
-        function closeContentEditModal() {
-            document.getElementById('admin-content-modal').classList.remove('active');
-            currentEditElementId = null;
-        }
-
-        function saveContentEdit() {
-            if (!currentEditElementId) return;
-            
-            const input = document.getElementById('content-edit-input');
-            const newValue = input.value;
-            const oldValue = websiteContent[currentEditElementId];
-            
-            if (newValue !== oldValue) {
-                // สำหรับ main_title ให้แปลง \n เป็น <br>
-                if (currentEditElementId === 'main_title') {
-                    websiteContent[currentEditElementId] = newValue.replace(/\n/g, '<br>');
-                } else {
-                    websiteContent[currentEditElementId] = newValue;
-                }
-                
-                try {
-                    localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
-                } catch (e) {
-                    console.error("Error saving content:", e);
-                    showNotification('เกิดข้อผิดพลาดในการบันทึก', 'error');
-                    return;
-                }
-                
-                // บันทึกประวัติการแก้ไข
-                let description = `แก้ไข ${getContentLabel(currentEditElementId)}`;
-                if (oldValue) {
-                    description += `: "${oldValue.substring(0, 50)}${oldValue.length > 50 ? '...' : ''}" → "${newValue.substring(0, 50)}${newValue.length > 50 ? '...' : ''}"`;
-                }
-                addToHistory('content', 'แก้ไขเนื้อหา', description);
-                
-                // โหลดเนื้อหาใหม่
-                loadWebsiteContent();
-                
-                showNotification('บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว', 'success');
-            }
-            
-            closeContentEditModal();
-        }
-
-        function getContentLabel(contentId) {
-            const labels = {
-                'main_title': 'หัวข้อหลัก',
-                'main_description': 'คำอธิบายหลัก',
-                'start_title': 'หัวข้อเริ่มต้นการนำทาง',
-                'start_description': 'คำอธิบายเริ่มต้นการนำทาง',
-                'explore_title': 'หัวข้อสำรวจชั้นเรียน',
-                'features_title': 'หัวข้อคุณสมบัติของระบบ',
-                'feature1_title': 'หัวข้อคุณสมบัติที่ 1',
-                'feature1_description': 'คำอธิบายคุณสมบัติที่ 1',
-                'feature2_title': 'หัวข้อคุณสมบัติที่ 2',
-                'feature2_description': 'คำอธิบายคุณสมบัติที่ 2',
-                'feature3_title': 'หัวข้อคุณสมบัติที่ 3',
-                'feature3_description': 'คำอธิบายคุณสมบัติที่ 3'
-            };
-            return labels[contentId] || contentId;
-        }
-
-        // ============================================
-        // ADMIN PANEL FUNCTIONS
-        // ============================================
-        function openAdminPanel() {
-            if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            currentEditType = 'admin_panel';
-            const modal = document.getElementById('admin-edit-modal');
-            const title = document.getElementById('admin-modal-title');
-            const description = document.getElementById('admin-modal-description');
-            const content = document.getElementById('admin-modal-content');
-            
-            title.textContent = 'แผงควบคุม Admin';
-            description.textContent = `จัดการเนื้อหาและรูปภาพทั้งหมดในเว็บไซต์ (ล็อกอินเป็น: ${currentAdminUser ? currentAdminUser.name : 'ไม่ทราบ'})`;
-            content.innerHTML = `
-                <div class="admin-stat-card mb-6">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h4 class="text-white text-lg font-bold">สถิติระบบ</h4>
-                            <p class="text-white/80 text-sm">ข้อมูลทั้งหมดในระบบ</p>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-2xl font-bold text-white">${Object.keys(navigationData).length - 1}</div>
-                            <div class="text-white/80 text-sm">ห้องทั้งหมด</div>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <div class="text-white font-bold">${Object.keys(roomImages).length}</div>
-                            <div class="text-white/80 text-xs">มีรูปภาพ</div>
-                        </div>
-                        <div>
-                            <div class="text-white font-bold">${editHistory.length}</div>
-                            <div class="text-white/80 text-xs">ประวัติแก้ไข</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <button class="tab-button active" onclick="loadEditTab('main')">เนื้อหาเว็บ</button>
-                    <button class="tab-button" onclick="loadEditTab('features')">คุณสมบัติ</button>
-                    <button class="tab-button" onclick="loadEditTab('rooms')">ข้อมูลห้อง</button>
-                    <button class="tab-button" onclick="loadEditTab('history')">ประวัติการแก้ไข</button>
-                </div>
-                <div id="edit-tab-content"></div>
-            `;
-            loadEditTab('main');
-            modal.classList.add('active');
-        }
-
-        function closeAdminEditModal() {
-            document.getElementById('admin-edit-modal').classList.remove('active');
-            currentEditType = null;
-        }
-
-        function loadEditTab(tab) {
-            // หา event.target ที่ถูกคลิก (ถ้ามี)
-            let eventTarget = event ? event.target : null;
-            if (eventTarget) {
-                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                eventTarget.classList.add('active');
-            } else {
-                // ถ้าไม่มี event ให้เลือกแท็บแรก
-                document.querySelectorAll('.tab-button').forEach((btn, index) => {
-                    if (index === 0) btn.classList.add('active');
-                    else btn.classList.remove('active');
-                });
-            }
-            
-            const content = document.getElementById('edit-tab-content');
-            
-            if (tab === 'main') {
-                content.innerHTML = `
-                    <div class="form-group">
-                        <label class="form-label" for="edit-main-title">หัวข้อหลัก</label>
-                        <input type="text" id="edit-main-title" class="form-input" value="${websiteContent.main_title.replace(/<br>/g, '\n').replace(/<[^>]*>/g, '')}">
-                        <p class="text-xs text-var(--stc-brown-light) mt-1">ใช้ &lt;br&gt; สำหรับขึ้นบรรทัดใหม่, ใช้ &lt;span class='text-var(--stc-brown)'&gt;...&lt;/span&gt; สำหรับเน้นข้อความสีน้ำตาล</p>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit-main-description">คำอธิบายหลัก</label>
-                        <textarea id="edit-main-description" class="form-textarea">${websiteContent.main_description}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit-start-title">หัวข้อเริ่มต้นการนำทาง</label>
-                        <input type="text" id="edit-start-title" class="form-input" value="${websiteContent.start_title}">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit-start-description">คำอธิบายเริ่มต้นการนำทาง</label>
-                        <textarea id="edit-start-description" class="form-textarea">${websiteContent.start_description}</textarea>
-                    </div>
-                `;
-            } else if (tab === 'features') {
-                content.innerHTML = `
-                    <div class="form-group">
-                        <label class="form-label" for="edit-features-title">หัวข้อคุณสมบัติ</label>
-                        <input type="text" id="edit-features-title" class="form-input" value="${websiteContent.features_title}">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit-explore-title">หัวข้อสำรวจชั้นเรียน</label>
-                        <input type="text" id="edit-explore-title" class="form-input" value="${websiteContent.explore_title}">
-                    </div>
-                    <div class="form-group">
-                        <h4 class="font-semibold text-var(--stc-text) mb-3">คุณสมบัติที่ 1</h4>
-                        <input type="text" id="edit-feature1-title" class="form-input mb-3" value="${websiteContent.feature1_title}">
-                        <textarea id="edit-feature1-description" class="form-textarea mb-6">${websiteContent.feature1_description}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <h4 class="font-semibold text-var(--stc-text) mb-3">คุณสมบัติที่ 2</h4>
-                        <input type="text" id="edit-feature2-title" class="form-input mb-3" value="${websiteContent.feature2_title}">
-                        <textarea id="edit-feature2-description" class="form-textarea mb-6">${websiteContent.feature2_description}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <h4 class="font-semibold text-var(--stc-text) mb-3">คุณสมบัติที่ 3</h4>
-                        <input type="text" id="edit-feature3-title" class="form-input mb-3" value="${websiteContent.feature3_title}">
-                        <textarea id="edit-feature3-description" class="form-textarea">${websiteContent.feature3_description}</textarea>
-                    </div>
-                `;
-            } else if (tab === 'rooms') {
-                let roomsHTML = '<h4 class="font-semibold text-var(--stc-text) mb-3">จัดการข้อมูลห้องเรียนทั้งหมด</h4>';
-                roomsHTML += '<div class="overflow-x-auto">';
-                roomsHTML += '<table class="admin-table">';
-                roomsHTML += '<thead><tr><th>รหัสห้อง</th><th>ชื่อห้อง</th><th>ชั้น</th><th>รูปภาพ</th><th>คำอธิบาย</th><th>การจัดการ</th></tr></thead>';
-                roomsHTML += '<tbody>';
-                
-                Object.keys(navigationData).forEach(key => {
-                    if (key === "TO_IT_BUILDING") return;
-                    
-                    const roomImage = roomImages[key];
-                    const floor = key.startsWith('63') ? '3' : '4';
-                    
-                    roomsHTML += `
-                        <tr>
-                            <td><strong>${key}</strong></td>
-                            <td>${getRoomName(key)}</td>
-                            <td>ชั้น ${floor}</td>
-                            <td>
-                                ${roomImage ? 
-                                    `<img src="${roomImage}" class="image-preview-small" alt="${key}">` : 
-                                    '<span class="text-red-500 text-sm">ไม่มีรูป</span>'
-                                }
-                            </td>
-                            <td class="text-sm">${getRoomDescription(key)}</td>
-                            <td>
-                                <div class="flex gap-2">
-                                    <button onclick="openUploadModal('${key}')" class="btn-secondary text-xs">
-                                        <i class="fa-solid fa-image"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                roomsHTML += '</tbody></table></div>';
-                content.innerHTML = roomsHTML;
-            } else if (tab === 'history') {
-                let historyHTML = '<h4 class="font-semibold text-var(--stc-text) mb-3">ประวัติการแก้ไขล่าสุด</h4>';
-                
-                if (editHistory.length === 0) {
-                    historyHTML += '<div class="text-center py-8 text-var(--stc-brown-light)">ยังไม่มีประวัติการแก้ไข</div>';
-                } else {
-                    historyHTML += '<div class="space-y-3 max-h-96 overflow-y-auto">';
-                    
-                    editHistory.slice(0, 20).forEach(item => {
-                        const typeIcon = {
-                            'login': 'fa-sign-in-alt',
-                            'logout': 'fa-sign-out-alt',
-                            'image': 'fa-image',
-                            'content': 'fa-edit',
-                            'delete': 'fa-trash',
-                            'system': 'fa-cog'
-                        }[item.type] || 'fa-history';
-                        
-                        historyHTML += `
-                            <div class="p-3 bg-var(--stc-beige) rounded-lg">
-                                <div class="flex justify-between items-start">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fa-solid ${typeIcon} text-var(--stc-brown-light)"></i>
-                                        <span class="font-medium">${item.action}</span>
-                                    </div>
-                                    <span class="text-xs text-var(--stc-brown-light)">${item.date}</span>
-                                </div>
-                                <p class="text-sm mt-2">${item.description}</p>
-                                <div class="flex justify-between items-center mt-2">
-                                    <span class="text-xs text-var(--stc-brown-light)">โดย: ${item.user}</span>
-                                    <span class="text-xs px-2 py-1 rounded bg-white">${item.type}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    historyHTML += '</div>';
-                    
-                    if (editHistory.length > 20) {
-                        historyHTML += `<div class="text-center mt-4">
-                            <button onclick="clearHistory()" class="btn-danger text-sm">
-                                <i class="fa-solid fa-trash mr-2"></i>ล้างประวัติทั้งหมด
-                            </button>
-                        </div>`;
-                    }
-                }
-                
-                content.innerHTML = historyHTML;
-            }
-        }
-
-        function saveAdminChanges() {
-            // Save from tabs
-            if (document.getElementById('edit-main-title')) {
-                const oldContent = { ...websiteContent };
-                
-                websiteContent.main_title = document.getElementById('edit-main-title').value.replace(/\n/g, '<br>');
-                websiteContent.main_description = document.getElementById('edit-main-description').value;
-                websiteContent.start_title = document.getElementById('edit-start-title').value;
-                websiteContent.start_description = document.getElementById('edit-start-description').value;
-                websiteContent.features_title = document.getElementById('edit-features-title').value;
-                websiteContent.explore_title = document.getElementById('edit-explore-title').value;
-                websiteContent.feature1_title = document.getElementById('edit-feature1-title').value;
-                websiteContent.feature1_description = document.getElementById('edit-feature1-description').value;
-                websiteContent.feature2_title = document.getElementById('edit-feature2-title').value;
-                websiteContent.feature2_description = document.getElementById('edit-feature2-description').value;
-                websiteContent.feature3_title = document.getElementById('edit-feature3-title').value;
-                websiteContent.feature3_description = document.getElementById('edit-feature3-description').value;
-                
-                try {
-                    localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
-                } catch (e) {
-                    console.error("Error saving content:", e);
-                    showNotification('เกิดข้อผิดพลาดในการบันทึก', 'error');
-                    return;
-                }
-                
-                // บันทึกประวัติการแก้ไข
-                addToHistory('content', 'แก้ไขเนื้อหาหลายจุด', 'แก้ไขเนื้อหาหลักและคุณสมบัติของเว็บไซต์');
-                
-                loadWebsiteContent();
-                showNotification('บันทึกการเปลี่ยนแปลงเนื้อหาเรียบร้อยแล้ว', 'success');
-            }
-            
-            closeAdminEditModal();
-        }
-
-        function clearHistory() {
-            if (confirm('คุณแน่ใจหรือไม่ที่จะล้างประวัติการแก้ไขทั้งหมด?')) {
-                editHistory = [];
-                try {
-                    localStorage.setItem('editHistory', JSON.stringify(editHistory));
-                } catch (e) {
-                    console.error("Error clearing history:", e);
-                    showNotification('เกิดข้อผิดพลาดในการล้างประวัติ', 'error');
-                    return;
-                }
-                loadEditTab('history');
-                showNotification('ล้างประวัติการแก้ไขเรียบร้อยแล้ว', 'success');
-            }
-        }
-
         // ============================================
         // UTILITY FUNCTIONS
         // ============================================
-        function saveAllData() {
-            if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            try {
-                localStorage.setItem('roomImages', JSON.stringify(roomImages));
-                localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
-                localStorage.setItem('editHistory', JSON.stringify(editHistory));
-            } catch (e) {
-                console.error("Error saving all data:", e);
-                showNotification('เกิดข้อผิดพลาดในการบันทึกข้อมูลทั้งหมด', 'error');
-                return;
-            }
-            
-            addToHistory('system', 'บันทึกข้อมูล', 'บันทึกข้อมูลทั้งหมดของระบบ');
-            
-            showNotification('บันทึกข้อมูลทั้งหมดเรียบร้อยแล้ว', 'success');
-        }
-
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            
-            const icons = {
-                'success': 'fa-check-circle',
-                'error': 'fa-exclamation-circle',
-                'info': 'fa-info-circle'
-            };
-            
-            notification.innerHTML = `
-                <i class="fa-solid ${icons[type]} ${type === 'success' ? 'text-green-500' : type === 'error' ? 'text-red-500' : 'text-blue-500'}"></i>
-                <div>
-                    <p class="font-medium text-var(--stc-text)">${message}</p>
-                </div>
-                <button onclick="this.parentElement.remove()" class="ml-4 text-var(--stc-brown-light) hover:text-var(--stc-brown)">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // อัตโนมัติลบหลังจาก 5 วินาที
-            setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.style.animation = 'slideOutRight 0.3s ease-out';
-                    setTimeout(() => {
-                        if (notification.parentElement) {
-                            notification.remove();
-                        }
-                    }, 300);
-                }
-            }, 5000);
-        }
-
         function searchRoom() {
             const q = document.getElementById('searchInput').value.toLowerCase();
             let hasResults = false;
@@ -2381,156 +924,12 @@
             }, 1500);
         });
 
-        // Close modals when clicking outside
-        document.getElementById('upload-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeUploadModal();
-            }
-        });
-
-        document.getElementById('login-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLoginModal();
-            }
-        });
-
-        document.getElementById('admin-edit-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAdminEditModal();
-            }
-        });
-
-        document.getElementById('admin-content-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeContentEditModal();
-            }
-        });
-
         // Prevent default touch behavior
         document.addEventListener('touchmove', function(e) {
             if (e.scale !== 1) {
                 e.preventDefault();
             }
         }, { passive: false });
-
-        // ============================================
-        // DATA EXPORT/IMPORT FUNCTIONS
-        // ============================================
-        function exportData() {
-            if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            const allData = {
-                roomImages: roomImages,
-                websiteContent: websiteContent,
-                editHistory: editHistory,
-                exportedAt: new Date().toISOString(),
-                exportedBy: currentAdminUser ? currentAdminUser.name : 'unknown'
-            };
-            
-            const dataStr = JSON.stringify(allData, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = `srtc-navigator-backup-${new Date().toISOString().split('T')[0]}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            
-            addToHistory('system', 'ส่งออกข้อมูล', 'ส่งออกข้อมูลทั้งหมดของระบบ');
-            showNotification('ส่งออกข้อมูลสำเร็จ', 'success');
-        }
-
-        function importData() {
-            if (!isAdminLoggedIn) {
-                showNotification('กรุณาเข้าสู่ระบบ Admin ก่อน', 'error');
-                openLoginModal();
-                return;
-            }
-            
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                
-                reader.onload = function(event) {
-                    try {
-                        const importedData = JSON.parse(event.target.result);
-                        
-                        if (confirm('คุณแน่ใจหรือไม่ที่จะนำเข้าข้อมูล? การกระทำนี้จะเขียนทับข้อมูลปัจจุบันทั้งหมด')) {
-                            if (importedData.roomImages) {
-                                roomImages = importedData.roomImages;
-                                localStorage.setItem('roomImages', JSON.stringify(roomImages));
-                            }
-                            
-                            if (importedData.websiteContent) {
-                                websiteContent = importedData.websiteContent;
-                                localStorage.setItem('websiteContent', JSON.stringify(websiteContent));
-                            }
-                            
-                            if (importedData.editHistory) {
-                                editHistory = importedData.editHistory;
-                                localStorage.setItem('editHistory', JSON.stringify(editHistory));
-                            }
-                            
-                            addToHistory('system', 'นำเข้าข้อมูล', 'นำเข้าข้อมูลทั้งหมดจากไฟล์แบ็คอัพ');
-                            showNotification('นำเข้าข้อมูลสำเร็จ', 'success');
-                            
-                            // รีเฟรชหน้า
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1000);
-                        }
-                    } catch (error) {
-                        console.error("Error importing data:", error);
-                        showNotification('ไฟล์ข้อมูลไม่ถูกต้อง', 'error');
-                    }
-                };
-                
-                reader.readAsText(file);
-            };
-            
-            input.click();
-        }
-
-        // เพิ่มปุ่มนำเข้า/ส่งออกใน Admin Panel
-        function addExportImportButtons() {
-            if (!isAdminLoggedIn) return;
-            
-            const adminPanel = document.querySelector('#admin-edit-modal .upload-modal-content');
-            if (adminPanel) {
-                const existingButtons = adminPanel.querySelector('.admin-action-buttons');
-                if (!existingButtons) {
-                    const actionButtons = document.createElement('div');
-                    actionButtons.className = 'admin-action-buttons';
-                    actionButtons.innerHTML = `
-                        <button onclick="exportData()" class="btn-secondary">
-                            <i class="fa-solid fa-download mr-2"></i>ส่งออกข้อมูล
-                        </button>
-                        <button onclick="importData()" class="btn-secondary">
-                            <i class="fa-solid fa-upload mr-2"></i>นำเข้าข้อมูล
-                        </button>
-                    `;
-                    adminPanel.querySelector('#admin-modal-content').appendChild(actionButtons);
-                }
-            }
-        }
-
-        // Override openAdminPanel to add export/import buttons
-        const originalOpenAdminPanel = openAdminPanel;
-        window.openAdminPanel = function() {
-            originalOpenAdminPanel();
-            setTimeout(addExportImportButtons, 100);
-        };
     </script>
 </body>
 </html>
