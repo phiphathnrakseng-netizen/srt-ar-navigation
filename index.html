@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     
-    <title>ระบบนำทาง AR | นำทางไปยังเป้าหมาย</title>
+    <title>ระบบนำทาง AR | วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,1117 +28,485 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- AR View Container --- */
-        #ar-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        /* --- Camera View --- */
-        #camera-view {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1); /* Mirror for front camera */
-        }
-
-        /* --- Navigation Overlay --- */
-        .navigation-overlay {
-            position: absolute;
+        /* --- Loading Screen Styles --- */
+        #loading-screen {
+            position: fixed;
             inset: 0;
-            background: rgba(0, 29, 54, 0.7);
-            backdrop-filter: blur(8px);
-            display: flex;
+            background: #ffffff;
+            z-index: 9999;
+            display: none; 
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+            will-change: opacity;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            background: white;
+            border-radius: 50% !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 35px rgba(0, 45, 98, 0.15), inset 0 0 0 2px var(--stc-navy);
+            border: 6px solid white;
+            margin-bottom: 2.5rem;
+            outline: 1px solid var(--stc-silver);
+            animation: fadeInScale 0.8s ease-out forwards;
+        }
+
+        .logo-container img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
+        }
+
+        .loader-wrapper {
+            width: 300px;
+            text-align: center;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: #F1F5F9;
+            border: 1px solid var(--stc-silver);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--stc-navy), #0056b3);
+            box-shadow: 0 0 10px rgba(0, 45, 98, 0.2);
+            transition: width 0.3s ease-out;
+        }
+
+        .speed-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--stc-navy);
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- UI Elements --- */
+        * { border-radius: 0 !important; }
+        .logo-container { border-radius: 50% !important; }
+
+        .official-header {
+            background: var(--stc-navy-deep);
+            border-bottom: 5px solid var(--stc-gold);
+            position: relative;
+            padding: 4.5rem 2rem;
+            color: white;
+            overflow: hidden;
+        }
+
+        .official-header::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.02) 75%, transparent 75%, transparent);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+        .btn-official {
+            background: var(--stc-navy);
+            color: white;
+            border: 1px solid var(--stc-navy);
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .btn-official:hover { background: white; color: var(--stc-navy); transform: translateY(-1px); }
+        .btn-official:active { transform: translateY(1px); }
+
+        .room-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-left: 8px solid var(--stc-navy);
+            transition: all 0.25s ease;
+            box-shadow: 4px 4px 0px #F1F5F9;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .room-card:hover {
+            border-color: var(--stc-gold);
+            transform: translate(-3px, -3px);
+            box-shadow: 10px 10px 0px var(--stc-navy);
             z-index: 10;
         }
 
-        /* --- Step Counter UI --- */
-        .step-counter-ui {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            border: 3px solid var(--stc-navy);
-            min-width: 180px;
-            backdrop-filter: blur(10px);
-            animation: slideInRight 0.5s ease-out;
+        .nav-official {
+            background: white;
+            border-bottom: 2px solid var(--stc-silver);
+            height: 75px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
-        .step-display {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .step-count {
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--stc-navy);
-            line-height: 1;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .step-label {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--stc-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        .distance-display {
-            background: var(--stc-navy);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .distance-value {
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .distance-label {
-            font-size: 11px;
-            opacity: 0.9;
-            margin-top: 2px;
-        }
-
-        /* --- Controls --- */
-        .control-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .control-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        .control-btn-primary {
-            background: var(--stc-navy);
-            color: white;
-        }
-
-        .control-btn-secondary {
-            background: var(--stc-gold);
-            color: white;
-        }
-
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .control-btn:active {
-            transform: translateY(0);
-        }
-
-        /* --- Navigation Guide --- */
-        .navigation-guide {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            border: 3px solid var(--stc-gold);
-            backdrop-filter: blur(10px);
-            animation: slideInUp 0.5s ease-out;
-        }
-
-        .guide-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .guide-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--stc-gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-        }
-
-        .guide-title {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--stc-navy);
-            flex: 1;
-        }
-
-        .guide-text {
-            font-size: 16px;
-            line-height: 1.5;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .progress-indicator {
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-
-        .progress-bar {
+        .nav-link {
             height: 100%;
-            background: linear-gradient(90deg, var(--stc-gold), #ffd700);
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 4px;
-        }
-
-        /* --- Compass --- */
-        .compass {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 50%;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-            border: 3px solid var(--stc-navy);
-            backdrop-filter: blur(10px);
+            padding: 0 1.5rem;
+            font-weight: 700;
+            color: #4A5568;
+            border-bottom: 4px solid transparent;
+            transition: all 0.2s;
         }
 
-        .compass-needle {
-            width: 4px;
-            height: 30px;
-            background: #e53e3e;
-            border-radius: 2px;
-            position: absolute;
-            top: 10px;
-            transform-origin: bottom center;
-            transition: transform 0.1s ease;
-        }
-
-        .compass-direction {
-            position: absolute;
-            bottom: 10px;
-            font-size: 12px;
-            font-weight: 800;
+        .nav-link-active {
             color: var(--stc-navy);
+            border-bottom: 4px solid var(--stc-navy);
+            background: #F8FAFC;
         }
 
-        /* --- Animations --- */
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .step-pulse {
-            animation: pulse 0.5s ease;
-        }
-
-        /* --- Responsive --- */
-        @media (max-width: 480px) {
-            .step-counter-ui {
-                top: 10px;
-                right: 10px;
-                min-width: 150px;
-                padding: 15px;
-            }
-            
-            .step-count {
-                font-size: 36px;
-            }
-            
-            .navigation-guide {
-                bottom: 10px;
-                left: 10px;
-                right: 10px;
-                padding: 15px;
-            }
-            
-            .compass {
-                top: 10px;
-                left: 10px;
-                width: 60px;
-                height: 60px;
-            }
-        }
-
-        /* --- Loading --- */
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: var(--stc-navy-deep);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading-text {
+        .section-tag {
+            background: var(--stc-gold);
             color: white;
-            font-size: 18px;
-            font-weight: 600;
-            margin-top: 20px;
-            text-align: center;
+            padding: 3px 14px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
+
+        /* Smoothing Search */
+        #searchInput::placeholder { color: #CBD5E0; font-weight: 400; }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-overlay" class="loading-overlay">
-        <div class="logo-container" style="width: 120px; height: 120px;">
+
+    <div id="loading-screen">
+        <div class="logo-container">
             <img src="favicon.png" alt="STC Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/th/a/a2/Surat_Thani_Technical_College_Logo.png'">
         </div>
-        <div class="loading-text" id="loading-text">กำลังเตรียมระบบนำทาง...</div>
-    </div>
-
-    <!-- AR View Container -->
-    <div id="ar-container">
-        <!-- Camera Feed -->
-        <video id="camera-view" autoplay playsinline></video>
-        
-        <!-- Compass -->
-        <div class="compass">
-            <div class="compass-needle" id="compass-needle"></div>
-            <div class="compass-direction" id="compass-direction">N</div>
-        </div>
-
-        <!-- Step Counter UI -->
-        <div class="step-counter-ui">
-            <div class="step-display">
-                <div class="step-count" id="step-count">0</div>
-                <div class="step-label">ก้าว</div>
+        <div class="loader-wrapper">
+            <h2 class="text-[#002D62] font-black mb-4 text-xl tracking-tight uppercase">วิทยาลัยเทคนิคสุราษฎร์ธานี</h2>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-bar-fill"></div>
             </div>
-            
-            <div class="distance-display">
-                <div class="distance-value" id="distance-value">0.0</div>
-                <div class="distance-label">ระยะทาง (เมตร)</div>
-            </div>
-            
-            <div class="control-buttons">
-                <button class="control-btn control-btn-primary" id="reset-btn">
-                    <i class="fas fa-redo"></i> รีเซ็ต
-                </button>
-                <button class="control-btn control-btn-secondary" id="calibrate-btn">
-                    <i class="fas fa-compass"></i> ตั้งศูนย์
-                </button>
-            </div>
-        </div>
-
-        <!-- Navigation Guide -->
-        <div class="navigation-guide">
-            <div class="guide-header">
-                <div class="guide-icon">
-                    <i class="fas fa-map-signs"></i>
+            <div class="speed-info">
+                <div class="flex items-center gap-2 bg-slate-100 px-5 py-2 border border-slate-200">
+                    <i class="fa-solid fa-satellite-dish text-[#B8860B] animate-pulse"></i>
+                    <span id="speed-text" class="font-mono text-sm tracking-tighter">Initializing STC-Net...</span>
                 </div>
-                <div class="guide-title" id="target-name">กำลังโหลด...</div>
-                <div class="distance-value" id="remaining-distance">-</div>
-            </div>
-            
-            <div class="progress-indicator">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            
-            <div class="guide-text" id="guide-text">
-                กำลังประมวลผลคำแนะนำการเดินทาง...
-            </div>
-            
-            <div class="control-buttons">
-                <button class="control-btn control-btn-primary" onclick="window.location.href='index.html'">
-                    <i class="fas fa-home"></i> กลับหน้าหลัก
-                </button>
-                <button class="control-btn control-btn-secondary" id="voice-guide-btn">
-                    <i class="fas fa-volume-up"></i> คำแนะนำเสียง
-                </button>
             </div>
         </div>
     </div>
+
+    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity"></div>
+        <div class="relative bg-white border-4 border-[#002D62] max-w-[500px] w-full shadow-2xl overflow-hidden scale-in-center">
+            <div class="bg-[#002D62] p-5 text-white flex justify-between items-center">
+                <span class="font-bold tracking-[0.2em] text-xs uppercase">Official Navigation Guideline</span>
+                <button onclick="closeModal()" class="hover:text-amber-400 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-10">
+                <h3 class="text-3xl font-black text-[#002D62] mb-5 tracking-tight">ยินดีต้อนรับสู่ระบบ AR</h3>
+                <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                    เพื่อให้ระบบนำทางได้อย่างแม่นยำสูงสุด กรุณายืนบริเวณ <span class="font-bold text-[#B8860B] underline underline-offset-4">ป้อมยามหน้าวิทยาลัย</span> และหันหน้าไปทางอาคารอำนวยการก่อนเริ่มใช้งาน
+                </p>
+                <div class="space-y-4 mb-10">
+                    <div class="flex items-center gap-4 text-sm font-extrabold p-4 bg-blue-50 border-l-4 border-blue-600 text-blue-900">
+                        <i class="fa-solid fa-shield-halved text-xl"></i>
+                        โปรดอนุญาตสิทธิ์การเข้าถึงกล้องและเซนเซอร์เมื่อระบบร้องขอ
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-full btn-official py-5 uppercase tracking-[0.3em] text-sm font-black shadow-lg">ยืนยันพิกัดและเริ่มใช้งาน</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6">
+        <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='index.html'">
+            <img src="favicon.png" class="h-11 w-11 object-contain" alt="STC Logo">
+            <div class="leading-tight">
+                <div class="font-black text-[13px] text-[#002D62] tracking-tighter">SURAT THANI TECHNICAL COLLEGE</div>
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.15em]">IT AR-Navigation v2.0</div>
+            </div>
+        </div>
+        <div class="hidden lg:flex h-full">
+            <a href="index.html" class="nav-link" id="nav-home">หน้าหลัก</a>
+            <a href="?floor=3" class="nav-link" id="nav-f3">ชั้น 3</a>
+            <a href="?floor=4" class="nav-link" id="nav-f4">ชั้น 4</a>
+        </div>
+        <div class="lg:hidden">
+             <i class="fa-solid fa-ellipsis-vertical text-slate-300"></i>
+        </div>
+    </nav>
+
+    <header class="official-header">
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="section-tag shadow-sm">Digital Campus Map</div>
+            <h1 class="text-4xl md:text-7xl font-black leading-[0.9] mb-6 tracking-tighter">
+                ระบบนำทางอาคาร <br>
+                <span class="text-transparent" style="-webkit-text-stroke: 1.5px white; opacity: 0.9;">แผนกเทคโนโลยีสารสนเทศ</span>
+            </h1>
+            <div class="w-24 h-1.5 bg-[#B8860B] mb-6"></div>
+            <p class="text-slate-300 max-w-2xl text-base font-medium leading-relaxed opacity-80">
+                จุดเริ่มต้น: ป้อมยามหน้าวิทยาลัยเทคนิคสุราษฎร์ธานี (ประตู 1) <br>
+                เป้าหมาย: อาคารแผนกเทคโนโลยีสารสนเทศ (อาคารสีม่วง / ตึกเทคโนฯ)
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-16">
+        <div id="search-container" class="mb-14 hidden">
+            <div class="flex flex-col md:flex-row gap-8 items-end border-b-4 border-slate-50 pb-10">
+                <div class="flex-1 w-full">
+                    <label class="block font-black text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-3">Filter Classroom Floor <span id="floor-title" class="text-[#002D62]">--</span></label>
+                    <div class="relative group">
+                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ระบุเลขห้อง (เช่น 631) หรือ ชื่อห้อง..." class="w-full border-2 border-slate-200 p-4 outline-none focus:border-[#002D62] font-bold text-xl transition-all placeholder:italic">
+                        <i class="fa-solid fa-magnifying-glass absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#002D62] transition-colors"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="start-phase" class="mb-20 hidden">
+            <h2 class="text-3xl font-black mb-10 flex items-center gap-4 text-[#002D62] tracking-tighter">
+                <span class="bg-[#002D62] text-white w-10 h-10 flex items-center justify-center text-sm font-bold rotate-3">01</span>
+                เลือกจุดหมายปลายทางของท่าน
+            </h2>
+            <button onclick="navigate('TO_IT_BUILDING')" class="w-full room-card p-12 flex flex-col md:flex-row justify-between items-center group mb-8">
+                <div class="text-left mb-8 md:mb-0">
+                    <div class="section-tag bg-[#002D62] px-3">Primary Target</div>
+                    <h3 class="text-4xl font-black text-slate-800 italic flex items-center gap-4 flex-wrap">
+                        ป้อมยาม <i class="fa-solid fa-chevron-right text-[#B8860B] text-2xl animate-pulse"></i> อาคารแผนกไอที
+                    </h3>
+                    <p class="text-slate-400 font-extrabold mt-3 italic tracking-tight uppercase text-sm">Main Corridor Path: Pass through Building 11</p>
+                </div>
+                <div class="btn-official px-12 py-5 w-full md:w-auto text-lg shadow-xl hover:shadow-2xl">
+                    เริ่มการนำทาง AR <i class="fa-solid fa-street-view ml-2"></i>
+                </div>
+            </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <a href="?floor=3" class="btn-official py-12 text-2xl italic bg-white !text-[#002D62] border-2 border-[#002D62] hover:!bg-[#002D62] hover:!text-white shadow-md">สำรวจห้องเรียนชั้น 3 (631 - 635)</a>
+                <a href="?floor=4" class="btn-official py-12 text-2xl italic bg-white !text-[#002D62] border-2 border-[#002D62] hover:!bg-[#002D62] hover:!text-white shadow-md">สำรวจชั้น 4 (พักครู / LAB)</a>
+            </div>
+        </div>
+
+        <div id="floor-3" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="rooms-3"></div></div>
+        <div id="floor-4" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="rooms-4"></div></div>
+
+        <div id="empty-state" class="text-center py-24 hidden">
+            <i class="fa-solid fa-map-location-dot text-6xl text-slate-200 mb-6"></i>
+            <h2 class="text-3xl font-black text-slate-800 mb-6 uppercase tracking-widest">Floor Not Found</h2>
+            <a href="index.html" class="btn-official px-14 py-5 mx-auto w-fit shadow-lg">Back to Home</a>
+        </div>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-100 py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Developed By</p>
+                <p class="font-bold text-[#002D62]">แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
+            </div>
+            <div class="flex gap-6 text-slate-300">
+                <i class="fa-brands fa-facebook-f hover:text-[#002D62] cursor-pointer transition-colors"></i>
+                <i class="fa-solid fa-globe hover:text-[#002D62] cursor-pointer transition-colors"></i>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // ========== ระบบตรวจจับและนับก้าวเดิน ==========
-        class StepCounterSystem {
-            constructor() {
-                this.stepCount = 0;
-                this.totalDistance = 0;
-                this.lastAcceleration = null;
-                this.stepThreshold = 1.5; // ความไวในการตรวจจับก้าว
-                this.isCounting = false;
-                this.lastStepTime = 0;
-                this.stepDebounce = 300; // เวลาระหว่างก้าว (ms)
-                this.stepLength = 0.75; // ความยาวต่อก้าว (เมตร)
-                this.calibrationSteps = 0;
-                this.isCalibrating = false;
-                
-                // สำหรับเก็บประวัติการเคลื่อนไหว
-                this.accelerationHistory = [];
-                this.historySize = 10;
-                
-                // องค์ประกอบ UI
-                this.stepCountElement = document.getElementById('step-count');
-                this.distanceElement = document.getElementById('distance-value');
-                this.resetButton = document.getElementById('reset-btn');
-                this.calibrateButton = document.getElementById('calibrate-btn');
+        // --- Enhanced Loading Engine ---
+        function runLoading() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const progressFill = document.getElementById('progress-fill');
+            const speedText = document.getElementById('speed-text');
+            const isFirstVisit = !sessionStorage.getItem('stc_init_complete');
+
+            if (!isFirstVisit) {
+                loadingScreen.style.display = 'none';
+                return;
             }
 
-            initialize() {
-                console.log('Initializing Step Counter System...');
-                
-                // ตั้งค่าปุ่มควบคุม
-                this.resetButton.addEventListener('click', () => this.reset());
-                this.calibrateButton.addEventListener('click', () => this.startCalibration());
-                
-                // ตรวจสอบการรองรับเซ็นเซอร์
-                this.checkSensorSupport();
-            }
+            loadingScreen.style.display = 'flex';
+            let progress = 0;
+            const targetSpeed = (Math.random() * (50 - 30) + 30).toFixed(1);
 
-            checkSensorSupport() {
-                if (typeof DeviceMotionEvent !== 'undefined') {
-                    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-                        // iOS 13+ - ต้องขออนุญาต
-                        this.requestIOSPermission();
-                    } else {
-                        // Android และเบราว์เซอร์อื่นๆ
-                        this.startMotionTracking();
-                    }
-                } else {
-                    console.warn('Device Motion not supported, using simulation mode');
-                    this.startSimulationMode();
-                }
-            }
-
-            async requestIOSPermission() {
-                try {
-                    const permission = await DeviceMotionEvent.requestPermission();
-                    if (permission === 'granted') {
-                        console.log('Motion permission granted');
-                        this.startMotionTracking();
-                    } else {
-                        console.warn('Motion permission denied');
-                        this.startSimulationMode();
-                    }
-                } catch (error) {
-                    console.error('Error requesting motion permission:', error);
-                    this.startSimulationMode();
-                }
-            }
-
-            startMotionTracking() {
-                console.log('Starting motion tracking...');
-                
-                window.addEventListener('devicemotion', (event) => {
-                    this.processMotionData(event);
-                }, { passive: true });
-
-                // เริ่มนับหลังจากเตรียมระบบเสร็จ
-                setTimeout(() => {
-                    this.isCounting = true;
-                    console.log('Step counter activated');
-                    this.updateLoadingText('ระบบตรวจจับก้าวพร้อมใช้งาน');
-                }, 1000);
-            }
-
-            processMotionData(event) {
-                if (!this.isCounting) return;
-
-                const acceleration = event.accelerationIncludingGravity;
-                if (!acceleration) return;
-
-                // คำนวณความเร่งรวม
-                const totalAcc = Math.sqrt(
-                    Math.pow(acceleration.x || 0, 2) +
-                    Math.pow(acceleration.y || 0, 2) +
-                    Math.pow(acceleration.z || 0, 2)
-                );
-
-                // บันทึกประวัติความเร่ง
-                this.accelerationHistory.push(totalAcc);
-                if (this.accelerationHistory.length > this.historySize) {
-                    this.accelerationHistory.shift();
-                }
-
-                const currentTime = Date.now();
-
-                // ตรวจจับการก้าว
-                if (this.lastAcceleration !== null && this.accelerationHistory.length >= 3) {
-                    // คำนวณค่าเฉลี่ยเคลื่อนที่
-                    const avgAcc = this.accelerationHistory.reduce((a, b) => a + b, 0) / this.accelerationHistory.length;
-                    const delta = Math.abs(totalAcc - avgAcc);
+            const timer = setInterval(() => {
+                progress += Math.random() * 12;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(timer);
+                    speedText.innerText = `Connected via STC-WIFI: ${targetSpeed} Mbps`;
                     
-                    // ตรวจสอบเงื่อนไขการก้าว
-                    if (delta > this.stepThreshold && 
-                        (currentTime - this.lastStepTime) > this.stepDebounce &&
-                        this.isValidStepPattern()) {
-                        
-                        this.registerStep(currentTime);
-                    }
-                }
-
-                this.lastAcceleration = totalAcc;
-            }
-
-            isValidStepPattern() {
-                // ตรวจสอบรูปแบบการก้าวที่ถูกต้อง
-                if (this.accelerationHistory.length < 3) return false;
-                
-                const recent = this.accelerationHistory.slice(-3);
-                const isPeak = recent[1] > recent[0] && recent[1] > recent[2];
-                const magnitude = Math.max(...recent) - Math.min(...recent);
-                
-                return isPeak && magnitude > this.stepThreshold * 0.7;
-            }
-
-            registerStep(timestamp) {
-                this.stepCount++;
-                this.lastStepTime = timestamp;
-                
-                // คำนวณระยะทาง
-                this.totalDistance = this.stepCount * this.stepLength;
-                
-                // อัพเดท UI
-                this.updateDisplay();
-                
-                // ส่งอีเวนต์การก้าว
-                this.dispatchStepEvent();
-                
-                // ถ้ากำลังปรับเทียบ
-                if (this.isCalibrating) {
-                    this.calibrationSteps++;
-                    if (this.calibrationSteps >= 10) {
-                        this.finishCalibration();
-                    }
-                }
-            }
-
-            updateDisplay() {
-                // อัพเดทตัวนับก้าว
-                if (this.stepCountElement) {
-                    this.stepCountElement.textContent = this.stepCount;
-                    this.stepCountElement.classList.add('step-pulse');
                     setTimeout(() => {
-                        this.stepCountElement.classList.remove('step-pulse');
-                    }, 500);
-                }
-                
-                // อัพเดทระยะทาง
-                if (this.distanceElement) {
-                    this.distanceElement.textContent = this.totalDistance.toFixed(1);
-                }
-                
-                // อัพเดทโปรเกรสในการนำทาง
-                this.updateNavigationProgress();
-            }
-
-            updateNavigationProgress() {
-                const params = new URLSearchParams(window.location.search);
-                const targetDistance = parseFloat(params.get('dist')) || 200;
-                const progress = Math.min((this.totalDistance / targetDistance) * 100, 100);
-                
-                const progressBar = document.getElementById('progress-bar');
-                if (progressBar) {
-                    progressBar.style.width = progress + '%';
-                }
-                
-                const remainingDistance = Math.max(targetDistance - this.totalDistance, 0);
-                const remainingElement = document.getElementById('remaining-distance');
-                if (remainingElement) {
-                    remainingElement.textContent = remainingDistance.toFixed(1) + 'm';
-                }
-            }
-
-            dispatchStepEvent() {
-                // ส่ง Custom Event สำหรับส่วนอื่นๆ ของแอป
-                const stepEvent = new CustomEvent('stepDetected', {
-                    detail: {
-                        count: this.stepCount,
-                        distance: this.totalDistance,
-                        timestamp: Date.now()
-                    }
-                });
-                window.dispatchEvent(stepEvent);
-            }
-
-            startCalibration() {
-                console.log('Starting calibration...');
-                this.isCalibrating = true;
-                this.calibrationSteps = 0;
-                this.updateLoadingText('โปรดเดิน 10 ก้าวเพื่อปรับเทียบค่า...');
-                
-                // รีเซ็ตชั่วคราว
-                const tempSteps = this.stepCount;
-                const tempDistance = this.totalDistance;
-                
-                this.stepCount = 0;
-                this.totalDistance = 0;
-                this.updateDisplay();
-                
-                // ตั้งเวลา timeout ถ้าไม่ครบ 10 ก้าว
-                setTimeout(() => {
-                    if (this.isCalibrating) {
-                        this.isCalibrating = false;
-                        this.stepCount = tempSteps;
-                        this.totalDistance = tempDistance;
-                        this.updateDisplay();
-                        this.updateLoadingText('การปรับเทียบถูกยกเลิก');
-                    }
-                }, 30000);
-            }
-
-            finishCalibration() {
-                this.isCalibrating = false;
-                const avgStepLength = 10 / this.calibrationSteps; // เมตรต่อก้าว
-                this.stepLength = avgStepLength * 0.75; // ปรับค่าสำหรับการเดินปกติ
-                
-                console.log(`Calibration complete. Step length: ${this.stepLength.toFixed(3)}m`);
-                this.updateLoadingText('ปรับเทียบสำเร็จ!');
-                
-                // แจ้งเตือนผู้ใช้
-                if (window.navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]);
-                }
-            }
-
-            reset() {
-                this.stepCount = 0;
-                this.totalDistance = 0;
-                this.updateDisplay();
-                
-                // แจ้งเตือนรีเซ็ต
-                if (window.navigator.vibrate) {
-                    navigator.vibrate(100);
-                }
-                
-                console.log('Step counter reset');
-            }
-
-            startSimulationMode() {
-                console.log('Starting simulation mode');
-                this.updateLoadingText('ใช้โหมดจำลอง (Simulation Mode)');
-                
-                // จำลองการก้าวทุก 1.5 วินาที
-                setInterval(() => {
-                    if (this.isCounting) {
-                        this.registerStep(Date.now());
-                    }
-                }, 1500);
-                
-                this.isCounting = true;
-            }
-
-            updateLoadingText(text) {
-                const loadingText = document.getElementById('loading-text');
-                if (loadingText) {
-                    loadingText.textContent = text;
-                }
-            }
-
-            getStats() {
-                return {
-                    steps: this.stepCount,
-                    distance: this.totalDistance,
-                    stepLength: this.stepLength,
-                    isCalibrating: this.isCalibrating
-                };
-            }
-        }
-
-        // ========== ระบบนำทางและเป้าหมาย ==========
-        class NavigationSystem {
-            constructor() {
-                this.params = new URLSearchParams(window.location.search);
-                this.targetId = this.params.get('target') || 'TO_IT_BUILDING';
-                this.targetAngle = parseFloat(this.params.get('angle')) || 0;
-                this.targetDistance = parseFloat(this.params.get('dist')) || 200;
-                this.guideText = decodeURIComponent(this.params.get('guide') || 'เดินตรงไปข้างหน้า');
-                
-                this.currentHeading = 0;
-                this.targetReached = false;
-                
-                this.initUI();
-            }
-
-            initUI() {
-                // อัพเดทชื่อเป้าหมาย
-                const targetNameElement = document.getElementById('target-name');
-                if (targetNameElement) {
-                    const targetNames = {
-                        'TO_IT_BUILDING': 'อาคารแผนกไอที',
-                        'DEPT_LABEL_3': 'ป้ายแผนกไอที (ชั้น 3)',
-                        'DEPT_LABEL_4': 'ป้ายแผนกไอที (ชั้น 4)',
-                        '631': 'ห้องเรียน 631',
-                        '632': 'ห้องเรียน 632',
-                        '633': 'ห้องเรียน 633',
-                        '634': 'ห้องเรียน 634',
-                        '635': 'ห้องเรียน 635',
-                        'TEACHER_ROOM': 'ห้องพักครู',
-                        'LECTURE': 'ห้องแลคเชอร์',
-                        'LAB1': 'ห้องแลป 1',
-                        'LAB2': 'ห้องแลป 2',
-                        'LAB3': 'ห้องแลป 3'
-                    };
-                    
-                    targetNameElement.textContent = targetNames[this.targetId] || this.targetId;
-                }
-                
-                // อัพเดทคำแนะนำ
-                const guideTextElement = document.getElementById('guide-text');
-                if (guideTextElement) {
-                    guideTextElement.textContent = this.guideText;
-                }
-                
-                // อัพเดทระยะทางที่เหลือ
-                const remainingElement = document.getElementById('remaining-distance');
-                if (remainingElement) {
-                    remainingElement.textContent = this.targetDistance.toFixed(1) + 'm';
-                }
-                
-                // เริ่มระบบคอมพาส
-                this.initCompass();
-            }
-
-            initCompass() {
-                if (typeof DeviceOrientationEvent !== 'undefined') {
-                    window.addEventListener('deviceorientation', (event) => {
-                        this.handleOrientation(event);
-                    }, true);
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingScreen.style.visibility = 'hidden';
+                            loadingScreen.style.display = 'none';
+                            sessionStorage.setItem('stc_init_complete', 'true');
+                            
+                            const floorParam = new URLSearchParams(window.location.search).get('floor');
+                            if (!floorParam) {
+                                document.getElementById('guide-modal').classList.remove('hidden');
+                            }
+                        }, 600);
+                    }, 800);
                 } else {
-                    console.warn('Device Orientation not supported');
+                    progressFill.style.width = progress + '%';
+                    speedText.innerText = `Fetching Spatial Data... ${(progress * 0.4).toFixed(1)}%`;
                 }
-            }
-
-            handleOrientation(event) {
-                if (event.alpha !== null) {
-                    this.currentHeading = event.alpha;
-                    
-                    // อัพเดทเข็มทิศ
-                    const compassNeedle = document.getElementById('compass-needle');
-                    if (compassNeedle) {
-                        compassNeedle.style.transform = `rotate(${this.currentHeading}deg)`;
-                    }
-                    
-                    // อัพเดททิศทาง
-                    const directionElement = document.getElementById('compass-direction');
-                    if (directionElement) {
-                        const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-                        const index = Math.round(this.currentHeading / 45) % 8;
-                        directionElement.textContent = directions[index];
-                    }
-                    
-                    // ตรวจสอบทิศทางไปยังเป้าหมาย
-                    this.checkTargetDirection();
-                }
-            }
-
-            checkTargetDirection() {
-                const angleDiff = Math.abs(this.currentHeading - this.targetAngle);
-                const normalizedDiff = Math.min(angleDiff, 360 - angleDiff);
-                
-                // ถ้าเดินผิดทิศทางเกิน 30 องศา
-                if (normalizedDiff > 30 && !this.targetReached) {
-                    this.showDirectionHint();
-                }
-            }
-
-            showDirectionHint() {
-                // แสดงคำแนะนำทิศทาง
-                const guideTextElement = document.getElementById('guide-text');
-                if (guideTextElement) {
-                    const originalText = guideTextElement.textContent;
-                    guideTextElement.innerHTML = `
-                        <span style="color: #B8860B; font-weight: bold;">
-                            <i class="fas fa-exclamation-triangle"></i> 
-                            โปรดปรับทิศทางไปยังเป้าหมาย
-                        </span>
-                        <br>
-                        ${originalText}
-                    `;
-                    
-                    // แจ้งเตือนด้วยการสั่น (ถ้ารองรับ)
-                    if (window.navigator.vibrate) {
-                        navigator.vibrate([200, 100, 200]);
-                    }
-                }
-            }
-
-            updateProgress(distanceTraveled) {
-                const progress = Math.min((distanceTraveled / this.targetDistance) * 100, 100);
-                
-                // อัพเดท progress bar
-                const progressBar = document.getElementById('progress-bar');
-                if (progressBar) {
-                    progressBar.style.width = progress + '%';
-                }
-                
-                // อัพเดทระยะทางที่เหลือ
-                const remainingDistance = Math.max(this.targetDistance - distanceTraveled, 0);
-                const remainingElement = document.getElementById('remaining-distance');
-                if (remainingElement) {
-                    remainingElement.textContent = remainingDistance.toFixed(1) + 'm';
-                }
-                
-                // ตรวจสอบว่าถึงเป้าหมายแล้วหรือยัง
-                if (remainingDistance <= 5 && !this.targetReached) {
-                    this.onTargetReached();
-                }
-            }
-
-            onTargetReached() {
-                this.targetReached = true;
-                
-                // แสดงข้อความสำเร็จ
-                const guideTextElement = document.getElementById('guide-text');
-                if (guideTextElement) {
-                    guideTextElement.innerHTML = `
-                        <span style="color: #10B981; font-weight: bold; font-size: 18px;">
-                            <i class="fas fa-check-circle"></i> 
-                            ถึงเป้าหมายแล้ว!
-                        </span>
-                        <br>
-                        คุณได้เดินทางถึงจุดหมายปลายทางแล้ว
-                    `;
-                }
-                
-                // แจ้งเตือนด้วยเสียงและสั่น
-                if (window.navigator.vibrate) {
-                    navigator.vibrate([300, 100, 300, 100, 300]);
-                }
-                
-                // เล่นเสียง (ถ้ามี)
-                this.playSuccessSound();
-                
-                // บันทึกสถิติ
-                this.saveNavigationStats();
-            }
-
-            playSuccessSound() {
-                // สร้างเสียงแจ้งเตือนด้วย Web Audio API
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.value = 880;
-                    oscillator.type = 'sine';
-                    
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 1);
-                } catch (error) {
-                    console.log('Audio not supported');
-                }
-            }
-
-            saveNavigationStats() {
-                const stats = {
-                    target: this.targetId,
-                    timestamp: new Date().toISOString(),
-                    distance: this.targetDistance,
-                    completed: true
-                };
-                
-                // บันทึกลง localStorage
-                const navigationHistory = JSON.parse(localStorage.getItem('stc_navigation_history') || '[]');
-                navigationHistory.push(stats);
-                localStorage.setItem('stc_navigation_history', JSON.stringify(navigationHistory.slice(-50))); // เก็บ 50 รายการล่าสุด
-            }
+            }, 90);
         }
 
-        // ========== ระบบกล้อง ==========
-        class CameraSystem {
-            constructor() {
-                this.videoElement = document.getElementById('camera-view');
-                this.isCameraActive = false;
-            }
+        const navigationData = {
+            "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
+            "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
+            "DEPT_LABEL_4": { angle: 5, dist: 215, guide: "ขึ้นไปที่ชั้น 4 ป้ายชื่อแผนกจะอยู่บริเวณโถงหน้าห้องพักครู" },
+            "631": { angle: 5, dist: 215, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
+            "632": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
+            "633": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งซ้าย" },
+            "634": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่สุดทางขวา" },
+            "635": { angle: 5, dist: 210, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องแรกซ้ายมือ" },
+            "TEACHER_ROOM": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องพักครูอยู่ขวามือ" },
+            "LECTURE": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องบรรยายอยู่ซ้ายมือ" },
+            "LAB1": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 1" },
+            "LAB2": { angle: 5, dist: 235, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 2" },
+            "LAB3": { angle: 5, dist: 240, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 3" }
+        };
 
-            async initialize() {
-                try {
-                    // ขออนุญาตใช้กล้อง
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            facingMode: 'environment', // ใช้กล้องหลัง
-                            width: { ideal: 1920 },
-                            height: { ideal: 1080 }
-                        },
-                        audio: false
-                    });
-                    
-                    this.videoElement.srcObject = stream;
-                    this.isCameraActive = true;
-                    
-                    console.log('Camera activated successfully');
-                    return true;
-                } catch (error) {
-                    console.error('Camera error:', error);
-                    this.showCameraError();
-                    return false;
-                }
-            }
-
-            showCameraError() {
-                // แสดงข้อความเมื่อกล้องไม่สามารถใช้งานได้
-                const guideTextElement = document.getElementById('guide-text');
-                if (guideTextElement) {
-                    guideTextElement.innerHTML = `
-                        <span style="color: #EF4444; font-weight: bold;">
-                            <i class="fas fa-video-slash"></i> 
-                            ไม่สามารถเข้าถึงกล้องได้
-                        </span>
-                        <br>
-                        ระบบจะทำงานในโหมดนำทางโดยไม่ใช้ภาพจากกล้อง
-                    `;
-                }
-                
-                // ตั้งพื้นหลังสีแทนกล้อง
-                document.getElementById('ar-container').style.background = 
-                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            }
-
-            stop() {
-                if (this.videoElement.srcObject) {
-                    const tracks = this.videoElement.srcObject.getTracks();
-                    tracks.forEach(track => track.stop());
-                    this.videoElement.srcObject = null;
-                }
-            }
+        function closeModal() {
+            const modal = document.getElementById('guide-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
-
-        // ========== ระบบเสียงนำทาง ==========
-        class VoiceGuidanceSystem {
-            constructor() {
-                this.isVoiceEnabled = false;
-                this.speechSynth = window.speechSynthesis;
-                this.voiceGuideBtn = document.getElementById('voice-guide-btn');
-                
-                if (this.voiceGuideBtn) {
-                    this.voiceGuideBtn.addEventListener('click', () => this.toggleVoiceGuidance());
-                }
-            }
-
-            toggleVoiceGuidance() {
-                this.isVoiceEnabled = !this.isVoiceEnabled;
-                
-                if (this.isVoiceEnabled) {
-                    this.voiceGuideBtn.innerHTML = '<i class="fas fa-volume-mute"></i> ปิดเสียง';
-                    this.speak('เปิดใช้งานคำแนะนำเสียงนำทาง');
-                } else {
-                    this.voiceGuideBtn.innerHTML = '<i class="fas fa-volume-up"></i> คำแนะนำเสียง';
-                    this.speak('ปิดคำแนะนำเสียงนำทาง');
-                }
-            }
-
-            speak(text) {
-                if (!this.isVoiceEnabled || !this.speechSynth) return;
-                
-                // ยกเลิกคำพูดก่อนหน้า
-                this.speechSynth.cancel();
-                
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'th-TH';
-                utterance.rate = 1.0;
-                utterance.pitch = 1.0;
-                utterance.volume = 1.0;
-                
-                this.speechSynth.speak(utterance);
-            }
-
-            giveDirectionHint(direction) {
-                if (!this.isVoiceEnabled) return;
-                
-                const directions = {
-                    'left': 'กรุณาเลี้ยวซ้าย',
-                    'right': 'กรุณาเลี้ยวขวา',
-                    'straight': 'เดินตรงไปข้างหน้า',
-                    'back': 'กรุณากลับหลัง'
-                };
-                
-                this.speak(directions[direction] || 'กรุณาปรับทิศทาง');
-            }
-        }
-
-        // ========== ระบบหลัก ==========
-        class ARNavigationApp {
-            constructor() {
-                this.stepCounter = new StepCounterSystem();
-                this.navigation = new NavigationSystem();
-                this.camera = new CameraSystem();
-                this.voiceGuidance = new VoiceGuidanceSystem();
-                this.isInitialized = false;
-            }
-
-            async initialize() {
-                console.log('Initializing AR Navigation App...');
-                
-                // เริ่มระบบต่างๆ
-                await this.startSystems();
-                
-                // ซ่อน loading screen
-                setTimeout(() => {
-                    this.hideLoadingScreen();
-                }, 2000);
-                
-                this.isInitialized = true;
-            }
-
-            async startSystems() {
-                // เริ่มระบบกล้อง
-                await this.camera.initialize();
-                
-                // เริ่มระบบนับก้าว
-                this.stepCounter.initialize();
-                
-                // ฟังการเปลี่ยนแปลงจำนวนก้าว
-                window.addEventListener('stepDetected', (event) => {
-                    this.navigation.updateProgress(event.detail.distance);
-                    
-                    // ให้คำแนะนำเสียง (ถ้าเปิดใช้งาน)
-                    if (event.detail.count % 20 === 0) { // ทุก 20 ก้าว
-                        this.voiceGuidance.speak(`เดินไปแล้ว ${event.detail.count} ก้าว`);
-                    }
-                });
-                
-                // เริ่มต้นคำแนะนำ
-                this.voiceGuidance.speak('เริ่มระบบนำทางแล้ว โปรดเดินไปตามทิศทางที่กำหนด');
-            }
-
-            hideLoadingScreen() {
-                const loadingOverlay = document.getElementById('loading-overlay');
-                if (loadingOverlay) {
-                    loadingOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingOverlay.style.display = 'none';
-                    }, 500);
-                }
-            }
-
-            cleanup() {
-                // ทำความสะอาดทรัพยากร
-                this.camera.stop();
-                this.voiceGuidance.speechSynth.cancel();
-                
-                // บันทึกสถิติเมื่อออก
-                if (this.stepCounter.stepCount > 0) {
-                    const stats = {
-                        steps: this.stepCounter.stepCount,
-                        distance: this.stepCounter.totalDistance,
-                        timestamp: new Date().toISOString()
-                    };
-                    localStorage.setItem('stc_last_session', JSON.stringify(stats));
-                }
-            }
-        }
-
-        // ========== เริ่มต้นแอปพลิเคชัน ==========
-        let app;
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                app = new ARNavigationApp();
-                await app.initialize();
-                
-                // ตั้งค่าเมื่อปิดหน้า
-                window.addEventListener('beforeunload', () => {
-                    if (app) {
-                        app.cleanup();
-                    }
-                });
-                
-                // ตั้งค่าเมื่อเปลี่ยนแท็บ (สำหรับ mobile)
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden && app) {
-                        app.cleanup();
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Failed to initialize app:', error);
-                document.getElementById('loading-text').textContent = 
-                    'เกิดข้อผิดพลาดในการเริ่มต้นระบบ: ' + error.message;
-            }
-        });
-
-        // ========== ฟังก์ชันช่วยเหลือ ==========
-        function updateLoadingText(text) {
-            const element = document.getElementById('loading-text');
-            if (element) element.textContent = text;
-        }
-
-        // ตรวจสอบการรองรับฟีเจอร์ต่างๆ
-        function checkFeatures() {
-            const features = {
-                deviceMotion: 'ondevicemotion' in window,
-                deviceOrientation: 'ondeviceorientation' in window,
-                mediaDevices: 'mediaDevices' in navigator,
-                vibration: 'vibrate' in navigator,
-                speechSynthesis: 'speechSynthesis' in window
+        
+        function getRoomName(id) {
+            const names = {
+                "DEPT_LABEL_3": "ป้ายแผนกไอที (ชั้น 3)", "DEPT_LABEL_4": "ป้ายแผนกไอที (ชั้น 4)",
+                "631": "ห้องเรียน 631", "632": "ห้องเรียน 632", "633": "ห้องเรียน 633",
+                "634": "ห้องเรียน 634", "635": "ห้องเรียน 635", "TEACHER_ROOM": "ห้องพักครู",
+                "LECTURE": "ห้องแลคเชอร์", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2", "LAB3": "ห้องแลป 3"
             };
-            
-            console.log('Feature support:', features);
-            return features;
+            return names[id] || id;
         }
 
-        // เรียกตรวจสอบฟีเจอร์เมื่อโหลด
-        setTimeout(checkFeatures, 1000);
+        function initApp() {
+            const params = new URLSearchParams(window.location.search);
+            const floor = params.get('floor');
+            const s3 = document.getElementById('floor-3');
+            const s4 = document.getElementById('floor-4');
+            const empty = document.getElementById('empty-state');
+            const searchBar = document.getElementById('search-container');
+            const startPhase = document.getElementById('start-phase');
+            
+            // UI Reset State
+            [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-link-active'));
+
+            if (floor === '3') {
+                s3.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('nav-f3').classList.add('nav-link-active');
+                document.getElementById('floor-title').innerText = "3 (Classrooms)"; 
+                renderRooms(3);
+            } else if (floor === '4') {
+                s4.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('nav-f4').classList.add('nav-link-active');
+                document.getElementById('floor-title').innerText = "4 (Laboratory)"; 
+                renderRooms(4);
+            } else if (!floor) {
+                startPhase.classList.remove('hidden');
+                document.getElementById('nav-home').classList.add('nav-link-active');
+            } else {
+                empty.classList.remove('hidden');
+            }
+        }
+
+        function renderRooms(floor) {
+            const container = document.getElementById(`rooms-${floor}`);
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const deptId = (floor === 3) ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
+            container.innerHTML += `
+                <button onclick="navigate('${deptId}')" class="room-card p-8 text-left group bg-slate-50 border-l-[12px] !border-[#B8860B]">
+                    <div class="font-black text-[10px] text-amber-600 mb-2 tracking-widest uppercase">Arrival Point</div>
+                    <h4 class="text-2xl font-black text-slate-800 mb-5 tracking-tight">${getRoomName(deptId)}</h4>
+                    <div class="text-[#B8860B] font-extrabold text-sm flex items-center gap-2 italic">
+                        ไปยังจุดเช็คอินแผนก <i class="fa-solid fa-location-crosshairs animate-spin-slow"></i>
+                    </div>
+                </button>`;
+
+            Object.keys(navigationData).forEach(key => {
+                if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
+                const isFloor3 = key.startsWith('63');
+                if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
+                    container.innerHTML += `
+                        <button onclick="navigate('${key}')" class="room-card p-8 text-left group">
+                            <div class="font-black text-[10px] text-slate-400 mb-2 tracking-widest uppercase">Room ID: ${key}</div>
+                            <h4 class="text-2xl font-black text-slate-800 mb-5 tracking-tight">${getRoomName(key)}</h4>
+                            <div class="text-[#002D62] font-extrabold text-sm flex items-center gap-2 italic">
+                                เริ่มนำทางจากจุดปัจจุบัน <i class="fa-solid fa-arrow-right-long group-hover:translate-x-3 transition-transform"></i>
+                            </div>
+                        </button>`;
+                }
+            });
+        }
+
+        function searchRoom() {
+            const input = document.getElementById('searchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.room-card');
+            cards.forEach(card => {
+                const isVisible = card.textContent.toLowerCase().includes(input);
+                card.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) {
+                    card.style.animation = 'fadeInScale 0.3s ease-out';
+                }
+            });
+        }
+
+        function navigate(roomId) {
+            const data = navigationData[roomId];
+            if(!data) return;
+            // เพิ่ม Haptic Feedback เล็กน้อยถ้าเบราว์เซอร์รองรับ
+            if (window.navigator && window.navigator.vibrate) navigator.vibrate(20);
+            window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
+        }
+
+        // --- Master Initialization ---
+        window.addEventListener('DOMContentLoaded', () => {
+            runLoading();
+            initApp();
+            
+            // ป้องกันการ Zoom เมื่อแตะปุ่มรัวๆ ใน iOS
+            document.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 1) e.preventDefault();
+            }, { passive: false });
+        });
     </script>
 </body>
 </html>
+ห้ามลดบรรทัดโค้ด
