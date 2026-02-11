@@ -1,637 +1,512 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Department - แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title>ระบบนำทาง AR | วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* === Global Styles === */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --primary-brown: #5D4A3A;
-            --secondary-taupe: #A89B8C;
-            --bg-ivory: #FEFAF5;
-            --card-cream: #FFFFFF;
-            --text-dark: #3E352C;
-            --accent-sand: #DBCFBF;
-            --accent-warm: #EADBC6;
-            --shadow-soft: 0 15px 40px rgba(93, 74, 58, 0.06);
-            --shadow-hover: 0 25px 50px rgba(93, 74, 58, 0.12);
-            --radius-card: 32px;
-            --radius-btn: 60px;
+            --stc-navy-deep: #001A35;
+            --stc-navy: #002D62;
+            --stc-gold: #B8860B;
+            --stc-silver: #E2E8F0;
+            --stc-bg: #FFFFFF;
         }
 
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--bg-ivory);
-            color: var(--text-dark);
-            line-height: 1.7;
+        body { 
+            font-family: 'Noto Sans Thai', sans-serif; 
+            background-color: var(--stc-bg); 
+            color: #1A1A1A;
+            margin: 0;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* === Header / Navbar === */
-        header {
-            background: rgba(254, 250, 245, 0.85);
-            backdrop-filter: blur(20px);
-            padding: 0.8rem 7%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(93, 74, 58, 0.08);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.02);
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .logo-area:hover { opacity: 0.8; }
-
-        .logo-area img {
-            height: 58px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
-
-        .logo-text h1 {
-            font-size: 1.1rem;
-            color: var(--primary-brown);
-            font-weight: 600;
-            line-height: 1.25;
-            letter-spacing: -0.3px;
-        }
-        .logo-text span {
-            font-weight: 300;
-            font-size: 0.8rem;
-            color: var(--secondary-taupe);
-        }
-
-        nav {
-            display: flex;
-            gap: 10px;
-        }
-
-        nav button {
-            background: transparent;
-            border: none;
-            padding: 10px 26px;
-            font-size: 1rem;
-            color: var(--text-dark);
-            cursor: pointer;
-            border-radius: var(--radius-btn);
-            transition: all 0.35s;
-            font-weight: 400;
-            letter-spacing: 0.3px;
-            border: 1px solid transparent;
-        }
-
-        nav button:hover {
-            background: rgba(93, 74, 58, 0.05);
-            border-color: rgba(93, 74, 58, 0.1);
-        }
-
-        nav button.active {
-            background: var(--primary-brown);
-            color: white;
-            box-shadow: 0 8px 20px rgba(93, 74, 58, 0.25);
-            border-color: var(--primary-brown);
-        }
-
-        /* === Content Sections === */
-        .content-section {
-            display: none;
-            padding: 50px 7% 100px;
-            max-width: 1500px;
-            margin: 0 auto;
-            animation: fadeUp 0.55s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(25px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* === Hero (Home) === */
-        .hero-wrapper {
-            padding: 30px 0 50px;
-            text-align: center;
-        }
-
-        .hero-badge {
-            background: rgba(93, 74, 58, 0.1);
-            padding: 8px 22px;
-            border-radius: 60px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--primary-brown);
-            display: inline-block;
-            margin-bottom: 25px;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            backdrop-filter: blur(4px);
-        }
-
-        .hero-title {
-            font-size: clamp(2.2rem, 7vw, 4.2rem);
-            font-weight: 700;
-            color: var(--primary-brown);
-            line-height: 1.1;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-
-        .hero-sub {
-            font-size: 1.2rem;
-            color: var(--secondary-taupe);
-            max-width: 750px;
-            margin: 0 auto 60px;
-            font-weight: 300;
-        }
-
-        /* === Feature Grid === */
-        .feature-grid-modern {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-            gap: 30px;
-            margin-bottom: 90px;
-        }
-
-        .feature-modern {
-            background: var(--card-cream);
-            padding: 40px 35px;
-            border-radius: var(--radius-card);
-            text-align: left;
-            transition: all 0.4s;
-            border: 1px solid rgba(93, 74, 58, 0.04);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .feature-modern:hover {
-            transform: translateY(-12px);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--accent-sand);
-        }
-
-        .feature-modern i {
-            font-size: 2.3rem;
-            color: var(--primary-brown);
-            margin-bottom: 20px;
-            background: rgba(93, 74, 58, 0.07);
-            padding: 15px;
-            border-radius: 22px;
-        }
-
-        .feature-modern h4 {
-            font-size: 1.45rem;
-            font-weight: 600;
-            color: var(--primary-brown);
-            margin-bottom: 15px;
-        }
-
-        .feature-modern p {
-            color: #71675E;
-            font-size: 0.98rem;
-        }
-
-        /* === Room Grid (Cards) === */
-        .section-title {
-            font-size: 2.2rem;
-            color: var(--primary-brown);
-            text-align: center;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .section-sub {
-            text-align: center;
-            color: var(--secondary-taupe);
-            margin-bottom: 55px;
-            font-size: 1.15rem;
-            font-weight: 300;
-        }
-
-        .room-grid-elegant {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 35px;
-        }
-
-        .room-card-luxury {
-            background: var(--card-cream);
-            border-radius: var(--radius-card);
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
-            border: 1px solid rgba(93, 74, 58, 0.04);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .room-card-luxury:hover {
-            transform: translateY(-12px);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--accent-sand);
-        }
-
-        .room-thumb-art {
-            height: 240px;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.8s ease;
-        }
-
-        .room-card-luxury:hover .room-thumb-art {
-            transform: scale(1.07);
-        }
-
-        .room-info-modern {
-            padding: 30px 25px;
-            background: white;
-            text-align: center;
-        }
-
-        .room-info-modern h3 {
-            font-size: 1.5rem;
-            color: var(--primary-brown);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .room-info-modern p {
-            color: #9F948B;
-            font-size: 0.9rem;
-            font-weight: 300;
-        }
-
-        /* === Modal Design === */
-        .modal-ar {
+        /* --- Loading Screen Styles --- */
+        #loading-screen {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(55, 45, 38, 0.75);
-            backdrop-filter: blur(12px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 25px;
-        }
-
-        .modal-content-lux {
-            background: var(--bg-ivory);
-            width: 100%;
-            max-width: 1100px;
-            border-radius: 48px;
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 1.1fr 1fr;
-            box-shadow: 0 40px 100px rgba(30, 24, 20, 0.4);
-        }
-
-        .modal-image-panel {
-            height: 100%;
-            min-height: 500px;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .modal-info-panel {
-            padding: 60px 50px;
-            position: relative;
-            display: flex;
+            inset: 0;
+            background: #ffffff;
+            z-index: 9999;
+            display: none; 
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+            will-change: opacity;
         }
 
-        .modal-close-btn {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            cursor: pointer;
-            color: var(--primary-brown);
-            font-size: 1.6rem;
-            opacity: 0.55;
-            transition: 0.25s;
-            background: rgba(93, 74, 58, 0.05);
-            width: 45px;
-            height: 45px;
+        .logo-container {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            background: white;
+            border-radius: 50% !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            box-shadow: 0 15px 35px rgba(0, 45, 98, 0.15), inset 0 0 0 2px var(--stc-navy);
+            border: 6px solid white;
+            margin-bottom: 2.5rem;
+            outline: 1px solid var(--stc-silver);
+            animation: fadeInScale 0.8s ease-out forwards;
         }
 
-        .modal-close-btn:hover {
-            opacity: 1;
-            background: rgba(93, 74, 58, 0.12);
+        .logo-container img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
         }
 
-        .modal-tag {
-            font-size: 0.8rem;
-            color: var(--secondary-taupe);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
-            margin-bottom: 15px;
+        .loader-wrapper {
+            width: 300px;
+            text-align: center;
         }
 
-        .modal-title {
-            margin: 12px 0 25px;
-            color: var(--primary-brown);
-            font-size: 2.1rem;
-            font-weight: 700;
-            line-height: 1.2;
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: #F1F5F9;
+            border: 1px solid var(--stc-silver);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            position: relative;
         }
 
-        .modal-desc {
-            color: #5E554C;
-            font-size: 1.05rem;
-            line-height: 1.85;
-            flex-grow: 1;
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--stc-navy), #0056b3);
+            box-shadow: 0 0 10px rgba(0, 45, 98, 0.2);
+            transition: width 0.3s ease-out;
         }
 
-        .btn-ar-nav {
-            background: var(--primary-brown);
+        .speed-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--stc-navy);
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- UI Elements --- */
+        * { border-radius: 0 !important; }
+        .logo-container { border-radius: 50% !important; }
+
+        .official-header {
+            background: var(--stc-navy-deep);
+            border-bottom: 5px solid var(--stc-gold);
+            position: relative;
+            padding: 4.5rem 2rem;
             color: white;
-            border: none;
-            padding: 20px 30px;
-            border-radius: 100px;
-            margin-top: 40px;
-            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .official-header::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.02) 75%, transparent 75%, transparent);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+        .btn-official {
+            background: var(--stc-navy);
+            color: white;
+            border: 1px solid var(--stc-navy);
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.4s;
-            box-shadow: 0 15px 35px rgba(93, 74, 58, 0.3);
-            border: 1px solid rgba(255,255,255,0.2);
+            gap: 10px;
+            cursor: pointer;
         }
 
-        .btn-ar-nav:hover {
-            background: #3F332A;
-            transform: translateY(-6px);
-            box-shadow: 0 22px 45px rgba(93, 74, 58, 0.45);
+        .btn-official:hover { background: white; color: var(--stc-navy); transform: translateY(-1px); }
+        .btn-official:active { transform: translateY(1px); }
+
+        .room-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-left: 8px solid var(--stc-navy);
+            transition: all 0.25s ease;
+            box-shadow: 4px 4px 0px #F1F5F9;
+            cursor: pointer;
+            position: relative;
         }
 
-        /* === Responsive === */
-        @media (max-width: 900px) {
-            .modal-content-lux { grid-template-columns: 1fr; }
-            .modal-image-panel { min-height: 300px; }
-            header { flex-direction: column; text-align: center; padding: 15px; }
-            nav { flex-wrap: wrap; justify-content: center; }
+        .room-card:hover {
+            border-color: var(--stc-gold);
+            transform: translate(-3px, -3px);
+            box-shadow: 10px 10px 0px var(--stc-navy);
+            z-index: 10;
         }
+
+        .nav-official {
+            background: white;
+            border-bottom: 2px solid var(--stc-silver);
+            height: 75px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .nav-link {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-weight: 700;
+            color: #4A5568;
+            border-bottom: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-link-active {
+            color: var(--stc-navy);
+            border-bottom: 4px solid var(--stc-navy);
+            background: #F8FAFC;
+        }
+
+        .section-tag {
+            background: var(--stc-gold);
+            color: white;
+            padding: 3px 14px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Smoothing Search */
+        #searchInput::placeholder { color: #CBD5E0; font-weight: 400; }
     </style>
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
-    <header>
-        <div class="logo-area" onclick="showPage('home')">
-            <img src="https://scontent-bkk1-2.xx.fbcdn.net/v/t1.6435-9/124571575_750142568916394_6898155299249385591_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6OcHB6DIg0R14iWqq_ppBRRhe7dki1MhFGF7t2SLUyDUOuNiP3cn8cXIGyDxsLp0XJlvYjPzjKDZteCHz4Hm6&_nc_ohc=B8_Z-ZM0t44Q7kNvwG0tyI4&_nc_oc=AdkZrTzH_kMVnVr2zO8Kx9UfVVTMbYpLy9eENfbQUyGYlOoQ7egBVe0mqXGfwy7M628&_nc_zt=23&_nc_ht=scontent-bkk1-2.xx&_nc_gid=ZTPnADG5oO05z-1LVxQ1_Q&oh=00_AfvgL5xm0F0k787mTfEjdyDppDa78wvDlTiznqkHY_FYsQ&oe=69B3BB04" alt="IT Logo">
-            <div class="logo-text">
-                <h1>เทคโนโลยีสารสนเทศ<br><span>วิทยาลัยเทคนิคสุราษฎร์ธานี</span></h1>
+    <div id="loading-screen">
+        <div class="logo-container">
+            <img src="favicon.png" alt="STC Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/th/a/a2/Surat_Thani_Technical_College_Logo.png'">
+        </div>
+        <div class="loader-wrapper">
+            <h2 class="text-[#002D62] font-black mb-4 text-xl tracking-tight uppercase">วิทยาลัยเทคนิคสุราษฎร์ธานี</h2>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-bar-fill"></div>
             </div>
-        </div>
-        <nav>
-            <button id="btn-home" class="active" onclick="showPage('home')"><i class="fas fa-compass" style="margin-right: 6px;"></i> หน้าแรก</button>
-            <button id="btn-floor3" onclick="showPage('floor3')"><i class="fas fa-layer-group" style="margin-right: 6px;"></i> ชั้น 3</button>
-            <button id="btn-floor4" onclick="showPage('floor4')"><i class="fas fa-layer-group" style="margin-right: 6px;"></i> ชั้น 4</button>
-        </nav>
-    </header>
-
-    <!-- ===== หน้าแรก ===== -->
-    <section id="home" class="content-section active">
-        <div class="hero-wrapper">
-            <span class="hero-badge"><i class="fas fa-robot" style="margin-right: 7px;"></i> SMART IT NAVIGATION</span>
-            <h2 class="hero-title">นำทางอาคาร IT<br>อย่างชาญฉลาดด้วย AR</h2>
-            <p class="hero-sub">ระบบนำทางภายในอาคารแผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี  ข้อมูลครบถ้วน แสดงห้องพักครู ห้องเรียน ห้องLAB พร้อมรูปภาพจริง</p>
-
-            <!-- Feature Grid -->
-            <div class="feature-grid-modern">
-                <div class="feature-modern">
-                    <i class="fas fa-map"></i>
-                    <h4>แผนที่ดิจิทัล</h4>
-                    <p>ผังอาคาร ชั้น 3-4 แสดงห้องเรียน ห้องปฏิบัติการ ห้องพักครู ครบถ้วน พร้อมข้อมูลโดยละเอียด</p>
+            <div class="speed-info">
+                <div class="flex items-center gap-2 bg-slate-100 px-5 py-2 border border-slate-200">
+                    <i class="fa-solid fa-satellite-dish text-[#B8860B] animate-pulse"></i>
+                    <span id="speed-text" class="font-mono text-sm tracking-tighter">Initializing STC-Net...</span>
                 </div>
-                <div class="feature-modern">
-                    <i class="fas fa-desktop"></i>
-                    <h4>ห้องปฏิบัติการ</h4>
-                    <p>ข้อมูล Lab 1, Lab 2, Lab 3 พร้อมรายละเอียดภาษา JAVA  ระบบเครือข่าย และโครงงาน</p>
-                </div>
-                <div class="feature-modern">
-                    <i class="fas fa-vr-cardboard"></i>
-                    <h4>AR Navigation</h4>
-                    <p>ระบบนำทางอัจฉริยะ ไปยังห้องต่างๆ ภายในอาคาร  ใช้งานง่าย แสดงเส้นทางแบบเรียลไทม์</p>
-                </div>
-            </div>
-
-            <!-- Quick Select Floor -->
-            <h3 style="color: var(--primary-brown); font-size: 1.9rem; font-weight: 500; margin-bottom: 40px;">สำรวจชั้นที่คุณสนใจ</h3>
-            <div class="room-grid-elegant">
-                <div class="room-card-luxury" onclick="showPage('floor3')">
-                    <div class="room-thumb-art" style="background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format');"></div>
-                    <div class="room-info-modern">
-                        <h3>🏢 ชั้น 3</h3>
-                        <p>ห้องเรียน 631 - 635 ห้องบรรยาย</p>
-                    </div>
-                </div>
-                <div class="room-card-luxury" onclick="showPage('floor4')">
-                    <div class="room-thumb-art" style="background-image: url('https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=800&auto=format');"></div>
-                    <div class="room-info-modern">
-                        <h3>🏢 ชั้น 4</h3>
-                        <p>ห้องพักครู, LAB1, LAB2, LAB3</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== ชั้น 3 ===== -->
-    <section id="floor3" class="content-section">
-        <div style="padding: 20px 0;">
-            <h2 class="section-title">ชั้น 3</h2>
-            <p class="section-sub"><i class="fas fa-chalkboard-teacher" style="margin-right: 8px;"></i> ห้องเรียนทฤษฎี 631 - 635</p>
-            <div class="room-grid-elegant" id="grid-floor3"></div>
-        </div>
-    </section>
-
-    <!-- ===== ชั้น 4 ===== -->
-    <section id="floor4" class="content-section">
-        <div style="padding: 20px 0;">
-            <h2 class="section-title">ชั้น 4</h2>
-            <p class="section-sub"><i class="fas fa-flask" style="margin-right: 8px;"></i> ห้องพักครู · ห้องปฏิบัติการ LAB1 · LAB2 · LAB3</p>
-            <div class="room-grid-elegant" id="grid-floor4"></div>
-        </div>
-    </section>
-
-    <!-- ===== MODAL รายละเอียดห้อง ===== -->
-    <div id="roomModal" class="modal-ar">
-        <div class="modal-content-lux">
-            <div id="modal-img" class="modal-image-panel"></div>
-            <div class="modal-info-panel">
-                <span class="modal-close-btn" onclick="closeModal()"><i class="fas fa-times"></i></span>
-                <span id="modal-badge" class="modal-tag">INFORMATION</span>
-                <h2 id="modal-roomname" class="modal-title">ห้องเรียน</h2>
-                <p id="modal-description" class="modal-desc">รายละเอียดห้อง...</p>
-                <button class="btn-ar-nav" onclick="startNavigation()">
-                    <i class="fas fa-location-arrow"></i> เริ่มต้นนำทาง AR
-                    <i class="fas fa-arrow-right" style="font-size: 0.9rem;"></i>
-                </button>
             </div>
         </div>
     </div>
 
+    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity"></div>
+        <div class="relative bg-white border-4 border-[#002D62] max-w-[500px] w-full shadow-2xl overflow-hidden scale-in-center">
+            <div class="bg-[#002D62] p-5 text-white flex justify-between items-center">
+                <span class="font-bold tracking-[0.2em] text-xs uppercase">Official Navigation Guideline</span>
+                <button onclick="closeModal()" class="hover:text-amber-400 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-10">
+                <h3 class="text-3xl font-black text-[#002D62] mb-5 tracking-tight">ยินดีต้อนรับสู่ระบบ AR</h3>
+                <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                    เพื่อให้ระบบนำทางได้อย่างแม่นยำสูงสุด กรุณายืนบริเวณ <span class="font-bold text-[#B8860B] underline underline-offset-4">ป้อมยามหน้าวิทยาลัย</span> และหันหน้าไปทางอาคารอำนวยการก่อนเริ่มใช้งาน
+                </p>
+                <div class="space-y-4 mb-10">
+                    <div class="flex items-center gap-4 text-sm font-extrabold p-4 bg-blue-50 border-l-4 border-blue-600 text-blue-900">
+                        <i class="fa-solid fa-shield-halved text-xl"></i>
+                        โปรดอนุญาตสิทธิ์การเข้าถึงกล้องและเซนเซอร์เมื่อระบบร้องขอ
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-full btn-official py-5 uppercase tracking-[0.3em] text-sm font-black shadow-lg">ยืนยันพิกัดและเริ่มใช้งาน</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6">
+        <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='index.html'">
+            <img src="favicon.png" class="h-11 w-11 object-contain" alt="STC Logo">
+            <div class="leading-tight">
+                <div class="font-black text-[13px] text-[#002D62] tracking-tighter">SURAT THANI TECHNICAL COLLEGE</div>
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.15em]">IT AR-Navigation v2.0</div>
+            </div>
+        </div>
+        <div class="hidden lg:flex h-full">
+            <a href="index.html" class="nav-link" id="nav-home">หน้าหลัก</a>
+            <a href="?floor=3" class="nav-link" id="nav-f3">ชั้น 3</a>
+            <a href="?floor=4" class="nav-link" id="nav-f4">ชั้น 4</a>
+        </div>
+        <div class="lg:hidden">
+             <i class="fa-solid fa-ellipsis-vertical text-slate-300"></i>
+        </div>
+    </nav>
+
+    <header class="official-header">
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="section-tag shadow-sm">Digital Campus Map</div>
+            <h1 class="text-4xl md:text-7xl font-black leading-[0.9] mb-6 tracking-tighter">
+                ระบบนำทางอาคาร <br>
+                <span class="text-transparent" style="-webkit-text-stroke: 1.5px white; opacity: 0.9;">แผนกเทคโนโลยีสารสนเทศ</span>
+            </h1>
+            <div class="w-24 h-1.5 bg-[#B8860B] mb-6"></div>
+            <p class="text-slate-300 max-w-2xl text-base font-medium leading-relaxed opacity-80">
+                จุดเริ่มต้น: ป้อมยามหน้าวิทยาลัยเทคนิคสุราษฎร์ธานี (ประตู 1) <br>
+                เป้าหมาย: อาคารแผนกเทคโนโลยีสารสนเทศ (อาคารสีม่วง / ตึกเทคโนฯ)
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-16">
+        <div id="search-container" class="mb-14 hidden">
+            <div class="flex flex-col md:flex-row gap-8 items-end border-b-4 border-slate-50 pb-10">
+                <div class="flex-1 w-full">
+                    <label class="block font-black text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-3">Filter Classroom Floor <span id="floor-title" class="text-[#002D62]">--</span></label>
+                    <div class="relative group">
+                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ระบุเลขห้อง (เช่น 631) หรือ ชื่อห้อง..." class="w-full border-2 border-slate-200 p-4 outline-none focus:border-[#002D62] font-bold text-xl transition-all placeholder:italic">
+                        <i class="fa-solid fa-magnifying-glass absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#002D62] transition-colors"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="start-phase" class="mb-20 hidden">
+            <h2 class="text-3xl font-black mb-10 flex items-center gap-4 text-[#002D62] tracking-tighter">
+                <span class="bg-[#002D62] text-white w-10 h-10 flex items-center justify-center text-sm font-bold rotate-3">01</span>
+                เลือกจุดหมายปลายทางของท่าน
+            </h2>
+            <button onclick="navigate('TO_IT_BUILDING')" class="w-full room-card p-12 flex flex-col md:flex-row justify-between items-center group mb-8">
+                <div class="text-left mb-8 md:mb-0">
+                    <div class="section-tag bg-[#002D62] px-3">Primary Target</div>
+                    <h3 class="text-4xl font-black text-slate-800 italic flex items-center gap-4 flex-wrap">
+                        ป้อมยาม <i class="fa-solid fa-chevron-right text-[#B8860B] text-2xl animate-pulse"></i> อาคารแผนกไอที
+                    </h3>
+                    <p class="text-slate-400 font-extrabold mt-3 italic tracking-tight uppercase text-sm">Main Corridor Path: Pass through Building 11</p>
+                </div>
+                <div class="btn-official px-12 py-5 w-full md:w-auto text-lg shadow-xl hover:shadow-2xl">
+                    เริ่มการนำทาง AR <i class="fa-solid fa-street-view ml-2"></i>
+                </div>
+            </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <a href="?floor=3" class="btn-official py-12 text-2xl italic bg-white !text-[#002D62] border-2 border-[#002D62] hover:!bg-[#002D62] hover:!text-white shadow-md">สำรวจห้องเรียนชั้น 3 (631 - 635)</a>
+                <a href="?floor=4" class="btn-official py-12 text-2xl italic bg-white !text-[#002D62] border-2 border-[#002D62] hover:!bg-[#002D62] hover:!text-white shadow-md">สำรวจชั้น 4 (พักครู / LAB)</a>
+            </div>
+        </div>
+
+        <div id="floor-3" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="rooms-3"></div></div>
+        <div id="floor-4" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="rooms-4"></div></div>
+
+        <div id="empty-state" class="text-center py-24 hidden">
+            <i class="fa-solid fa-map-location-dot text-6xl text-slate-200 mb-6"></i>
+            <h2 class="text-3xl font-black text-slate-800 mb-6 uppercase tracking-widest">Floor Not Found</h2>
+            <a href="index.html" class="btn-official px-14 py-5 mx-auto w-fit shadow-lg">Back to Home</a>
+        </div>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-100 py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Developed By</p>
+                <p class="font-bold text-[#002D62]">แผนกเทคโนโลยีสารสนเทศ วิทยาลัยเทคนิคสุราษฎร์ธานี</p>
+            </div>
+            <div class="flex gap-6 text-slate-300">
+                <i class="fa-brands fa-facebook-f hover:text-[#002D62] cursor-pointer transition-colors"></i>
+                <i class="fa-solid fa-globe hover:text-[#002D62] cursor-pointer transition-colors"></i>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // --------------------------------------------------------------
-        // ข้อมูลครบถ้วนตามที่ได้รับจากโจทย์ — ห้องเรียน ชั้น 4 ห้องพักครู LAB1 LAB2 LAB3 
-        // รวมทั้งรูปภาพตามที่แนบมา (จำลองโดยใช้ placeholder ข้อความ และบางส่วนเป็น Unsplash 
-        // แต่เพื่อความสมจริง ได้ embed ภาพจากข้อความในไฟล์แนบเป็นสไตล์ และกำหนดรูปประจำ)
-        // --------------------------------------------------------------
-        const roomInventory = {
-            floor3: [
-                { id: '631', name: 'ห้องเรียน 631', img: 'https://images.unsplash.com/photo-1562774053-701939374585?w=800', desc: 'ห้องเรียน 631: ภาคทฤษฎี Programming, พื้นฐานระบบเครือข่าย' },
-                { id: '632', name: 'ห้องเรียน 632', img: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800', desc: 'ห้องเรียน 632: ใช้สำหรับการเรียนการสอน Database, ระบบปฏิบัติการ' },
-                { id: '633', name: 'ห้องเรียน 633', img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800', desc: 'ห้องเรียน 633: Multimedia และ Graphic Design' },
-                { id: '634', name: 'ห้องเรียน 634', img: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800', desc: 'ห้องเรียน 634: วิชาโครงงานคอมพิวเตอร์ และการนำเสนอ' },
-                { id: '635', name: 'ห้องเรียน 635', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800', desc: 'ห้องเรียน 635: ภาษาอังกฤษสำหรับเทคโนโลยีสารสนเทศ' }
-            ],
-            floor4: [
-                // ห้องพักครู (Teacher's room) ตามที่แนบ
-                { id: 'teacher-room', name: 'ห้องพักครู', img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800', desc: 'ห้องพักครูประจำแผนก IT  วิทยาลัยเทคนิคสุราษฎร์ธานี อาจารย์ที่ปรึกษา และติดต่องานธุรการ' },
-                // LAB 1 : JAVA Programming Language - รายละเอียดจาก image.png (Computer LAB1)
-                { id: 'LAB1', name: 'COMPUTER LAB1', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800', desc: '🔵 JAVA Programming Language: High-level, OOP พัฒนาโดย Sun Microsystems (1995)  ภาษาที่ได้รับความนิยม  ใช้เรียนเขียนโปรแกรมเชิงวัตถุ และพัฒนาแอปพลิเคชัน' },
-                // LAB 2 : WORK IN CABLES ตาม image.png (Computer LAB2)
-                { id: 'LAB2', name: 'COMPUTER LAB2', img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc51?w=800', desc: '🔧 WORK IN CABLES - ปฏิบัติการเดินสายและระบบเครือข่าย  เรียนรู้การคริมป์สาย LAN, เราเตอร์, สวิตช์, การจำลองเครือข่าย' },
-                // LAB 3 : fine / Test ตาม image.png (Computer LAB3)
-                { id: 'LAB3', name: 'COMPUTER LAB3', img: 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=800', desc: '🧪 ห้องปฏิบัติการขั้นสูง: ทดสอบระบบ IoT, โครงงาน Fine & Test  ไมโครคอนโทรลเลอร์,  ระบบสมองกลฝังตัว' }
-            ]
+        // --- Enhanced Loading Engine ---
+        function runLoading() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const progressFill = document.getElementById('progress-fill');
+            const speedText = document.getElementById('speed-text');
+            const isFirstVisit = !sessionStorage.getItem('stc_init_complete');
+
+            if (!isFirstVisit) {
+                loadingScreen.style.display = 'none';
+                return;
+            }
+
+            loadingScreen.style.display = 'flex';
+            let progress = 0;
+            const targetSpeed = (Math.random() * (50 - 30) + 30).toFixed(1);
+
+            const timer = setInterval(() => {
+                progress += Math.random() * 12;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(timer);
+                    speedText.innerText = `Connected via STC-WIFI: ${targetSpeed} Mbps`;
+                    
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingScreen.style.visibility = 'hidden';
+                            loadingScreen.style.display = 'none';
+                            sessionStorage.setItem('stc_init_complete', 'true');
+                            
+                            const floorParam = new URLSearchParams(window.location.search).get('floor');
+                            if (!floorParam) {
+                                document.getElementById('guide-modal').classList.remove('hidden');
+                            }
+                        }, 600);
+                    }, 800);
+                } else {
+                    progressFill.style.width = progress + '%';
+                    speedText.innerText = `Fetching Spatial Data... ${(progress * 0.4).toFixed(1)}%`;
+                }
+            }, 90);
+        }
+
+        const navigationData = {
+            "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
+            "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
+            "DEPT_LABEL_4": { angle: 5, dist: 215, guide: "ขึ้นไปที่ชั้น 4 ป้ายชื่อแผนกจะอยู่บริเวณโถงหน้าห้องพักครู" },
+            "631": { angle: 5, dist: 215, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
+            "632": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา" },
+            "633": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งซ้าย" },
+            "634": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่สุดทางขวา" },
+            "635": { angle: 5, dist: 210, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องแรกซ้ายมือ" },
+            "TEACHER_ROOM": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องพักครูอยู่ขวามือ" },
+            "LECTURE": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องบรรยายอยู่ซ้ายมือ" },
+            "LAB1": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 1" },
+            "LAB2": { angle: 5, dist: 235, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 2" },
+            "LAB3": { angle: 5, dist: 240, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 3" }
         };
 
-        // ---------- สร้างการ์ดทั้งหมดอัตโนมัติ ----------
-        function buildRoomCards() {
-            // ชั้น 3
-            const grid3 = document.getElementById('grid-floor3');
-            if (grid3) {
-                grid3.innerHTML = '';
-                roomInventory.floor3.forEach(room => {
-                    grid3.innerHTML += `<div class="room-card-luxury" onclick="openRoomModal('floor3', '${room.id}')">
-                        <div class="room-thumb-art" style="background-image: url('${room.img}');"></div>
-                        <div class="room-info-modern">
-                            <h3>${room.name}</h3>
-                            <p><i class="fas fa-info-circle" style="margin-right: 4px;"></i> แตะเพื่อดูรายละเอียด</p>
-                        </div>
-                    </div>`;
-                });
-            }
-
-            // ชั้น 4 - ห้องพักครู / LAB1 / LAB2 / LAB3  ครบถ้วนตามที่แนบ
-            const grid4 = document.getElementById('grid-floor4');
-            if (grid4) {
-                grid4.innerHTML = '';
-                roomInventory.floor4.forEach(room => {
-                    grid4.innerHTML += `<div class="room-card-luxury" onclick="openRoomModal('floor4', '${room.id}')">
-                        <div class="room-thumb-art" style="background-image: url('${room.img}');"></div>
-                        <div class="room-info-modern">
-                            <h3>${room.name}</h3>
-                            <p><i class="fas fa-info-circle" style="margin-right: 4px;"></i> แตะดูข้อมูลห้อง</p>
-                        </div>
-                    </div>`;
-                });
-            }
-        }
-
-        // ---------- เปลี่ยนหน้า (home, floor3, floor4) ----------
-        function showPage(pageId) {
-            // ซ่อนทุก section
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            // แสดง section ที่เลือก
-            const activeSection = document.getElementById(pageId);
-            if (activeSection) activeSection.classList.add('active');
-
-            // จัดการ active state ของปุ่ม nav
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-            if (pageId === 'home') document.getElementById('btn-home').classList.add('active');
-            if (pageId === 'floor3') document.getElementById('btn-floor3').classList.add('active');
-            if (pageId === 'floor4') document.getElementById('btn-floor4').classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ---------- เปิด Modal แสดงข้อมูลห้อง ----------
-        function openRoomModal(floorId, roomId) {
-            const floorData = roomInventory[floorId];
-            const room = floorData.find(r => r.id === roomId);
-            if (!room) return;
-
-            // อัปเดต modal
-            document.getElementById('modal-img').style.backgroundImage = `url('${room.img}')`;
-            document.getElementById('modal-roomname').innerText = room.name;
-            document.getElementById('modal-description').innerText = room.desc;
-
-            // แสดง floor badge
-            const badgeEl = document.getElementById('modal-badge');
-            if (floorId === 'floor3') badgeEl.innerText = 'ชั้น 3 · ห้องเรียนทฤษฎี';
-            else badgeEl.innerText = 'ชั้น 4 · ห้องปฏิบัติการ/พักครู';
-
-            // แสดง modal
-            document.getElementById('roomModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // ปิด scroll ด้านหลัง
-        }
-
-        // ---------- ปิด Modal ----------
         function closeModal() {
-            document.getElementById('roomModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
+            const modal = document.getElementById('guide-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+        
+        function getRoomName(id) {
+            const names = {
+                "DEPT_LABEL_3": "ป้ายแผนกไอที (ชั้น 3)", "DEPT_LABEL_4": "ป้ายแผนกไอที (ชั้น 4)",
+                "631": "ห้องเรียน 631", "632": "ห้องเรียน 632", "633": "ห้องเรียน 633",
+                "634": "ห้องเรียน 634", "635": "ห้องเรียน 635", "TEACHER_ROOM": "ห้องพักครู",
+                "LECTURE": "ห้องแลคเชอร์", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2", "LAB3": "ห้องแลป 3"
+            };
+            return names[id] || id;
         }
 
-        // ---------- จำลองระบบนำทาง AR ----------
-        function startNavigation() {
-            const roomName = document.getElementById('modal-roomname').innerText;
-            alert(`🚀 กำลังเริ่มต้นระบบนำทาง AR ไปยัง "${roomName}"\n(จำลองการนำทาง) กรุณารอสักครู่...`);
-            // สามารถต่อ WebXR หรือ AR.js ได้ในอนาคต
+        function initApp() {
+            const params = new URLSearchParams(window.location.search);
+            const floor = params.get('floor');
+            const s3 = document.getElementById('floor-3');
+            const s4 = document.getElementById('floor-4');
+            const empty = document.getElementById('empty-state');
+            const searchBar = document.getElementById('search-container');
+            const startPhase = document.getElementById('start-phase');
+            
+            // UI Reset State
+            [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-link-active'));
+
+            if (floor === '3') {
+                s3.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('nav-f3').classList.add('nav-link-active');
+                document.getElementById('floor-title').innerText = "3 (Classrooms)"; 
+                renderRooms(3);
+            } else if (floor === '4') {
+                s4.classList.remove('hidden'); searchBar.classList.remove('hidden');
+                document.getElementById('nav-f4').classList.add('nav-link-active');
+                document.getElementById('floor-title').innerText = "4 (Laboratory)"; 
+                renderRooms(4);
+            } else if (!floor) {
+                startPhase.classList.remove('hidden');
+                document.getElementById('nav-home').classList.add('nav-link-active');
+            } else {
+                empty.classList.remove('hidden');
+            }
         }
 
-        // ---------- คลิกพื้นหลัง modal เพื่อปิด ----------
-        window.onclick = function(event) {
-            const modal = document.getElementById('roomModal');
-            if (event.target === modal) closeModal();
-        };
+        function renderRooms(floor) {
+            const container = document.getElementById(`rooms-${floor}`);
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const deptId = (floor === 3) ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
+            container.innerHTML += `
+                <button onclick="navigate('${deptId}')" class="room-card p-8 text-left group bg-slate-50 border-l-[12px] !border-[#B8860B]">
+                    <div class="font-black text-[10px] text-amber-600 mb-2 tracking-widest uppercase">Arrival Point</div>
+                    <h4 class="text-2xl font-black text-slate-800 mb-5 tracking-tight">${getRoomName(deptId)}</h4>
+                    <div class="text-[#B8860B] font-extrabold text-sm flex items-center gap-2 italic">
+                        ไปยังจุดเช็คอินแผนก <i class="fa-solid fa-location-crosshairs animate-spin-slow"></i>
+                    </div>
+                </button>`;
 
-        // ---------- โหลดการ์ดเมื่อ DOM พร้อม ----------
-        document.addEventListener('DOMContentLoaded', function() {
-            buildRoomCards();
+            Object.keys(navigationData).forEach(key => {
+                if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
+                const isFloor3 = key.startsWith('63');
+                if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
+                    container.innerHTML += `
+                        <button onclick="navigate('${key}')" class="room-card p-8 text-left group">
+                            <div class="font-black text-[10px] text-slate-400 mb-2 tracking-widest uppercase">Room ID: ${key}</div>
+                            <h4 class="text-2xl font-black text-slate-800 mb-5 tracking-tight">${getRoomName(key)}</h4>
+                            <div class="text-[#002D62] font-extrabold text-sm flex items-center gap-2 italic">
+                                เริ่มนำทางจากจุดปัจจุบัน <i class="fa-solid fa-arrow-right-long group-hover:translate-x-3 transition-transform"></i>
+                            </div>
+                        </button>`;
+                }
+            });
+        }
 
-            // เพิ่มข้อมูลเพิ่มเติม LAB1 ให้ตรงกับที่ได้รับ: JAVA รายละเอียดภาษา  (แสดงใน modal เรียบร้อยแล้ว)
-            // ปรับ LAB2 และ LAB3 ตามไฟล์ภาพ
-            console.log('ระบบ IT Navigation พร้อมใช้งาน');
+        function searchRoom() {
+            const input = document.getElementById('searchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.room-card');
+            cards.forEach(card => {
+                const isVisible = card.textContent.toLowerCase().includes(input);
+                card.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) {
+                    card.style.animation = 'fadeInScale 0.3s ease-out';
+                }
+            });
+        }
+
+        function navigate(roomId) {
+            const data = navigationData[roomId];
+            if(!data) return;
+            // เพิ่ม Haptic Feedback เล็กน้อยถ้าเบราว์เซอร์รองรับ
+            if (window.navigator && window.navigator.vibrate) navigator.vibrate(20);
+            window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
+        }
+
+        // --- Master Initialization ---
+        window.addEventListener('DOMContentLoaded', () => {
+            runLoading();
+            initApp();
+            
+            // ป้องกันการ Zoom เมื่อแตะปุ่มรัวๆ ใน iOS
+            document.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 1) e.preventDefault();
+            }, { passive: false });
         });
-
-        // สำหรับ Unsplash fallback (กรณีภาพไม่โหลด) แต่ไม่จำเป็น
     </script>
-
-    <!-- หมายเหตุ: รูปภาพต่างๆ ถูกปรับให้เข้ากับบริบทห้อง LAB, ห้องเรียนและบรรยากาศ 
-         ห้อง LAB1 เน้น JAVA / LAB2 เน้น WORK IN CABLES / LAB3 เน้น FINE & TEST 
-         ห้องพักครูใช้ภาพบรรยากาศพูดคุย 
-         ครบถ้วนตามที่แนบและเพิ่มเติมชั้น 4 ห้องพักครู และ LAB 1-3 -->
 </body>
 </html>
