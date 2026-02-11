@@ -270,10 +270,10 @@
                 <button onclick="closeRoomDetail()" class="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-red-500 hover:text-white transition-all rounded-none"><i class="fa-solid fa-times"></i></button>
             </div>
             
-            <div class="relative w-full h-60 bg-slate-100 border-b border-slate-200 shrink-0">
-                <img id="modal-room-image" src="" class="w-full h-full object-cover" alt="Room Image" onerror="this.src='https://placehold.co/600x400/002D62/FFF?text=No+Image'">
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                    <h3 id="modal-room-name" class="text-white text-xl font-bold drop-shadow-md">ชื่อห้องเรียน</h3>
+            <div class="relative w-full h-64 bg-slate-100 border-b border-slate-200 shrink-0 group">
+                <img id="modal-room-image" src="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Room Image" onerror="this.src='https://placehold.co/600x400/002D62/FFF?text=No+Image'">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-12">
+                    <h3 id="modal-room-name" class="text-white text-2xl font-bold drop-shadow-md">ชื่อห้องเรียน</h3>
                 </div>
             </div>
 
@@ -457,7 +457,7 @@
             return names[id] || id;
         }
 
-        // --- ฟังก์ชันที่แก้ไขส่วนแสดงรูปภาพ ---
+        // --- ส่วนที่แก้ไข: ฟังก์ชันแสดง Modal และรูปภาพ ---
         function openRoomDetail(roomId) {
             const data = navigationData[roomId];
             if (!data) return;
@@ -467,14 +467,23 @@
             
             const imgElement = document.getElementById('modal-room-image');
             
-            // เพิ่มรายชื่อ ID ห้องในชั้น 4 เข้าไปเพื่อให้ดึงไฟล์ .jpeg มาใช้
-            const roomWithImages = [
-                '631','632','633','634','635',
-                'TEACHER_ROOM','LECTURE','LAB1','LAB2','LAB3'
-            ];
+            // Map ID ของห้องให้ตรงกับชื่อไฟล์รูปภาพที่คุณอัปโหลด
+            const roomImages = {
+                'TEACHER_ROOM': 'breakteacher.jpeg', // รูปห้องพักครู
+                'LECTURE': 'lecture.jpeg',           // รูปห้อง Lecture
+                'LAB1': 'lab 1.jpeg',                // รูปห้อง Lab 1 (มีเว้นวรรค)
+                'LAB2': 'lab 2.jpeg',                // รูปห้อง Lab 2
+                'LAB3': 'lab 3.jpeg',                // รูปห้อง Lab 3
+                // ห้องชั้น 3 ใส่ไว้เผื่อมีไฟล์
+                '631': '631.jpeg',
+                '632': '632.jpeg',
+                '633': '633.jpeg',
+                '634': '634.jpeg',
+                '635': '635.jpeg'
+            };
             
-            if(roomWithImages.includes(roomId)) {
-                imgElement.src = `${roomId}.jpeg`; 
+            if(roomImages[roomId]) {
+                imgElement.src = roomImages[roomId]; 
             } else {
                 imgElement.src = `https://placehold.co/600x400/002D62/FFF?text=${roomId}`;
             }
@@ -509,6 +518,7 @@
             Object.keys(navigationData).forEach(key => {
                 if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
                 const isFloor3 = ['631','632','633','634','635'].includes(key);
+                // ตรวจสอบห้องตามชั้น
                 if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
                     container.innerHTML += `
                         <button onclick="openRoomDetail('${key}')" class="room-card p-8 text-left group">
