@@ -33,7 +33,7 @@
             line-height: 1.6;
         }
 
-        /* --- Header ปรับสัดส่วนใหม่ --- */
+        /* --- Header --- */
         header {
             background-color: rgba(250, 247, 242, 0.9);
             backdrop-filter: blur(20px);
@@ -54,12 +54,10 @@
             cursor: pointer; 
         }
 
-        /* จัดการโลโก้ให้ไม่มีขอบขาวและขนาดพอดี */
         .logo-area img { 
-            height: 55px; /* เพิ่มขนาดเล็กน้อยเพื่อให้เห็นรายละเอียด */
+            height: 55px; 
             width: auto;
             object-fit: contain;
-            /* เทคนิคทำให้ขอบสีขาวหายไปในกรณีภาพพื้นหลังขาว */
             mix-blend-mode: multiply; 
         }
 
@@ -87,7 +85,7 @@
         .content-section {
             display: none; 
             padding: 40px 6% 100px;
-            max-width: 1300px; /* ขยายความกว้างสูงสุดเพื่อให้เหมาะกับจอ Wide */
+            max-width: 1300px;
             margin: 0 auto;
             animation: fadeIn 0.6s ease;
         }
@@ -178,22 +176,7 @@
         .room-info h3 { font-size: 1.35rem; color: var(--primary-color); margin-bottom: 8px; }
         .room-info p { font-size: 0.9rem; color: #999; }
 
-        /* --- Responsive Adjustments --- */
-        @media (max-width: 992px) {
-            header { padding: 1rem 4%; }
-            .content-section { padding: 30px 4% 60px; }
-        }
-
-        @media (max-width: 768px) {
-            header { flex-direction: column; padding: 1.5rem 5%; gap: 15px; }
-            .logo-area { flex-direction: column; text-align: center; }
-            nav { width: 100%; justify-content: center; overflow-x: auto; padding-bottom: 5px; }
-            nav button { padding: 8px 16px; font-size: 0.85rem; }
-            .hero-title { font-size: 2.2rem; }
-            .feature-grid { grid-template-columns: 1fr; }
-        }
-
-        /* --- Modal (เหมือนเดิมแต่ปรับสีปุ่มนิดหน่อย) --- */
+        /* --- Modal --- */
         .modal {
             position: fixed; inset: 0; background: rgba(42, 36, 30, 0.6);
             backdrop-filter: blur(10px); display: none;
@@ -219,6 +202,12 @@
             font-size: 1rem;
         }
         .ar-btn:hover { background: #5D5144; transform: translateY(-4px); box-shadow: 0 15px 30px rgba(125, 110, 93, 0.4); }
+
+        @media (max-width: 768px) {
+            .modal-content { grid-template-columns: 1fr; }
+            .modal-img { min-height: 250px; }
+            header { flex-direction: column; text-align: center; }
+        }
     </style>
 </head>
 <body>
@@ -313,12 +302,14 @@
     </div>
 
     <script>
-        // ข้อมูลตัวอย่าง (คงเดิมแต่ปรับคำอธิบายให้ดูเป็นทางการขึ้น)
+        // ข้อมูลห้องเรียนชั้น 3 อัปเดตตามรูปภาพที่แนบมา
         const roomData = {
             floor3: [
-                { id: '631', name: 'ห้องเรียน 631', img: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800', desc: 'ห้องเรียนทฤษฎีมาตรฐาน ติดตั้งอุปกรณ์อำนวยความสะดวกครบครันสำหรับการเรียนการสอนสมัยใหม่' },
-                { id: '632', name: 'ห้องเรียน 632', img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800', desc: 'ห้องบรรยายขนาดใหญ่ รองรับการจัดสัมมนาและกิจกรรมทางวิชาการของแผนก' },
-                { id: '633', name: 'ห้องเรียน 633', img: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800', desc: 'ห้องเรียนย่อยสำหรับการระดมความคิดและการทำงานกลุ่มของนักศึกษา' }
+                { id: '631', name: 'ห้องเรียน 631', img: '631.jpeg', desc: 'ห้องเรียนทฤษฎีมาตรฐาน แผนกเทคโนโลยีสารสนเทศ บรรยากาศเงียบสงบ เหมาะแก่การเรียนรู้ภาคทฤษฎี' },
+                { id: '632', name: 'ห้องเรียน 632', img: '632.jpeg', desc: 'ห้องสอบภาคปฏิบัติและห้องเรียนทฤษฎี ติดป้ายประกาศความปลอดภัยและระเบียบการใช้ห้องอย่างชัดเจน' },
+                { id: '633', name: 'ห้องเรียน 633', img: '633.jpeg', desc: 'ห้องปฏิบัติการคอมพิวเตอร์และห้องเรียนทฤษฎี มีหน้าต่างกระจกใสสามารถมองเห็นการเรียนการสอนภายในห้องได้' },
+                { id: '634', name: 'ห้อง 634 UNKNOWCALLBACK', img: '4589aacf-ae7c-4653-94d4-44093c3b5aa6.jpeg', desc: 'ศูนย์บ่มเพาะผู้ประกอบการอาชีวศึกษา (UNKNOWCALLBACK) แหล่งเรียนรู้เชิงธุรกิจและนวัตกรรม' },
+                { id: '635', name: 'ห้องปฏิบัติการ 635', img: 'd17862a4-ef02-4173-9281-7be37c44fa5a.jpeg', desc: 'ห้องปฏิบัติการคอมพิวเตอร์หลัก ติดตั้งเครื่องคอมพิวเตอร์ประสิทธิภาพสูงสำหรับงานเขียนโปรแกรมและกราฟิก' }
             ],
             floor4: [
                 { id: 'พักครู', name: 'ศูนย์ประสานงานอาจารย์', img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800', desc: 'ห้องพักครูและจุดติดต่อสอบถามข้อมูลหลักสำหรับนักศึกษา' },
@@ -330,6 +321,7 @@
         function initGrids() {
             ['floor3', 'floor4'].forEach(floor => {
                 const container = document.getElementById(`grid-${floor}`);
+                container.innerHTML = ''; // Clear existing
                 roomData[floor].forEach(room => {
                     container.innerHTML += `
                         <div class="room-card" onclick="openRoom('${floor}', '${room.id}')">
@@ -348,7 +340,10 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.getElementById('btn-' + (pageId === 'home' ? 'home' : pageId)).classList.add('active');
+            
+            const btnId = 'btn-' + (pageId === 'home' ? 'home' : pageId);
+            if(document.getElementById(btnId)) document.getElementById(btnId).classList.add('active');
+            
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
