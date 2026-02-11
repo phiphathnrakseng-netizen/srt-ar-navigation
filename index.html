@@ -345,7 +345,7 @@
                 <div class="flex-1 w-full">
                     <label class="block font-black text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-3">Filter Classroom Floor <span id="floor-title" class="text-[#002D62]">--</span></label>
                     <div class="relative group">
-                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ระบุเลขห้อง (เช่น 631) หรือ ชื่อห้อง..." class="w-full border-2 border-slate-200 p-4 outline-none focus:border-[#002D62] font-bold text-xl transition-all placeholder:italic">
+                        <input type="text" id="searchInput" onkeyup="searchRoom()" placeholder="ระบุเลขห้อง หรือ ชื่อห้อง..." class="w-full border-2 border-slate-200 p-4 outline-none focus:border-[#002D62] font-bold text-xl transition-all placeholder:italic">
                         <i class="fa-solid fa-magnifying-glass absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#002D62] transition-colors"></i>
                     </div>
                 </div>
@@ -399,38 +399,24 @@
     </footer>
 
     <script>
-        // --- Enhanced Loading Engine ---
         function runLoading() {
             const loadingScreen = document.getElementById('loading-screen');
             const progressFill = document.getElementById('progress-fill');
             const speedText = document.getElementById('speed-text');
             const isFirstVisit = !sessionStorage.getItem('stc_init_complete');
-
-            if (!isFirstVisit) {
-                loadingScreen.style.display = 'none';
-                return;
-            }
-
+            if (!isFirstVisit) { loadingScreen.style.display = 'none'; return; }
             loadingScreen.style.display = 'flex';
             let progress = 0;
-            const targetSpeed = (Math.random() * (50 - 30) + 30).toFixed(1);
-
             const timer = setInterval(() => {
                 progress += Math.random() * 12;
                 if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(timer);
-                    speedText.innerText = `Connected via STC-WIFI: ${targetSpeed} Mbps`;
-                    
+                    progress = 100; clearInterval(timer);
                     setTimeout(() => {
                         loadingScreen.style.opacity = '0';
                         setTimeout(() => {
-                            loadingScreen.style.visibility = 'hidden';
                             loadingScreen.style.display = 'none';
                             sessionStorage.setItem('stc_init_complete', 'true');
-                            
-                            const floorParam = new URLSearchParams(window.location.search).get('floor');
-                            if (!floorParam) {
+                            if (!new URLSearchParams(window.location.search).get('floor')) {
                                 document.getElementById('guide-modal').classList.remove('hidden');
                             }
                         }, 600);
@@ -442,68 +428,53 @@
             }, 90);
         }
 
-        // --- Data & Logic ---
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 195, guide: "เดินตรงจากป้อมยามผ่านอาคารอำนวยการตึก 11 ตึกไอทีสีม่วงจะอยู่ขวามือข้างหน้า" },
             "DEPT_LABEL_3": { angle: 5, dist: 205, guide: "ขึ้นไปที่ชั้น 3 ป้ายชื่อแผนกจะอยู่บริเวณโถงทางเข้าหลัก" },
             "DEPT_LABEL_4": { angle: 5, dist: 215, guide: "ขึ้นไปที่ชั้น 4 ป้ายชื่อแผนกจะอยู่บริเวณโถงหน้าห้องพักครู" },
-            // Added Image references implicitly via ID
-            "631": { angle: 5, dist: 215, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา (ห้องริมสุด)" },
-            "632": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งขวา (ถัดจาก 631)" },
-            "633": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่ฝั่งซ้าย (ห้องกระจก)" },
-            "634": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องอยู่สุดทางขวา (ศูนย์บ่มเพาะ)" },
-            "635": { angle: 5, dist: 210, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 3 ห้องแรกซ้ายมือ (ติดบันได)" },
-            
-            "TEACHER_ROOM": { angle: 5, dist: 220, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องพักครูอยู่ขวามือ" },
-            "LECTURE": { angle: 5, dist: 225, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นบันไดไปชั้น 4 ห้องบรรยายอยู่ซ้ายมือ" },
-            "LAB1": { angle: 5, dist: 230, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 1" },
-            "LAB2": { angle: 5, dist: 235, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 2" },
-            "LAB3": { angle: 5, dist: 240, guide: "เดินตรงสู่ตึกไอทีสีม่วง ขึ้นชั้น 4 ห้องปฏิบัติการ 3" }
+            // Floor 3
+            "631": { angle: 5, dist: 215, guide: "ตึกไอที ชั้น 3 ห้องอยู่ฝั่งขวา (ห้องริมสุด)" },
+            "632": { angle: 5, dist: 220, guide: "ตึกไอที ชั้น 3 ห้องอยู่ฝั่งขวา (ถัดจาก 631)" },
+            "633": { angle: 5, dist: 225, guide: "ตึกไอที ชั้น 3 ห้องอยู่ฝั่งซ้าย (ห้องกระจก)" },
+            "634": { angle: 5, dist: 230, guide: "ตึกไอที ชั้น 3 ห้องอยู่สุดทางขวา (ศูนย์บ่มเพาะ)" },
+            "635": { angle: 5, dist: 210, guide: "ตึกไอที ชั้น 3 ห้องแรกซ้ายมือ (ติดบันได)" },
+            // Floor 4
+            "TEACHER_ROOM": { angle: 5, dist: 220, guide: "ตึกไอที ชั้น 4 ห้องพักครูอยู่ทางขวามือของโถงบันได" },
+            "LECTURE": { angle: 5, dist: 225, guide: "ตึกไอที ชั้น 4 ห้องบรรยาย (Lecture) อยู่ทางซ้ายมือ" },
+            "LAB1": { angle: 5, dist: 230, guide: "ตึกไอที ชั้น 4 ห้องปฏิบัติการคอมพิวเตอร์ 1" },
+            "LAB2": { angle: 5, dist: 235, guide: "ตึกไอที ชั้น 4 ห้องปฏิบัติการคอมพิวเตอร์ 2" },
+            "LAB3": { angle: 5, dist: 240, guide: "ตึกไอที ชั้น 4 ห้องปฏิบัติการคอมพิวเตอร์ 3" }
         };
 
-        function closeModal() {
-            const modal = document.getElementById('guide-modal');
-            modal.style.opacity = '0';
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-        
         function getRoomName(id) {
             const names = {
                 "DEPT_LABEL_3": "ป้ายแผนกไอที (ชั้น 3)", "DEPT_LABEL_4": "ป้ายแผนกไอที (ชั้น 4)",
                 "631": "ห้องเรียน 631", "632": "ห้องเรียน 632", "633": "ห้องเรียน 633",
-                "634": "ห้องเรียน 634", "635": "ห้องเรียน 635", "TEACHER_ROOM": "ห้องพักครู",
-                "LECTURE": "ห้องแลคเชอร์", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2", "LAB3": "ห้องแลป 3"
+                "634": "ห้องเรียน 634", "635": "ห้องเรียน 635", 
+                "TEACHER_ROOM": "ห้องพักครู", "LECTURE": "ห้อง Lecture", 
+                "LAB1": "ห้อง Lab 1", "LAB2": "ห้อง Lab 2", "LAB3": "ห้อง Lab 3"
             };
             return names[id] || id;
         }
 
-        // --- Room Detail Modal Logic ---
         function openRoomDetail(roomId) {
             const data = navigationData[roomId];
             if (!data) return;
-
-            // 1. Populate Data
             document.getElementById('modal-room-id').innerText = roomId;
             document.getElementById('modal-room-name').innerText = getRoomName(roomId);
             document.getElementById('modal-room-guide').innerText = data.guide;
             
-            // 2. Set Image based on ID (Using uploaded file naming convention)
+            // Logic ดึงรูปภาพตาม ID ห้อง
             const imgElement = document.getElementById('modal-room-image');
+            const roomImages = ['631','632','633','634','635','TEACHER_ROOM','LECTURE','LAB1','LAB2','LAB3'];
             
-            if(['631','632','633','634','635'].includes(roomId)) {
+            if(roomImages.includes(roomId)) {
                 imgElement.src = `${roomId}.jpeg`; 
             } else {
-                // Placeholder for other rooms
                 imgElement.src = `https://placehold.co/600x400/002D62/FFF?text=${roomId}`;
             }
 
-            // 3. Setup Navigation Button
-            const btn = document.getElementById('btn-start-nav');
-            btn.onclick = function() {
-                directNavigate(roomId);
-            };
-
-            // 4. Show Modal
+            document.getElementById('btn-start-nav').onclick = () => directNavigate(roomId);
             const modal = document.getElementById('room-detail-modal');
             const content = document.getElementById('room-modal-content');
             modal.classList.remove('hidden');
@@ -512,113 +483,70 @@
         }
 
         function closeRoomDetail() {
-            const modal = document.getElementById('room-detail-modal');
             const content = document.getElementById('room-modal-content');
-            
-            content.classList.remove('modal-enter');
-            content.classList.add('modal-leave');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-        // --- Core Functions ---
-
-        function initApp() {
-            const params = new URLSearchParams(window.location.search);
-            const floor = params.get('floor');
-            const s3 = document.getElementById('floor-3');
-            const s4 = document.getElementById('floor-4');
-            const empty = document.getElementById('empty-state');
-            const searchBar = document.getElementById('search-container');
-            const startPhase = document.getElementById('start-phase');
-            
-            // UI Reset State
-            [s3, s4, empty, searchBar, startPhase].forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-link-active'));
-
-            if (floor === '3') {
-                s3.classList.remove('hidden'); searchBar.classList.remove('hidden');
-                document.getElementById('nav-f3').classList.add('nav-link-active');
-                document.getElementById('floor-title').innerText = "3 (Classrooms)"; 
-                renderRooms(3);
-            } else if (floor === '4') {
-                s4.classList.remove('hidden'); searchBar.classList.remove('hidden');
-                document.getElementById('nav-f4').classList.add('nav-link-active');
-                document.getElementById('floor-title').innerText = "4 (Laboratory)"; 
-                renderRooms(4);
-            } else if (!floor) {
-                startPhase.classList.remove('hidden');
-                document.getElementById('nav-home').classList.add('nav-link-active');
-            } else {
-                empty.classList.remove('hidden');
-            }
+            content.classList.replace('modal-enter', 'modal-leave');
+            setTimeout(() => document.getElementById('room-detail-modal').classList.add('hidden'), 200);
         }
 
         function renderRooms(floor) {
             const container = document.getElementById(`rooms-${floor}`);
             if (!container) return;
             container.innerHTML = '';
-            
             const deptId = (floor === 3) ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
+            
             container.innerHTML += `
                 <button onclick="directNavigate('${deptId}')" class="room-card p-8 text-left group bg-slate-50 border-l-[12px] !border-[#B8860B]">
                     <div class="font-black text-[10px] text-amber-600 mb-2 tracking-widest uppercase">Arrival Point</div>
                     <h4 class="text-2xl font-black text-slate-800 mb-5 tracking-tight">${getRoomName(deptId)}</h4>
-                    <div class="text-[#B8860B] font-extrabold text-sm flex items-center gap-2 italic">
-                        ไปยังจุดเช็คอินแผนก <i class="fa-solid fa-location-crosshairs animate-spin-slow"></i>
-                    </div>
+                    <div class="text-[#B8860B] font-extrabold text-sm flex items-center gap-2 italic">ไปยังจุดเช็คอินแผนก <i class="fa-solid fa-location-crosshairs"></i></div>
                 </button>`;
 
             Object.keys(navigationData).forEach(key => {
                 if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
-                const isFloor3 = key.startsWith('63');
+                const isFloor3 = ['631','632','633','634','635'].includes(key);
                 if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
-                    // Update: Changed onclick to openRoomDetail instead of direct navigate
                     container.innerHTML += `
                         <button onclick="openRoomDetail('${key}')" class="room-card p-8 text-left group">
                             <div class="font-black text-[10px] text-slate-400 mb-2 tracking-widest uppercase">Room ID: ${key}</div>
                             <h4 class="text-2xl font-black text-slate-800 mb-5 tracking-tight">${getRoomName(key)}</h4>
-                            <div class="text-[#002D62] font-extrabold text-sm flex items-center gap-2 italic">
-                                ดูรายละเอียด <i class="fa-solid fa-eye group-hover:scale-110 transition-transform"></i>
-                            </div>
+                            <div class="text-[#002D62] font-extrabold text-sm flex items-center gap-2 italic">ดูรายละเอียด <i class="fa-solid fa-eye"></i></div>
                         </button>`;
                 }
             });
         }
 
+        function initApp() {
+            const floor = new URLSearchParams(window.location.search).get('floor');
+            const sections = { s3: 'floor-3', s4: 'floor-4', start: 'start-phase', search: 'search-container' };
+            Object.values(sections).forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            if (floor === '3' || floor === '4') {
+                document.getElementById(`floor-${floor}`).classList.remove('hidden');
+                document.getElementById('search-container').classList.remove('hidden');
+                document.getElementById(`nav-f${floor}`).classList.add('nav-link-active');
+                document.getElementById('floor-title').innerText = floor;
+                renderRooms(parseInt(floor));
+            } else {
+                document.getElementById('start-phase').classList.remove('hidden');
+                document.getElementById('nav-home').classList.add('nav-link-active');
+            }
+        }
+
         function searchRoom() {
-            const input = document.getElementById('searchInput').value.toLowerCase().trim();
-            const cards = document.querySelectorAll('.room-card');
-            cards.forEach(card => {
-                const isVisible = card.textContent.toLowerCase().includes(input);
-                card.style.display = isVisible ? 'block' : 'none';
-                if (isVisible) {
-                    card.style.animation = 'fadeInScale 0.3s ease-out';
-                }
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.room-card').forEach(card => {
+                card.style.display = card.textContent.toLowerCase().includes(input) ? 'block' : 'none';
             });
         }
 
-        // Renamed from 'navigate' to avoid confusion, used for actual page jump
         function directNavigate(roomId) {
             const data = navigationData[roomId];
-            if(!data) return;
-            
-            if (window.navigator && window.navigator.vibrate) navigator.vibrate(20);
             window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
         }
 
-        // --- Master Initialization ---
-        window.addEventListener('DOMContentLoaded', () => {
-            runLoading();
-            initApp();
-            
-            // Prevent Zoom on double tap (iOS)
-            document.addEventListener('touchstart', (e) => {
-                if (e.touches.length > 1) e.preventDefault();
-            }, { passive: false });
-        });
+        function closeModal() { document.getElementById('guide-modal').classList.add('hidden'); }
+
+        window.addEventListener('DOMContentLoaded', () => { runLoading(); initApp(); });
     </script>
 </body>
 </html>
