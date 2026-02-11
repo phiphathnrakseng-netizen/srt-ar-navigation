@@ -18,10 +18,10 @@
             transform: scale(1.05);
         }
 
-        /* --- Overlay สำหรับเริ่มระบบ (Fix อาการค้าง) --- */
+        /* --- Full Screen Overlay (CRITICAL FIX) --- */
         #sensor-auth-overlay {
-            position: fixed; inset: 0; z-index: 999; 
-            background: rgba(0,10,20,0.9); backdrop-filter: blur(15px);
+            position: fixed; inset: 0; z-index: 9999; 
+            background: rgba(0,10,20,0.95); backdrop-filter: blur(20px);
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px;
         }
 
@@ -59,8 +59,8 @@
         .step-glitch { animation: glitch 0.15s linear; }
         @keyframes glitch {
             0% { transform: translate(0); }
-            33% { transform: translate(-4px, 2px) skewX(2deg); filter: hue-rotate(90deg); }
-            66% { transform: translate(4px, -2px); filter: saturate(2); }
+            33% { transform: translate(-2px, 1px); filter: hue-rotate(45deg); }
+            66% { transform: translate(2px, -1px); }
             100% { transform: translate(0); }
         }
 
@@ -69,14 +69,17 @@
 </head>
 <body class="h-screen select-none bg-black">
 
-    <!-- ส่วนที่เพิ่มมา: ปุ่มเริ่มใช้งานเพื่อขอสิทธิ์ Sensor -->
+    <!-- Overlay ปุ่มกดเพื่อขอสิทธิ์ (แก้ไขให้รองรับ iOS) -->
     <div id="sensor-auth-overlay">
-        <div class="text-center mb-8">
-            <i class="fa-solid fa-satellite-dish text-6xl text-cyan-400 animate-pulse mb-6"></i>
-            <h1 class="font-modern text-2xl font-black tracking-widest text-white mb-2">AR CORE INITIALIZE</h1>
-            <p class="text-slate-400 text-sm italic">ยืนยันพิกัดและเปิดการทำงานของเซนเซอร์นับก้าว</p>
+        <div class="text-center mb-10">
+            <div class="relative inline-block mb-6">
+                <i class="fa-solid fa-compass text-7xl text-cyan-400 animate-pulse"></i>
+                <div class="absolute inset-0 bg-cyan-400 blur-2xl opacity-20"></div>
+            </div>
+            <h1 class="font-modern text-2xl font-black tracking-[0.3em] text-white mb-3">SYSTEM_READY</h1>
+            <p class="text-slate-400 text-sm font-light leading-relaxed">กรุณากดปุ่มเพื่อเริ่มการทำงานของเซนเซอร์ <br> และระบบนำทาง AR</p>
         </div>
-        <button onclick="requestPermissions()" class="bg-cyan-500 hover:bg-cyan-400 text-black font-modern font-black px-12 py-5 tracking-[0.2em] shadow-[0_0_30px_rgba(0,242,255,0.4)] transition-all active:scale-95">
+        <button id="start-nav-btn" class="bg-cyan-500 hover:bg-cyan-400 text-black font-modern font-black px-14 py-5 tracking-[0.2em] shadow-[0_0_40px_rgba(0,242,255,0.3)] transition-all active:scale-90 border-none outline-none">
             START TRACKING
         </button>
     </div>
@@ -85,65 +88,56 @@
     <div class="ar-grid"></div>
 
     <div class="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
+        <!-- Top UI -->
         <div class="flex justify-between items-start mt-6">
             <div class="pointer-events-auto">
                 <div class="flex items-center gap-3 mb-1">
-                    <span class="w-2.5 h-2.5 bg-red-600 rounded-full animate-ping"></span>
-                    <p class="font-modern text-[9px] tracking-[0.3em] text-cyan-400 font-bold uppercase">Live Signal Tracking</p>
+                    <span class="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
+                    <p class="font-modern text-[9px] tracking-[0.3em] text-cyan-400 font-bold">SIGNAL_FEED</p>
                 </div>
-                <h2 id="target-display-name" class="text-3xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">...</h2>
-                <p id="target-id-tag" class="font-modern text-[10px] text-white/50 mt-1 bg-white/10 w-fit px-2 py-0.5">ID_SCANNING</p>
+                <h2 id="target-display-name" class="text-2xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">...</h2>
             </div>
-            <button onclick="window.location.href='index.html'" class="w-14 h-14 pointer-events-auto border border-white/30 flex items-center justify-center bg-black/50 backdrop-blur-md active:scale-90 transition-transform">
-                <i class="fa-solid fa-arrow-left text-xl"></i>
+            <button onclick="window.location.href='index.html'" class="w-12 h-12 pointer-events-auto border border-white/20 flex items-center justify-center bg-black/40 backdrop-blur-md active:scale-90 transition-transform">
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
 
+        <!-- Center UI -->
         <div class="relative flex-1 flex items-center justify-center">
             <div id="ar-floating-tag" class="flex flex-col items-center z-20">
-                <p class="font-modern text-[11px] text-cyan-300 mb-2 font-bold">DESTINATION_LOCK</p>
-                <h3 id="floating-room-name" class="text-3xl font-black tracking-tight">ROOM NAME</h3>
-                <div class="w-full h-1 bg-cyan-400 mt-4 animate-pulse"></div>
+                <h3 id="floating-room-name" class="text-2xl font-black tracking-tight">ROOM NAME</h3>
+                <div class="w-full h-0.5 bg-cyan-400 mt-3 animate-pulse"></div>
             </div>
 
             <div id="ar-target-box">
                 <div class="corner tl"></div><div class="corner tr"></div>
                 <div class="corner bl"></div><div class="corner br"></div>
-                <div id="arrow-container" class="arrow-nav">
-                    <svg width="120" height="120" viewBox="0 0 100 100">
-                        <defs>
-                            <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:var(--neon);stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#0056b3;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <path d="M50 10 L20 85 L50 70 L80 85 Z" fill="url(#arrowGrad)" stroke="white" stroke-width="1.5"/>
+                <div id="arrow-container" class="arrow-nav transition-transform duration-300">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <path d="M50 10 L20 85 L50 70 L80 85 Z" fill="var(--neon)" stroke="white" stroke-width="1"/>
                     </svg>
                 </div>
             </div>
 
-            <div class="absolute bottom-12 w-full px-8 text-center">
-                 <p id="guide-msg" class="font-bold text-base tracking-wide text-white drop-shadow-md leading-relaxed bg-black/40 py-2 inline-block px-4 border-x-2 border-cyan-400">CALIBRATING SENSORS...</p>
+            <div class="absolute bottom-16 w-full px-8 text-center">
+                 <p id="guide-msg" class="font-bold text-sm tracking-wide text-white bg-black/50 py-2 inline-block px-4 border-l-4 border-cyan-400">WAITING FOR SENSOR...</p>
             </div>
         </div>
 
-        <div class="flex justify-between items-end border-t border-white/20 pb-8 pt-5 bg-black/60 backdrop-blur-lg -mx-6 px-8">
+        <!-- Bottom UI -->
+        <div class="flex justify-between items-end border-t border-white/10 pb-10 pt-6 bg-black/80 backdrop-blur-xl -mx-6 px-10">
             <div>
-                <p class="font-modern text-[10px] text-cyan-500 mb-1 tracking-widest font-bold">RANGE_TO_TARGET</p>
+                <p class="font-modern text-[9px] text-cyan-500 mb-1 tracking-widest font-bold uppercase">Distance</p>
                 <div class="flex items-baseline gap-2">
-                    <span id="dist-remain" class="font-modern text-7xl font-black text-white italic">0</span>
-                    <span class="text-xl font-black text-cyan-400 font-modern">M</span>
+                    <span id="dist-remain" class="font-modern text-6xl font-black text-white italic">0</span>
+                    <span class="text-lg font-black text-cyan-400 font-modern">M</span>
                 </div>
             </div>
-            <div class="text-right pb-2">
-                <p class="font-modern text-[10px] text-cyan-500 mb-2 tracking-widest font-bold">DATA_FEED</p>
-                <div id="status-tag" class="px-4 py-1.5 bg-cyan-600 text-black text-[11px] font-black rounded-sm uppercase tracking-tighter">Initializing</div>
+            <div class="text-right pb-1">
+                <div id="status-tag" class="px-3 py-1 bg-cyan-900/50 text-cyan-400 border border-cyan-500/50 text-[10px] font-black uppercase tracking-tighter">Standby</div>
             </div>
         </div>
     </div>
-
-    <!-- ปุ่มลับสำหรับทดสอบกดมือ (เก็บไว้เผื่อเซนเซอร์ไม่ทำงาน) -->
-    <button onclick="processStep()" class="absolute bottom-1/2 left-0 opacity-0 w-20 h-40 z-50"></button>
 
     <script>
         const params = new URLSearchParams(window.location.search);
@@ -154,10 +148,9 @@
         
         let smoothedHeading = 0;
         let lastStepTime = 0;
-        let stepCount = 0;
 
         const roomNames = {
-            "DEPT_LABEL_3": "หน้าแผนกไอที (3)", "DEPT_LABEL_4": "หน้าแผนกไอที (4)",
+            "DEPT_LABEL_3": "หน้าแผนกไอที (ชั้น 3)", "DEPT_LABEL_4": "หน้าแผนกไอที (ชั้น 4)",
             "631": "ห้อง 631", "632": "ห้อง 632", "633": "ห้อง 633",
             "634": "ห้อง 634", "635": "ห้อง 635", "TEACHER_ROOM": "ห้องพักครู",
             "LECTURE": "ห้องบรรยาย", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2",
@@ -166,37 +159,41 @@
 
         const displayName = roomNames[targetId] || targetId;
         document.getElementById('target-display-name').innerText = displayName;
-        document.getElementById('target-id-tag').innerText = `NODE_ID: ${targetId}`;
         document.getElementById('floating-room-name').innerText = displayName;
         document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
         document.getElementById('guide-msg').innerText = guideText;
 
-        // --- ระบบขอสิทธิ์ (แก้ไขให้ทำงานบน iOS 13+) ---
-        async function requestPermissions() {
+        // --- แก้ไขจุดสำคัญ: ฟังก์ชันขอสิทธิ์ที่ห้ามติดขัด (User Gesture) ---
+        async function startApp() {
+            // 1. ขอสิทธิ์ DeviceOrientation ทันที (ต้องทำเป็นลำดับแรกสุดใน click event)
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    const status = await DeviceOrientationEvent.requestPermission();
+                    if (status !== 'granted') {
+                        alert("ต้องขออนุญาตเซนเซอร์เข็มทิศเพื่อนำทาง");
+                        return;
+                    }
+                } catch (e) {
+                    alert("Error: " + e.message);
+                    return;
+                }
+            }
+
+            // 2. ซ่อน Overlay
+            document.getElementById('sensor-auth-overlay').style.display = 'none';
+
+            // 3. เริ่มระบบเซนเซอร์
+            setupNavSystems();
+
+            // 4. เริ่มระบบกล้อง (ทำทีหลังสุด)
             try {
-                // ขอใช้กล้อง
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { facingMode: 'environment' } 
                 });
                 document.getElementById('video-preview').srcObject = stream;
-
-                // ขอใช้ Sensor (iOS)
-                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                    const status = await DeviceOrientationEvent.requestPermission();
-                    if (status === 'granted') {
-                        setupNavSystems();
-                    } else {
-                        alert("โปรดอนุญาต Sensor เพื่อใช้ระบบนำทาง");
-                    }
-                } else {
-                    // Android หรือ Browser ทั่วไป
-                    setupNavSystems();
-                }
-
-                document.getElementById('sensor-auth-overlay').style.display = 'none';
+                document.getElementById('status-tag').innerText = "Active_Nav";
             } catch (err) {
-                console.error(err);
-                alert("ไม่สามารถเข้าถึงเซนเซอร์หรือกล้องได้: " + err);
+                console.error("Camera error:", err);
             }
         }
 
@@ -204,14 +201,12 @@
             const sensorType = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
             window.addEventListener(sensorType, handleOrientation, true);
             window.addEventListener('devicemotion', handleMotion, true);
-            document.getElementById('status-tag').innerText = "Active_Nav";
         }
 
         function handleOrientation(event) {
             let heading = event.webkitCompassHeading || (360 - event.alpha);
             if (!heading) return;
 
-            // Smoothing
             let diffHeading = heading - smoothedHeading;
             if (diffHeading > 180) diffHeading -= 360;
             if (diffHeading < -180) diffHeading += 360;
@@ -224,28 +219,19 @@
             if (Math.abs(arrowAngle) < 20) {
                 box.style.transform = "scale(1.2)";
                 box.style.opacity = "1";
+                box.style.borderColor = "var(--neon)";
             } else {
                 box.style.transform = "scale(0.85)";
                 box.style.opacity = "0.35";
+                box.style.borderColor = "rgba(255,255,255,0.2)";
             }
         }
 
-        // --- ระบบนับก้าวที่เสถียรขึ้น ---
         function handleMotion(event) {
-            // ใช้ accelerationIncludingGravity เพื่อความเสถียรสูงสุด
             const acc = event.accelerationIncludingGravity;
             if (!acc) return;
-
-            const x = acc.x || 0;
-            const y = acc.y || 0;
-            const z = acc.z || 0;
-
-            // คำนวณ Magnitude ของแรงสั่นสะเทือน
-            const totalAcc = Math.sqrt(x*x + y*y + z*z);
+            const totalAcc = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
             const now = Date.now();
-
-            // Threshold สำหรับการเดินปกติคือประมาณ 11-13 (แรงโน้มถ่วงโลกคือ 9.8)
-            // ถ้าค่ากระโดดเกิน 12.5 และห่างจากก้าวที่แล้ว 600ms ให้ถือว่าเป็นก้าวเดิน
             if (totalAcc > 12.5 && (now - lastStepTime) > 600) {
                 processStep();
                 lastStepTime = now;
@@ -254,27 +240,25 @@
 
         function processStep() {
             if (currentDistance <= 0) return;
-
-            // 1 ก้าวลดลงประมาณ 0.7 เมตร
             currentDistance = Math.max(0, currentDistance - 0.7);
+            document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
             
-            const distEl = document.getElementById('dist-remain');
-            distEl.innerText = Math.ceil(currentDistance);
-            
-            // เอฟเฟกต์หน้าจอสั่นตอนนับก้าว
             document.body.classList.add('step-glitch');
             setTimeout(() => document.body.classList.remove('step-glitch'), 150);
 
-            if (currentDistance <= 5) distEl.classList.add('distance-critical');
             if (currentDistance <= 3.5) {
                 document.getElementById('ar-floating-tag').classList.add('visible');
+                document.getElementById('guide-msg').innerText = "เป้าหมายอยู่ข้างหน้าท่าน";
             }
             if (currentDistance <= 0) {
                 document.getElementById('status-tag').innerText = "Reached";
-                document.getElementById('guide-msg').innerText = "ถึงจุดหมายแล้ว!";
                 if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
             }
         }
+
+        // เชื่อมโยงปุ่มเข้ากับฟังก์ชันขอสิทธิ์
+        document.getElementById('start-nav-btn').addEventListener('click', startApp);
+
     </script>
 </body>
 </html>
