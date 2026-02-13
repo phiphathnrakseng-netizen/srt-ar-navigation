@@ -12,7 +12,7 @@
     
     <style>
         :root {
-            /* Light Mode Colors */
+            /* Light Mode Variables */
             --stc-navy: #002D62;
             --stc-crimson: #8B0000;
             --stc-gold-dark: #A67C00;
@@ -23,9 +23,10 @@
             --stc-text-sub: #4A5568;
             --stc-border: #DEE2E6;
             --stc-nav-bg: #FFFFFF;
+            --stc-input-bg: #F8FAFC;
         }
 
-        /* Dark Mode Colors */
+        /* Dark Mode Variables */
         [data-theme="dark"] {
             --stc-bg: #0F172A;
             --stc-card-bg: #1E293B;
@@ -33,7 +34,8 @@
             --stc-text-sub: #94A3B8;
             --stc-border: #334155;
             --stc-nav-bg: #0F172A;
-            --stc-navy: #38BDF8; /* ปรับสีน้ำเงินให้อ่านง่ายขึ้นในโหมดมืด */
+            --stc-input-bg: #334155;
+            --stc-navy: #38BDF8; /* ปรับสีน้ำเงินให้อ่านง่ายขึ้นในที่มืด */
         }
 
         body { 
@@ -46,34 +48,22 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* ห้ามโค้งมน */
+        /* ห้ามโค้งมน (Strictly No Border Radius) */
         * { border-radius: 0 !important; }
 
-        /* --- Dark Mode Toggle Button --- */
-        #theme-toggle {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 1000;
-            width: 55px;
-            height: 55px;
-            background: var(--stc-navy);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            font-size: 1.2rem;
+        /* การจัดการ Logo ให้ไม่มีขอบขาว */
+        .logo-img {
+            mix-blend-mode: multiply; /* สำหรับโหมดสว่าง */
         }
-        #theme-toggle:hover { transform: scale(1.1); }
+        [data-theme="dark"] .logo-img {
+            filter: brightness(1.2);
+            mix-blend-mode: normal; /* โหมดมืดใช้ filter แทน */
+        }
 
         /* --- Loading Screen --- */
         #loading-screen {
             position: fixed; inset: 0;
-            background: #002D62;
+            background: #002D62; /* คงสีน้ำเงิน STC ไว้ */
             z-index: 9999;
             display: none; 
             flex-direction: column;
@@ -104,9 +94,9 @@
         }
 
         .btn-official {
-            background: #002D62;
+            background: var(--stc-navy);
             color: white;
-            border: 1px solid #002D62;
+            border: 1px solid var(--stc-navy);
             font-weight: 700;
             transition: all 0.2s;
             display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -120,7 +110,7 @@
         .room-card {
             background: var(--stc-card-bg);
             border: 1px solid var(--stc-border);
-            border-left: 6px solid #002D62;
+            border-left: 6px solid var(--stc-navy);
             transition: all 0.2s ease;
             position: relative;
             color: var(--stc-text-main);
@@ -129,7 +119,7 @@
         .room-card:hover {
             border-left-color: #8B0000;
             transform: scale(1.02);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             z-index: 2;
         }
 
@@ -138,7 +128,6 @@
             border-bottom: 1px solid var(--stc-border);
             height: 70px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: background-color 0.3s;
         }
 
         .nav-link {
@@ -152,19 +141,11 @@
             border-bottom-color: #8B0000;
         }
 
-        .section-tag {
-            background: #8B0000;
-            color: white; padding: 4px 12px;
-            font-size: 11px; font-weight: 800;
-            display: inline-block; margin-bottom: 1rem;
-        }
-
         /* Modal Styles */
         .modal-box {
             background: var(--stc-card-bg); 
-            border: 1px solid #002D62;
-            max-width: 500px; width: 100%; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--stc-navy);
+            max-width: 500px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             color: var(--stc-text-main);
         }
         
@@ -175,16 +156,25 @@
 
         input[type="text"] {
             border: 1px solid var(--stc-border);
-            background: var(--stc-bg);
+            background: var(--stc-input-bg);
             color: var(--stc-text-main);
         }
-        
-        /* แก้ไขสี Text เฉพาะจุด */
-        .text-slate-800, .text-slate-700 { color: var(--stc-text-main) !important; }
-        .text-slate-600, .text-slate-500 { color: var(--stc-text-sub) !important; }
-        .bg-slate-50 { background-color: var(--stc-card-bg) !important; }
-        footer { background-color: var(--stc-nav-bg) !important; border-top: 1px solid var(--stc-border) !important; }
 
+        /* Floating Theme Toggle */
+        #theme-toggle {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 1000;
+            width: 56px; height: 56px; background: #8B0000; color: white;
+            display: flex; items-center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4); cursor: pointer;
+            font-size: 1.5rem; transition: transform 0.3s;
+            border: 2px solid white;
+        }
+        #theme-toggle:active { transform: scale(0.9); }
+
+        .text-slate-600 { color: var(--stc-text-sub); }
+        .text-slate-800 { color: var(--stc-text-main); }
+        .bg-slate-50 { background: var(--stc-input-bg); }
+        footer { background: var(--stc-nav-bg); color: var(--stc-text-main); }
     </style>
 </head>
 <body>
@@ -195,7 +185,7 @@
 
     <div id="loading-screen">
         <div class="mb-8" style="width: 120px; height: 120px; background: white; padding: 10px; border: 4px solid #8B0000;">
-            <img src="https://scontent-bkk1-2.xx.fbcdn.net/v/t1.6435-9/124571575_750142568916394_6898155299249385591_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6OcHB6DIg0R14iWqq_ppBRRhe7dki1MhFGF7t2SLUyDUOuNiP3cn8cXIGyDxsLp0XJlvYjPzjKDZteCHz4Hm6&_nc_ohc=B8_Z-ZM0t44Q7kNvwG0tyI4&_nc_oc=AdkZrTzH_kMVnVr2zO8Kx9UfVVTMbYpLy9eENfbQUyGYlOoQ7egBVe0mqXGfwy7M628&_nc_zt=23&_nc_ht=scontent-bkk1-2.xx&_nc_gid=Xm2QQj43D8DUBHRUk7MWig&oh=00_AftFUz42aTSzkpL9H0IkL2FJ0oitNNS_y3Tooz1XGOlg0Q&oe=69B5ED84" class="w-full h-full object-contain">
+            <img src="https://scontent-bkk1-2.xx.fbcdn.net/v/t1.6435-9/124571575_750142568916394_6898155299249385591_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6OcHB6DIg0R14iWqq_ppBRRhe7dki1MhFGF7t2SLUyDUOuNiP3cn8cXIGyDxsLp0XJlvYjPzjKDZteCHz4Hm6&_nc_ohc=B8_Z-ZM0t44Q7kNvwG0tyI4&_nc_oc=AdkZrTzH_kMVnVr2zO8Kx9UfVVTMbYpLy9eENfbQUyGYlOoQ7egBVe0mqXGfwy7M628&_nc_zt=23&_nc_ht=scontent-bkk1-2.xx&_nc_gid=Xm2QQj43D8DUBHRUk7MWig&oh=00_AftFUz42aTSzkpL9H0IkL2FJ0oitNNS_y3Tooz1XGOlg0Q&oe=69B5ED84" class="w-full h-full object-contain logo-img">
         </div>
         <div class="loader-wrapper">
             <h2 class="font-black mb-4 text-lg tracking-[0.2em] uppercase">STC AR NAVIGATION</h2>
@@ -215,10 +205,10 @@
             </div>
             <div class="p-8">
                 <h3 class="text-2xl font-black mb-4">ระเบียบการใช้งานระบบ AR</h3>
-                <p class="mb-6 leading-relaxed text-[var(--stc-text-sub)]">
+                <p class="text-slate-600 mb-6 leading-relaxed">
                     เพื่อให้การนำทางเป็นไปอย่างเป็นระเบียบและแม่นยำ โปรดยืนประจำจุด ณ <span class="font-bold text-red-700">ป้ายประกาศแผนก</span> ประจำชั้นของท่าน ก่อนเริ่มระบบติดตาม
                 </p>
-                <div class="p-4 bg-red-900/10 border-l-4 border-red-800 text-sm font-bold text-red-900 mb-8 dark:text-red-400">
+                <div class="p-4 bg-slate-50 border-l-4 border-red-800 text-sm font-bold text-red-900 mb-8">
                     <i class="fa-solid fa-camera-retro mr-2"></i> กรุณาอนุญาตให้ระบบเข้าถึงกล้องและเซนเซอร์เข็มทิศ
                 </div>
                 <button onclick="closeModal()" class="w-full btn-official py-4">รับทราบและเริ่มปฏิบัติการ</button>
@@ -228,7 +218,7 @@
 
     <div id="room-detail-modal" class="fixed inset-0 z-[150] flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/60" onclick="closeRoomDetail()"></div>
-        <div id="room-modal-content" class="relative bg-[var(--stc-card-bg)] w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh] border-t-8 border-red-800">
+        <div id="room-modal-content" class="relative modal-box w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh] border-t-8 border-red-800">
             <div class="p-4 border-b flex justify-between items-center">
                 <span id="modal-room-id" class="font-black text-slate-400 text-sm">ROOM_ID</span>
                 <button onclick="closeRoomDetail()" class="text-slate-400 hover:text-red-600"><i class="fa-solid fa-times"></i></button>
@@ -236,7 +226,7 @@
             
             <div class="relative h-56 bg-slate-200">
                 <img id="modal-room-image" src="" class="w-full h-full object-cover">
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-900/90 to-transparent p-6">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
                     <h3 id="modal-room-name" class="text-white text-2xl font-bold">ชื่อห้องเรียน</h3>
                 </div>
             </div>
@@ -244,7 +234,7 @@
             <div class="p-6 overflow-y-auto">
                 <div class="flex gap-4 mb-4">
                     <div class="text-red-800"><i class="fa-solid fa-map-pin text-xl"></i></div>
-                    <p id="modal-room-guide" class="text-sm leading-relaxed text-[var(--stc-text-sub)]"></p>
+                    <p id="modal-room-guide" class="text-slate-600 text-sm leading-relaxed"></p>
                 </div>
             </div>
 
@@ -258,9 +248,9 @@
 
     <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6">
         <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
-            <img src="https://scontent-bkk1-2.xx.fbcdn.net/v/t1.6435-9/124571575_750142568916394_6898155299249385591_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6OcHB6DIg0R14iWqq_ppBRRhe7dki1MhFGF7t2SLUyDUOuNiP3cn8cXIGyDxsLp0XJlvYjPzjKDZteCHz4Hm6&_nc_ohc=B8_Z-ZM0t44Q7kNvwG0tyI4&_nc_oc=AdkZrTzH_kMVnVr2zO8Kx9UfVVTMbYpLy9eENfbQUyGYlOoQ7egBVe0mqXGfwy7M628&_nc_zt=23&_nc_ht=scontent-bkk1-2.xx&_nc_gid=Xm2QQj43D8DUBHRUk7MWig&oh=00_AftFUz42aTSzkpL9H0IkL2FJ0oitNNS_y3Tooz1XGOlg0Q&oe=69B5ED84" class="h-10 w-10">
+            <img src="https://scontent-bkk1-2.xx.fbcdn.net/v/t1.6435-9/124571575_750142568916394_6898155299249385591_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6OcHB6DIg0R14iWqq_ppBRRhe7dki1MhFGF7t2SLUyDUOuNiP3cn8cXIGyDxsLp0XJlvYjPzjKDZteCHz4Hm6&_nc_ohc=B8_Z-ZM0t44Q7kNvwG0tyI4&_nc_oc=AdkZrTzH_kMVnVr2zO8Kx9UfVVTMbYpLy9eENfbQUyGYlOoQ7egBVe0mqXGfwy7M628&_nc_zt=23&_nc_ht=scontent-bkk1-2.xx&_nc_gid=Xm2QQj43D8DUBHRUk7MWig&oh=00_AftFUz42aTSzkpL9H0IkL2FJ0oitNNS_y3Tooz1XGOlg0Q&oe=69B5ED84" class="h-10 w-10 logo-img">
             <div class="leading-none">
-                <div class="font-black text-xs text-[var(--stc-navy)] tracking-tight transition-colors">SURAT THANI TECHNICAL COLLEGE</div>
+                <div class="font-black text-xs text-[#002D62] tracking-tight dark-nav-text">SURAT THANI TECHNICAL COLLEGE</div>
                 <div class="text-[9px] font-bold text-red-800 uppercase mt-0.5">IT AR-Navigation System</div>
             </div>
         </div>
@@ -273,7 +263,7 @@
 
     <header class="official-header">
         <div class="max-w-6xl mx-auto">
-            <div class="section-tag">Campus Official Map</div>
+            <div class="section-tag" style="background: #8B0000; color: white; padding: 4px 12px; font-size: 11px; font-weight: 800; display: inline-block; margin-bottom: 1rem;">Campus Official Map</div>
             <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">
                 แผนที่นำทางอาคารเรียน <br>
                 <span class="text-red-500">เทคโนโลยีสารสนเทศ</span>
@@ -310,11 +300,11 @@
             </button>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <a href="?floor=3" class="p-8 border-2 border-[var(--stc-border)] hover:border-red-800 flex justify-between items-center group transition-all">
+                <a href="?floor=3" class="p-8 border-2 border-slate-200 hover:border-red-800 flex justify-between items-center group transition-all room-card">
                     <span class="text-xl font-bold">สำรวจห้องเรียนชั้น 3</span>
                     <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-red-800"></i>
                 </a>
-                <a href="?floor=4" class="p-8 border-2 border-[var(--stc-border)] hover:border-red-800 flex justify-between items-center group transition-all">
+                <a href="?floor=4" class="p-8 border-2 border-slate-200 hover:border-red-800 flex justify-between items-center group transition-all room-card">
                     <span class="text-xl font-bold">สำรวจห้องปฏิบัติการชั้น 4</span>
                     <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-red-800"></i>
                 </a>
@@ -331,7 +321,7 @@
         </div>
     </main>
 
-    <footer class="py-10 px-6 mt-20">
+    <footer class="border-t py-10 px-6 mt-20">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="text-center md:text-left">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Developed for Education</p>
@@ -342,24 +332,23 @@
     </footer>
 
     <script>
-        // --- ระบบจัดการ Dark Mode ---
+        // --- ระบบสลับ Dark Mode ---
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('theme-icon');
-            
             if (html.getAttribute('data-theme') === 'dark') {
                 html.removeAttribute('data-theme');
                 icon.className = 'fa-solid fa-moon';
-                localStorage.setItem('stc_theme', 'light');
+                localStorage.setItem('theme', 'light');
             } else {
                 html.setAttribute('data-theme', 'dark');
                 icon.className = 'fa-solid fa-sun';
-                localStorage.setItem('stc_theme', 'dark');
+                localStorage.setItem('theme', 'dark');
             }
         }
 
-        // ตรวจสอบ Theme เดิม
-        if (localStorage.getItem('stc_theme') === 'dark') {
+        // โหลด Theme ที่บันทึกไว้
+        if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('theme-icon').className = 'fa-solid fa-sun';
         }
@@ -449,7 +438,7 @@
             const deptId = (floor === 3) ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
             
             container.innerHTML += `
-                <button onclick="directNavigate('${deptId}')" class="room-card p-6 text-left bg-red-50/50 !border-red-800">
+                <button onclick="directNavigate('${deptId}')" class="room-card p-6 text-left bg-red-50 !border-red-800">
                     <div class="text-[10px] font-black text-red-800 mb-1">CHECK-POINT</div>
                     <h4 class="text-lg font-black">${getRoomName(deptId)}</h4>
                 </button>`;
