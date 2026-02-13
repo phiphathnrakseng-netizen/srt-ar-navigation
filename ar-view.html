@@ -147,20 +147,34 @@
         let smoothedHeading = 0;
         let lastStepTime = 0;
         let isReached = false;
+        let hasSpokenNear = false; // ตัวแปรเช็คว่าพูดว่าใกล้ถึงไปหรือยัง
 
         const roomNames = {
-            "DEPT_LABEL_3": "หน้าแผนกไอที (ชั้น 3)", 
-            "DEPT_LABEL_4": "หน้าแผนกไอที (ชั้น 4)",
+            "DEPT_LABEL_3": "หน้าแผนกไอที ชั้นสาม", 
+            "DEPT_LABEL_4": "หน้าแผนกไอที ชั้นสี่",
             "631": "ห้อง 631", "632": "ห้อง 632", "633": "ห้อง 633",
             "634": "ห้อง 634", "635": "ห้อง 635", "TEACHER_ROOM": "ห้องพักครู",
-            "LECTURE": "ห้องบรรยาย", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2",
-            "LAB3": "ห้องแลป 3", "TO_IT_BUILDING": "อาคารแผนกไอที"
+            "LECTURE": "ห้องบรรยาย", "LAB1": "ห้องแล็บหนึ่ง", "LAB2": "ห้องแล็บสอง",
+            "LAB3": "ห้องแล็บสาม", "TO_IT_BUILDING": "อาคารแผนกไอที"
         };
 
         document.getElementById('target-display-name').innerText = roomNames[targetId] || targetId;
         document.getElementById('floating-room-name').innerText = roomNames[targetId] || targetId;
         document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
         document.getElementById('guide-msg').innerText = initialGuide;
+
+        // --- เพิ่มฟังก์ชันสำหรับระบบเสียงพูด (Text-to-Speech) ---
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                // เคลียร์คิวเสียงเก่าทิ้งก่อนพูดใหม่
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH'; // กำหนดเป็นภาษาไทย
+                utterance.pitch = 1;
+                utterance.rate = 1;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
 
         async function startApp() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -174,6 +188,10 @@
             }
             document.getElementById('sensor-auth-overlay').style.display = 'none';
             setupNavSystems();
+
+            // เริ่มนำทาง: พูดคำแนะนำแรกทันที
+            speak(initialGuide);
+
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { facingMode: 'environment' } 
@@ -224,7 +242,6 @@
             const totalAcc = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
             const now = Date.now();
             
-            // ปรับ Threshold 12.0 ให้เซนเซอร์ตรวจจับก้าวเดินได้ไวขึ้นนิดหน่อย
             if (totalAcc > 12.0 && (now - lastStepTime) > 600) {
                 processStep();
                 lastStepTime = now;
@@ -234,7 +251,6 @@
         function processStep() {
             if (currentDistance <= 0 || isReached) return;
 
-            // แก้ไข: ลดทีละ 1 ก้าว แทนการลดตามระยะเมตร
             currentDistance = Math.max(0, currentDistance - 1);
             
             const distElement = document.getElementById('dist-remain');
@@ -243,17 +259,24 @@
             document.body.classList.add('step-glitch');
             setTimeout(() => document.body.classList.remove('step-glitch'), 150);
 
-            // แจ้งเตือนเมื่อเหลือ 2 ก้าวสุดท้าย
-            if (currentDistance <= 2) {
+            // เมื่อเหลือ 2 ก้าวสุดท้าย: พูดแจ้งเตือน
+            if (currentDistance <= 2 && currentDistance > 0 && !hasSpokenNear) {
                 distElement.classList.add('distance-critical');
                 document.getElementById('ar-floating-tag').classList.add('visible');
-                document.getElementById('guide-msg').innerText = "ถึงที่หมายแล้ว!";
+                document.getElementById('guide-msg').innerText = "ใกล้ถึงที่หมายแล้ว!";
+                speak("ใกล้ถึงที่หมายแล้วค่ะ");
+                hasSpokenNear = true;
             }
 
+            // เมื่อถึงที่หมาย: พูดบอกชื่อห้อง
             if (currentDistance <= 0) {
                 isReached = true;
                 document.getElementById('status-tag').innerText = "ARRIVED";
                 document.getElementById('status-tag').classList.replace('bg-green-900/50', 'bg-amber-600');
+                
+                const roomName = roomNames[targetId] || "ที่หมาย";
+                speak("ถึงที่หมายแล้วค่ะ " + roomName);
+                
                 if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
             }
         }
