@@ -124,10 +124,10 @@
 
         <div class="flex justify-between items-end border-t border-white/10 pb-10 pt-6 bg-black/80 backdrop-blur-xl -mx-6 px-10">
             <div>
-                <p class="font-modern text-[9px] text-cyan-500 mb-1 tracking-widest font-bold uppercase">Distance</p>
+                <p class="font-modern text-[9px] text-cyan-500 mb-1 tracking-widest font-bold uppercase">Distance Remaining</p>
                 <div class="flex items-baseline gap-2">
                     <span id="dist-remain" class="font-modern text-6xl font-black text-white italic transition-all">0</span>
-                    <span class="text-lg font-black text-cyan-400 font-modern">M</span>
+                    <span class="text-lg font-black text-cyan-400 font-modern">STEPS</span>
                 </div>
             </div>
             <div class="text-right pb-1">
@@ -138,14 +138,12 @@
     </div>
 
     <script>
-        // 1. รับค่า Parameter จาก URL
         const params = new URLSearchParams(window.location.search);
         const targetAngle = parseFloat(params.get('angle')) || 0;
         const targetId = params.get('target') || "Unknown";
         const initialGuide = params.get('guide') ? decodeURIComponent(params.get('guide')) : "เดินไปตามทางลูกศร";
         let currentDistance = parseFloat(params.get('dist')) || 0;
         
-        // 2. ตั้งค่าสถานะตัวแปร
         let smoothedHeading = 0;
         let lastStepTime = 0;
         let isReached = false;
@@ -156,47 +154,34 @@
             "631": "ห้อง 631", "632": "ห้อง 632", "633": "ห้อง 633",
             "634": "ห้อง 634", "635": "ห้อง 635", "TEACHER_ROOM": "ห้องพักครู",
             "LECTURE": "ห้องบรรยาย", "LAB1": "ห้องแลป 1", "LAB2": "ห้องแลป 2",
-            "LAB3": "ห้องแลป 3", "TO_IT_BUILDING": "อาคารแผนกไอที",
-            "ENTRANCE": "ประตูทางเข้า", "LOBBY": "โถงทางเดิน"
+            "LAB3": "ห้องแลป 3", "TO_IT_BUILDING": "อาคารแผนกไอที"
         };
 
-        // 3. เริ่มต้นแสดงผล UI
-        const displayName = roomNames[targetId] || targetId;
-        document.getElementById('target-display-name').innerText = displayName;
-        document.getElementById('floating-room-name').innerText = displayName;
+        document.getElementById('target-display-name').innerText = roomNames[targetId] || targetId;
+        document.getElementById('floating-room-name').innerText = roomNames[targetId] || targetId;
         document.getElementById('dist-remain').innerText = Math.ceil(currentDistance);
         document.getElementById('guide-msg').innerText = initialGuide;
 
-        // 4. ฟังก์ชันเริ่มแอป (รองรับ User Gesture สำหรับ iOS)
         async function startApp() {
-            // ขอสิทธิ์ Orientation
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 try {
                     const status = await DeviceOrientationEvent.requestPermission();
                     if (status !== 'granted') {
-                        alert("ระบบต้องการสิทธิ์เข็มทิศเพื่อใช้ในการนำทาง AR");
+                        alert("ต้องอนุญาตสิทธิ์เข็มทิศ");
                         return;
                     }
-                } catch (e) {
-                    console.error(e);
-                }
+                } catch (e) { console.error(e); }
             }
-
             document.getElementById('sensor-auth-overlay').style.display = 'none';
             setupNavSystems();
-
-            // เริ่มกล้อง
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment', focusMode: 'continuous' } 
+                    video: { facingMode: 'environment' } 
                 });
                 document.getElementById('video-preview').srcObject = stream;
                 document.getElementById('status-tag').innerText = "Active_Nav";
                 document.getElementById('status-tag').classList.replace('bg-cyan-900/50', 'bg-green-900/50');
-            } catch (err) {
-                console.error("Camera error:", err);
-                document.getElementById('guide-msg').innerText = "ERROR: CAMERA_NOT_FOUND";
-            }
+            } catch (err) { console.error(err); }
         }
 
         function setupNavSystems() {
@@ -205,55 +190,42 @@
             window.addEventListener('devicemotion', handleMotion, true);
         }
 
-        // 5. จัดการทิศทาง (Compass Logic)
         function handleOrientation(event) {
             let heading = event.webkitCompassHeading || (360 - event.alpha);
             if (heading === undefined) return;
 
-            // ทำให้การหมุนเข็มทิศลื่นไหล (Smoothing)
             let diffHeading = heading - smoothedHeading;
             if (diffHeading > 180) diffHeading -= 360;
             if (diffHeading < -180) diffHeading += 360;
             smoothedHeading = (smoothedHeading + diffHeading * 0.2 + 360) % 360;
 
-            // คำนวณมุมลูกศร
             let arrowAngle = targetAngle - smoothedHeading;
             document.getElementById('arrow-container').style.transform = `rotate(${arrowAngle}deg)`;
             document.getElementById('sensor-debug').innerText = `HDG: ${Math.round(smoothedHeading)}° | TGT: ${targetAngle}°`;
 
-            // ปรับแต่ง UI ตามความแม่นยำในการหันหน้า
             const box = document.getElementById('ar-target-box');
             const guide = document.getElementById('guide-msg');
             const absAngle = Math.abs(arrowAngle % 360);
             
-            // Logic การแจ้งเตือนทิศทาง
             if (absAngle < 25 || absAngle > 335) {
                 box.style.transform = "scale(1.15)";
                 box.style.opacity = "1";
-                box.style.borderColor = "var(--neon)";
                 if(!isReached) guide.innerText = initialGuide; 
-            } else if (absAngle > 160 && absAngle < 200) {
-                guide.innerText = "⚠️ กลับหลังหัน: จุดหมายอยู่ด้านหลังคุณ";
-                box.style.opacity = "0.2";
             } else {
                 box.style.transform = "scale(0.9)";
                 box.style.opacity = "0.4";
-                box.style.borderColor = "rgba(255,255,255,0.2)";
-                if(!isReached) guide.innerText = "หันโทรศัพท์ไปตามลูกศร";
+                if(!isReached) guide.innerText = "หันโทรศัพท์ตามลูกศร";
             }
         }
 
-        // 6. ระบบตรวจจับการเดิน (Pedometer Logic)
         function handleMotion(event) {
             const acc = event.accelerationIncludingGravity;
             if (!acc) return;
-            
-            // คำนวณแรงเหวี่ยงรวม
             const totalAcc = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
             const now = Date.now();
             
-            // Threshold สำหรับตรวจจับก้าวเดิน (12.5 คือค่ามาตรฐานที่ค่อนข้างแม่นยำ)
-            if (totalAcc > 12.5 && (now - lastStepTime) > 650) {
+            // ปรับ Threshold 12.0 ให้เซนเซอร์ตรวจจับก้าวเดินได้ไวขึ้นนิดหน่อย
+            if (totalAcc > 12.0 && (now - lastStepTime) > 600) {
                 processStep();
                 lastStepTime = now;
             }
@@ -262,24 +234,22 @@
         function processStep() {
             if (currentDistance <= 0 || isReached) return;
 
-            // ลดระยะทางลงทีละ 0.7 เมตร (ระยะก้าวเฉลี่ย)
-            currentDistance = Math.max(0, currentDistance - 0.7);
+            // แก้ไข: ลดทีละ 1 ก้าว แทนการลดตามระยะเมตร
+            currentDistance = Math.max(0, currentDistance - 1);
+            
             const distElement = document.getElementById('dist-remain');
             distElement.innerText = Math.ceil(currentDistance);
             
-            // เอฟเฟกต์ Glitch เมื่อเดิน
             document.body.classList.add('step-glitch');
             setTimeout(() => document.body.classList.remove('step-glitch'), 150);
 
-            // เมื่อใกล้ถึง (3 เมตร)
-            if (currentDistance <= 3) {
+            // แจ้งเตือนเมื่อเหลือ 2 ก้าวสุดท้าย
+            if (currentDistance <= 2) {
                 distElement.classList.add('distance-critical');
                 document.getElementById('ar-floating-tag').classList.add('visible');
-                document.getElementById('guide-msg').innerText = "ถึงที่หมายแล้ว: " + displayName;
-                document.getElementById('guide-msg').style.borderColor = "#ff0055";
+                document.getElementById('guide-msg').innerText = "ถึงที่หมายแล้ว!";
             }
 
-            // เมื่อถึงจุดหมาย
             if (currentDistance <= 0) {
                 isReached = true;
                 document.getElementById('status-tag').innerText = "ARRIVED";
@@ -288,10 +258,7 @@
             }
         }
 
-        // เชื่อมปุ่มเริ่มเข้ากับฟังก์ชัน
         document.getElementById('start-nav-btn').addEventListener('click', startApp);
-
-        // ป้องกันการกวาดนิ้วเพื่อรีเฟรชหน้าบนมือถือ
         document.addEventListener('touchmove', (e) => { if (e.scale !== 1) e.preventDefault(); }, { passive: false });
     </script>
 </body>
