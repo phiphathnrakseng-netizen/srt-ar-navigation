@@ -181,10 +181,6 @@
 </head>
 <body>
 
-    <audio id="sound-ping" src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" style="display:none;"></audio>
-    <audio id="sound-arrival" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto" style="display:none;"></audio>
-
-
     <div class="theme-switch" id="theme-btn" onclick="toggleTheme()">
         <i class="fa-solid fa-moon"></i>
     </div>
@@ -335,7 +331,59 @@
     </footer>
 
     <script>
-        // --- ระบบสลับ Theme ---
+        // --- 1. ระบบเสียงแจ้งเตือนแบบใหม่ (High Decibel & TTS) ---
+        let audioCtx = null;
+
+        // ฟังก์ชันสร้างเสียงบี๊บที่ดังและแหลม (Emergency Style)
+        function playArrivalBeep() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const duration = 0.2;
+            const repeat = 3;
+
+            for (let i = 0; i < repeat; i++) {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = 'square'; // คลื่นสี่เหลี่ยมจะให้เสียงที่ดังและเสียดหูกว่าคลื่นปกติ
+                    osc.frequency.setValueAtTime(1000, audioCtx.currentTime); // ความถี่ 1000Hz
+                    
+                    gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration);
+                }, i * 300);
+            }
+        }
+
+        // ฟังก์ชันพูดภาษาไทย
+        function speakThai(text) {
+            if ('speechSynthesis' in window) {
+                // ยกเลิกเสียงที่ค้างอยู่
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH';
+                utterance.rate = 1.0;
+                utterance.volume = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // ฟังก์ชันรวม: เมื่อถึงที่หมาย
+        function notifyArrival(roomName) {
+            playArrivalBeep();
+            setTimeout(() => {
+                speakThai("ขณะนี้คุณเดินทางถึง " + roomName + " แล้วค่ะ");
+            }, 1000);
+        }
+
+        // --- 2. ระบบ UI เดิม ---
         function toggleTheme() {
             const html = document.documentElement;
             const btnIcon = document.querySelector('#theme-btn i');
@@ -351,13 +399,11 @@
             }
         }
 
-        // โหลด Theme ที่บันทึกไว้
         if (localStorage.getItem('stc-theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.querySelector('#theme-btn i').className = 'fa-solid fa-sun';
         }
 
-        // --- รักษาระบบเดิมไว้ทั้งหมด ---
         function runLoading() {
             const loadingScreen = document.getElementById('loading-screen');
             const progressFill = document.getElementById('progress-fill');
@@ -414,49 +460,11 @@
             return names[id] || id;
         }
 
-        // --- ระบบเสียงแจ้งเตือน (AUDIO SYSTEM) ---
-        function playStartSound(text) {
-            // เล่นเสียง Ping
-            const sound = document.getElementById('sound-arrival'); // ใช้เสียง alarm สั้นๆ เป็นตัวแทน หรือใช้ sound-ping
-            sound.volume = 0.5;
-            sound.play().catch(e => console.log("Audio requires interaction:", e));
-
-            // พูดข้อความ
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // หยุดเสียงเก่าก่อน
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'th-TH';
-                utterance.rate = 1.0;
-                utterance.volume = 1.0;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        // *** ฟังก์ชันแจ้งเตือนเมื่อถึงที่หมาย (สำหรับเรียกใช้ในหน้า AR) ***
-        function triggerArrivalAlert(destinationName) {
-            // 1. เล่นเสียงเตือนดังๆ
-            const alarm = document.getElementById('sound-arrival');
-            alarm.currentTime = 0;
-            alarm.volume = 1.0;
-            alarm.play();
-
-            // 2. พูดแจ้งเตือนหลังจากเสียงเตือนดังสักพัก
-            setTimeout(() => {
-                if ('speechSynthesis' in window) {
-                    const msg = new SpeechSynthesisUtterance("ถึงจุดหมายแล้วค่ะ " + destinationName);
-                    msg.lang = 'th-TH';
-                    window.speechSynthesis.speak(msg);
-                }
-            }, 1000);
-        }
-
         function openRoomDetail(roomId) {
             const data = navigationData[roomId];
             if (!data) return;
             document.getElementById('modal-room-id').innerText = `ID: ${roomId}`;
-            
-            const roomName = getRoomName(roomId);
-            document.getElementById('modal-room-name').innerText = roomName;
+            document.getElementById('modal-room-name').innerText = getRoomName(roomId);
             document.getElementById('modal-room-guide').innerText = data.guide;
             
             const imgElement = document.getElementById('modal-room-image');
@@ -466,9 +474,6 @@
                 '631': '631.jpeg', '632': '632.jpeg', '633': '633.jpeg', '634': '634.jpeg', '635': '635.jpeg'
             };
             imgElement.src = roomImages[roomId] || `https://placehold.co/600x400/002D62/FFF?text=${roomId}`;
-
-            // อ่านชื่อห้องเมื่อเปิด Modal
-            // playStartSound("ห้อง " + roomName); 
 
             document.getElementById('btn-start-nav').onclick = () => directNavigate(roomId);
             document.getElementById('room-detail-modal').classList.remove('hidden');
@@ -528,19 +533,30 @@
         }
 
         function directNavigate(roomId) {
+            // เมื่อเริ่มเดิน ให้ปลดล็อก Audio Context ทันที (เพราะมีการคลิกแล้ว)
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
             const data = navigationData[roomId];
             const roomName = getRoomName(roomId);
 
-            // 1. แจ้งเตือนด้วยเสียงและพูดทันทีที่กดเริ่ม
-            playStartSound("กำลังนำทางไปยัง " + roomName);
+            // ส่งเสียงบี๊บเบาๆ และพูดว่ากำลังเริ่ม
+            speakThai("กำลังเริ่มการนำทางไปยัง " + roomName);
 
-            // 2. หน่วงเวลาเล็กน้อยเพื่อให้เสียงพูดเริ่มก่อนเปลี่ยนหน้า (1.5 วินาที)
+            // หน่วงเวลาเล็กน้อยเพื่อให้ระบบพูดจบก่อนจะเปลี่ยนหน้า
             setTimeout(() => {
                 window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
-            }, 1500);
+            }, 1800);
         }
 
-        function closeModal() { document.getElementById('guide-modal').classList.add('hidden'); }
+        function closeModal() { 
+            // ปลดล็อกระบบเสียงเมื่อผู้ใช้กดปิด Modal แรก (เป็นจุดแรกที่เกิด User Interaction)
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            document.getElementById('guide-modal').classList.add('hidden'); 
+            speakThai("ยินดีต้อนรับสู่ระบบนำทางค่ะ");
+        }
 
         window.addEventListener('DOMContentLoaded', () => { runLoading(); initApp(); });
     </script>
