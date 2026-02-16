@@ -181,6 +181,10 @@
 </head>
 <body>
 
+    <audio id="sound-ping" src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" style="display:none;"></audio>
+    <audio id="sound-arrival" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto" style="display:none;"></audio>
+
+
     <div class="theme-switch" id="theme-btn" onclick="toggleTheme()">
         <i class="fa-solid fa-moon"></i>
     </div>
@@ -410,11 +414,49 @@
             return names[id] || id;
         }
 
+        // --- ระบบเสียงแจ้งเตือน (AUDIO SYSTEM) ---
+        function playStartSound(text) {
+            // เล่นเสียง Ping
+            const sound = document.getElementById('sound-arrival'); // ใช้เสียง alarm สั้นๆ เป็นตัวแทน หรือใช้ sound-ping
+            sound.volume = 0.5;
+            sound.play().catch(e => console.log("Audio requires interaction:", e));
+
+            // พูดข้อความ
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // หยุดเสียงเก่าก่อน
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH';
+                utterance.rate = 1.0;
+                utterance.volume = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // *** ฟังก์ชันแจ้งเตือนเมื่อถึงที่หมาย (สำหรับเรียกใช้ในหน้า AR) ***
+        function triggerArrivalAlert(destinationName) {
+            // 1. เล่นเสียงเตือนดังๆ
+            const alarm = document.getElementById('sound-arrival');
+            alarm.currentTime = 0;
+            alarm.volume = 1.0;
+            alarm.play();
+
+            // 2. พูดแจ้งเตือนหลังจากเสียงเตือนดังสักพัก
+            setTimeout(() => {
+                if ('speechSynthesis' in window) {
+                    const msg = new SpeechSynthesisUtterance("ถึงจุดหมายแล้วค่ะ " + destinationName);
+                    msg.lang = 'th-TH';
+                    window.speechSynthesis.speak(msg);
+                }
+            }, 1000);
+        }
+
         function openRoomDetail(roomId) {
             const data = navigationData[roomId];
             if (!data) return;
             document.getElementById('modal-room-id').innerText = `ID: ${roomId}`;
-            document.getElementById('modal-room-name').innerText = getRoomName(roomId);
+            
+            const roomName = getRoomName(roomId);
+            document.getElementById('modal-room-name').innerText = roomName;
             document.getElementById('modal-room-guide').innerText = data.guide;
             
             const imgElement = document.getElementById('modal-room-image');
@@ -424,6 +466,9 @@
                 '631': '631.jpeg', '632': '632.jpeg', '633': '633.jpeg', '634': '634.jpeg', '635': '635.jpeg'
             };
             imgElement.src = roomImages[roomId] || `https://placehold.co/600x400/002D62/FFF?text=${roomId}`;
+
+            // อ่านชื่อห้องเมื่อเปิด Modal
+            // playStartSound("ห้อง " + roomName); 
 
             document.getElementById('btn-start-nav').onclick = () => directNavigate(roomId);
             document.getElementById('room-detail-modal').classList.remove('hidden');
@@ -484,7 +529,15 @@
 
         function directNavigate(roomId) {
             const data = navigationData[roomId];
-            window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
+            const roomName = getRoomName(roomId);
+
+            // 1. แจ้งเตือนด้วยเสียงและพูดทันทีที่กดเริ่ม
+            playStartSound("กำลังนำทางไปยัง " + roomName);
+
+            // 2. หน่วงเวลาเล็กน้อยเพื่อให้เสียงพูดเริ่มก่อนเปลี่ยนหน้า (1.5 วินาที)
+            setTimeout(() => {
+                window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
+            }, 1500);
         }
 
         function closeModal() { document.getElementById('guide-modal').classList.add('hidden'); }
