@@ -12,7 +12,6 @@
     
     <style>
         :root {
-            /* New Color Palette: Modern Blue & White */
             --stc-navy: #002D57;        
             --stc-blue-bright: #007AFF;
             --stc-bg: #FFFFFF;
@@ -39,7 +38,6 @@
             transition: background-color 0.4s ease;
         }
 
-        /* --- Navbar Adjustment --- */
         .nav-official {
             background: transparent;
             transition: all 0.3s ease-in-out;
@@ -47,7 +45,6 @@
             border-bottom: 1px solid transparent;
         }
 
-        /* เมื่อ Scroll ลงมาจะเป็นสีทึบ (Solid) */
         .nav-scrolled {
             background: var(--stc-navy) !important;
             height: 70px;
@@ -71,7 +68,6 @@
             color: white !important;
         }
 
-        /* --- Header Styling --- */
         .official-header {
             background: linear-gradient(135deg, #F0F7FF 0%, #FFFFFF 100%);
             padding: 6rem 1.5rem;
@@ -111,6 +107,7 @@
 
         .logo-img {
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            border-radius: 50%;
         }
 
         .theme-switch {
@@ -161,8 +158,8 @@
 
     <nav id="navbar" class="nav-official fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 md:px-12">
         <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
-            <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
-                 class="h-10 w-10 object-contain logo-img">
+            <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=JcpuETUW83IQ7kNvwEav0UH&_nc_oc=AdnTjT3Kd5ozrWmkmsBLN1beORemaDieJ6YTqlBvnMWw-UJKbkRKAf_hO9Z5mzq1KRI&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=SAXiYWd59W4mtgtC6RlBag&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
+                 class="h-12 w-12 object-cover logo-img">
             <div class="leading-tight nav-text-logo">
                 <div class="font-black text-lg tracking-tighter">SRTC NAVIGATION</div>
                 <div class="text-[8px] font-bold opacity-60 uppercase tracking-widest">Surat Thani Technical College</div>
@@ -242,7 +239,8 @@
     <footer class="border-t border-slate-100 py-12 px-8 mt-20 bg-slate-50">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-3">
-                <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" class="h-8 grayscale opacity-50">
+                <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=JcpuETUW83IQ7kNvwEav0UH&_nc_oc=AdnTjT3Kd5ozrWmkmsBLN1beORemaDieJ6YTqlBvnMWw-UJKbkRKAf_hO9Z5mzq1KRI&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=SAXiYWd59W4mtgtC6RlBag&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
+                     class="h-10 w-10 grayscale opacity-70 object-cover rounded-full">
                 <p class="text-xs text-slate-400 font-medium uppercase tracking-widest">Surat Thani Technical College</p>
             </div>
             <p class="text-xs text-slate-400">© 2026 IT Department. All Rights Reserved.</p>
