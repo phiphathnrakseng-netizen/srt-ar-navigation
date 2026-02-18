@@ -21,21 +21,11 @@
             --stc-border: #E2E8F0;
         }
 
-        [data-theme="dark"] {
-            --stc-bg: #0F172A;
-            --stc-card-bg: #1E293B;
-            --stc-text-main: #F8FAFC;
-            --stc-text-sub: #94A3B8;
-            --stc-border: #334155;
-            --stc-navy: #38BDF8;
-        }
-
         body { 
             font-family: 'Noto Sans Thai', sans-serif; 
             background-color: var(--stc-bg); 
             color: var(--stc-text-main);
             margin: 0;
-            transition: background-color 0.4s ease;
         }
 
         .nav-official {
@@ -110,53 +100,14 @@
             border-radius: 50%;
         }
 
-        .theme-switch {
-            position: fixed; bottom: 30px; right: 30px; z-index: 1000;
-            width: 50px; height: 50px; background: var(--stc-navy);
-            color: white; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        /* สไตล์เพิ่มเติมสำหรับ Welcome Modal */
-        #welcome-modal img {
+        /* สไตล์เพิ่มเติมสำหรับ Modal รายละเอียดห้อง */
+        #room-detail-modal img {
             max-height: 80vh;
             object-fit: contain;
         }
     </style>
 </head>
 <body>
-
-    <div id="welcome-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="closeWelcomeModal()"></div>
-        <div class="relative max-w-2xl w-full bg-white rounded-[2rem] overflow-hidden shadow-2xl transform transition-all">
-            <button onclick="closeWelcomeModal()" class="absolute top-4 right-4 z-10 bg-black/20 hover:bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all">
-                <i class="fa-solid fa-times text-xl"></i>
-            </button>
-            <div class="w-full bg-slate-100 flex items-center justify-center">
-                <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/636702196_3468023666708227_7872848278528065536_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=dd6889&_nc_eui2=AeHf8LnqorITo2wBokQiGjBkA8I0wh2y0fEDwjTCHbLR8TpUJpDg0dTTPZtlP2eHR_bYsgGv-52MF6CsqVQyUshH&_nc_ohc=mrsiGFZr6ZoQ7kNvwF6faWx&_nc_oc=AdlGqVx45ft6ZUvaj7tLvgU_JhM_a-lxHX1Z15OyIv19MeOKq_xVQ60d3Opf156-pjo&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=9P4BaObv_caxyRD4CR8XFg&oh=00_AftnMeYi-O_cnOoFFPRZ_mPX5weJixOX754gYNrByfGFvQ&oe=699BA2B6" 
-                     alt="Welcome" class="w-full h-auto block">
-            </div>
-            <div class="p-4 bg-white text-center">
-                <button onclick="closeWelcomeModal()" class="btn-official w-full">ปิดหน้าต่าง</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="theme-switch" id="theme-btn" onclick="toggleTheme()">
-        <i class="fa-solid fa-moon"></i>
-    </div>
-
-    <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
-        <div class="relative bg-white rounded-[2rem] w-full max-w-md p-8 text-center shadow-2xl">
-            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-location-dot text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-2">คำแนะนำการใช้งาน</h3>
-            <p class="text-slate-500 mb-6">กรุณายืนบริเวณ <span class="font-bold text-blue-600">ป้ายประกาศแผนก</span> เพื่อให้ระบบ AR ทำงานได้อย่างแม่นยำ</p>
-            <button onclick="closeModal()" class="w-full btn-official">ตกลง เข้าสู่ระบบ</button>
-        </div>
-    </div>
 
     <div id="room-detail-modal" class="fixed inset-0 z-[150] flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-md" onclick="closeRoomDetail()"></div>
@@ -270,19 +221,6 @@
     </footer>
 
     <script>
-        // [NEW] Welcome Modal Logic
-        function closeWelcomeModal() {
-            document.getElementById('welcome-modal').classList.add('hidden');
-            // เก็บสถานะไว้ใน Session เพื่อไม่ให้เด้งซ้ำเมื่อกดเปลี่ยนชั้นในเซสชั่นเดียวกัน
-            sessionStorage.setItem('stc_welcome_seen', 'true');
-        }
-
-        function showWelcomeModal() {
-            if (!sessionStorage.getItem('stc_welcome_seen')) {
-                document.getElementById('welcome-modal').classList.remove('hidden');
-            }
-        }
-
         // Navbar Scroll Logic
         window.onscroll = function() {
             const nav = document.getElementById('navbar');
@@ -366,7 +304,6 @@
         }
 
         function initApp() {
-            showWelcomeModal(); // เรียกใช้ Pop-up เมื่อโหลดหน้า
             const floor = new URLSearchParams(window.location.search).get('floor');
             if (floor === '3' || floor === '4') {
                 document.getElementById(`floor-${floor}`).classList.remove('hidden');
@@ -393,17 +330,6 @@
         function directNavigate(roomId) {
             const data = navigationData[roomId];
             window.location.href = `ar-view.html?target=${roomId}&angle=${data.angle}&dist=${data.dist}&guide=${encodeURIComponent(data.guide)}`;
-        }
-
-        function closeModal() { 
-            document.getElementById('guide-modal').classList.add('hidden'); 
-            sessionStorage.setItem('stc_guide_seen', 'true');
-        }
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
         }
 
         window.addEventListener('DOMContentLoaded', initApp);
