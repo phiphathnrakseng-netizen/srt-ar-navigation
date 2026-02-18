@@ -91,6 +91,7 @@
             border-radius: 1rem !important;
             transition: all 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
+            cursor: pointer;
         }
 
         .btn-official:hover {
@@ -310,6 +311,27 @@
     </footer>
 
     <script>
+        // เพิ่มฟังก์ชันแจ้งเตือนปรับปรุงระบบ (Maintenance Alert)
+        function showMaintenanceAlert(floor) {
+            const alertHtml = `
+                <div id="maintenance-modal" class="fixed inset-0 z-[300] flex items-center justify-center p-4">
+                    <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+                    <div class="relative max-w-md w-full bg-white rounded-[2rem] p-8 shadow-2xl text-center animate-in fade-in zoom-in duration-300">
+                        <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">แจ้งปรับปรุงระบบ AR</h3>
+                        <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 mb-6 text-sm text-slate-600">
+                            <p class="font-bold text-amber-700 mb-1">ชั้นที่ ${floor} กำลังอัปเกรดความล้ำสมัย!</p>
+                            ระบบปิดปรับปรุงตั้งแต่วันที่ 19 กุมภาพันธ์ 2569 เป็นต้นไปจนกว่าจะแล้วเสร็จ
+                        </div>
+                        <button onclick="window.location.href='index.html'" class="btn-official w-full">รับทราบ</button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+        }
+
         // Welcome Modal Logic
         function showWelcomeModal() {
             if (!sessionStorage.getItem('welcome_viewed')) {
@@ -393,7 +415,7 @@
 
             Object.keys(navigationData).forEach(key => {
                 if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
-                const isFloor3 = ['631','632','633','634','635'].includes(key);
+                const isFloor3 = ['631','632','633','634','635','TEACHER_ROOM','LECTURE'].includes(key);
                 if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
                     container.innerHTML += `
                         <button onclick="openRoomDetail('${key}')" class="room-card text-left">
@@ -412,18 +434,18 @@
             showWelcomeModal();
 
             if (page === 'contact') {
-                // แสดงหน้าติดต่อ
                 document.getElementById('contact-page').classList.remove('hidden');
                 document.getElementById('main-content').classList.add('hidden');
                 document.getElementById('nav-contact').classList.add('nav-link-active');
             } else if (floor === '3' || floor === '4') {
-                // แสดงหน้าชั้น
+                // แสดง Pop-up แจ้งปรับปรุงทันทีที่เข้าหน้าชั้น 3 หรือ 4
+                showMaintenanceAlert(floor);
+                
                 document.getElementById(`floor-${floor}`).classList.remove('hidden');
                 document.getElementById('search-container').classList.remove('hidden');
                 document.getElementById(`nav-f${floor}`).classList.add('nav-link-active');
                 renderRooms(parseInt(floor));
             } else {
-                // แสดงหน้าแรก
                 document.getElementById('start-phase').classList.remove('hidden');
                 document.getElementById('nav-home').classList.add('nav-link-active');
             }
