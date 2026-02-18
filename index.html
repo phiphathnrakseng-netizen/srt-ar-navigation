@@ -13,7 +13,7 @@
     <style>
         :root {
             /* Palette ใหม่: น้ำเงิน-ขาว (Modern Clean) */
-            --stc-primary: #0056D2;       /* Royal Blue */
+            --stc-primary: #0056D2;        /* Royal Blue */
             --stc-primary-dark: #003399;  /* Deep Navy */
             --stc-accent: #E3F2FD;        /* Light Blue Background */
             --stc-bg: #F5F7FA;            /* Clean Grayish White */
@@ -390,6 +390,7 @@
             document.querySelector('#theme-btn i').className = 'fa-solid fa-sun text-xl';
         }
 
+        // ข้อมูลหลักสำหรับนำทาง
         const navigationData = {
             "TO_IT_BUILDING": { angle: 0, dist: 25, guide: "เดินตรงจากจุดป้อมยามหน้าวิทยาลัยประมาณ 25 ก้าว อาคารไอทีจะตั้งอยู่ฝั่งขวามือ" },
             "DEPT_LABEL_3": { angle: 5, dist: 0, guide: "จุดเริ่มต้น: ป้ายประกาศแผนกสารสนเทศ ชั้น 3" },
@@ -406,27 +407,35 @@
             "LAB3": { angle: 5, dist: 15, guide: "เดินตรงไปจนเกือบสุดโถงทางเดิน ห้องปฏิบัติการที่ 3 จะอยู่ทางซ้าย" }
         };
 
+        // เพิ่มข้อมูลภาพและชื่อห้อง (สำหรับดึงคืนมาแสดงผล)
+        const roomInfo = {
+            "631": { name: "ห้องเรียน 631", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=ROOM+631" },
+            "632": { name: "ห้องเรียน 632", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=ROOM+632" },
+            "633": { name: "ห้องเรียน 633", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=ROOM+633" },
+            "634": { name: "ห้องเรียน 634", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=ROOM+634" },
+            "635": { name: "ห้องเรียน 635", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=ROOM+635" },
+            "TEACHER_ROOM": { name: "ห้องพักครู IT", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=TEACHER+ROOM" },
+            "LECTURE": { name: "ห้องบรรยาย (Lecture)", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=LECTURE+ROOM" },
+            "LAB1": { name: "คอมพิวเตอร์ปฏิบัติการ 1", floor: 4, img: "https://placehold.co/600x400/4F46E5/FFFFFF?text=LAB+COMPUTER+1" },
+            "LAB2": { name: "คอมพิวเตอร์ปฏิบัติการ 2", floor: 4, img: "https://placehold.co/600x400/4F46E5/FFFFFF?text=LAB+COMPUTER+2" },
+            "LAB3": { name: "คอมพิวเตอร์ปฏิบัติการ 3", floor: 4, img: "https://placehold.co/600x400/4F46E5/FFFFFF?text=LAB+COMPUTER+3" },
+            "DEPT_LABEL_3": { name: "Check Point ชั้น 3", floor: 3, img: "https://placehold.co/600x400/0056D2/FFFFFF?text=CHECK+POINT+F3" },
+            "DEPT_LABEL_4": { name: "Check Point ชั้น 4", floor: 4, img: "https://placehold.co/600x400/4F46E5/FFFFFF?text=CHECK+POINT+F4" }
+        };
+
         function getRoomName(id) {
-            const names = {
-                "DEPT_LABEL_3": "Check Point ชั้น 3", "DEPT_LABEL_4": "Check Point ชั้น 4",
-                "631": "ห้องเรียน 631", "632": "ห้องเรียน 632", "633": "ห้องเรียน 633",
-                "634": "ห้องเรียน 634", "635": "ห้องเรียน 635", 
-                "TEACHER_ROOM": "ห้องพักครู", "LECTURE": "ห้อง Lecture", 
-                "LAB1": "Lab Computer 1", "LAB2": "Lab Computer 2", "LAB3": "Lab Computer 3"
-            };
-            return names[id] || id;
+            return roomInfo[id] ? roomInfo[id].name : id;
         }
 
         function openRoomDetail(roomId) {
             const data = navigationData[roomId];
-            if (!data) return;
+            const info = roomInfo[roomId];
+            if (!data || !info) return;
+
             document.getElementById('modal-room-id').innerText = `ID: ${roomId}`;
-            document.getElementById('modal-room-name').innerText = getRoomName(roomId);
+            document.getElementById('modal-room-name').innerText = info.name;
             document.getElementById('modal-room-guide').innerText = data.guide;
-            
-            // Dummy Image Logic (Replace with real logic if needed)
-            const imgElement = document.getElementById('modal-room-image');
-            imgElement.src = `https://placehold.co/600x400/0056D2/FFFFFF?text=${roomId}`;
+            document.getElementById('modal-room-image').src = info.img;
             
             document.getElementById('btn-start-nav').onclick = () => directNavigate(roomId);
             document.getElementById('room-detail-modal').classList.remove('hidden');
@@ -438,28 +447,31 @@
             const container = document.getElementById(`rooms-${floor}`);
             if (!container) return;
             container.innerHTML = '';
+
+            // เพิ่มปุ่มสแกนประจำชั้นก่อน
             const deptId = (floor === 3) ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
-            
             container.innerHTML += `
                 <button onclick="directNavigate('${deptId}')" class="room-card text-left bg-blue-50 border border-blue-100 flex flex-col justify-center items-center text-center">
                     <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm text-blue-600">
                         <i class="fa-solid fa-crosshairs"></i>
                     </div>
-                    <h4 class="text-lg font-bold text-blue-900">จุดสแกน (${floor})</h4>
+                    <h4 class="text-lg font-bold text-blue-900">จุดสแกน (ชั้น ${floor})</h4>
                     <p class="text-xs text-blue-500 mt-1">Base Point</p>
                 </button>`;
 
-            Object.keys(navigationData).forEach(key => {
-                if (key === "TO_IT_BUILDING" || key.startsWith("DEPT_")) return;
-                const isFloor3 = ['631','632','633','634','635','TEACHER_ROOM','LECTURE'].includes(key);
-                if ((floor === 3 && isFloor3) || (floor === 4 && !isFloor3)) {
+            // กรองและแสดงห้องตามชั้นจาก roomInfo
+            Object.keys(roomInfo).forEach(key => {
+                if (key.startsWith("DEPT_")) return; // ข้ามป้ายประกาศเพราะใส่ข้างบนแล้ว
+                
+                const info = roomInfo[key];
+                if (info.floor === floor) {
                     container.innerHTML += `
                         <button onclick="openRoomDetail('${key}')" class="room-card text-left group relative">
                             <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-blue-600">
                                 <i class="fa-solid fa-arrow-right-long"></i>
                             </div>
                             <div class="text-[10px] font-bold text-slate-400 mb-1 tracking-wider uppercase">Room</div>
-                            <h4 class="text-xl font-bold mb-4 text-[var(--stc-text-main)]">${getRoomName(key)}</h4>
+                            <h4 class="text-xl font-bold mb-4 text-[var(--stc-text-main)]">${info.name}</h4>
                             <div class="h-1 w-8 bg-slate-100 group-hover:bg-[var(--stc-primary)] transition-colors rounded-full"></div>
                         </button>`;
                 }
