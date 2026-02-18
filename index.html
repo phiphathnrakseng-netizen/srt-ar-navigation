@@ -117,36 +117,33 @@
             cursor: pointer; border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        /* สไตล์เพิ่มเติมสำหรับปุ่มเปิดรูปภาพ */
-        .img-popup-btn {
-            position: fixed; bottom: 90px; right: 30px; z-index: 1000;
-            width: 50px; height: 50px; background: #E11D48;
-            color: white; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
+        /* สไตล์เพิ่มเติมสำหรับ Welcome Modal */
+        #welcome-modal img {
+            max-height: 80vh;
+            object-fit: contain;
         }
-        .img-popup-btn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
 
-    <div class="img-popup-btn" onclick="openImagePopup()">
-        <i class="fa-solid fa-image"></i>
+    <div id="welcome-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="closeWelcomeModal()"></div>
+        <div class="relative max-w-2xl w-full bg-white rounded-[2rem] overflow-hidden shadow-2xl transform transition-all">
+            <button onclick="closeWelcomeModal()" class="absolute top-4 right-4 z-10 bg-black/20 hover:bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+            <div class="w-full bg-slate-100 flex items-center justify-center">
+                <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/636702196_3468023666708227_7872848278528065536_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=dd6889&_nc_eui2=AeHf8LnqorITo2wBokQiGjBkA8I0wh2y0fEDwjTCHbLR8TpUJpDg0dTTPZtlP2eHR_bYsgGv-52MF6CsqVQyUshH&_nc_ohc=mrsiGFZr6ZoQ7kNvwF6faWx&_nc_oc=AdlGqVx45ft6ZUvaj7tLvgU_JhM_a-lxHX1Z15OyIv19MeOKq_xVQ60d3Opf156-pjo&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=9P4BaObv_caxyRD4CR8XFg&oh=00_AftnMeYi-O_cnOoFFPRZ_mPX5weJixOX754gYNrByfGFvQ&oe=699BA2B6" 
+                     alt="Welcome" class="w-full h-auto block">
+            </div>
+            <div class="p-4 bg-white text-center">
+                <button onclick="closeWelcomeModal()" class="btn-official w-full">ปิดหน้าต่าง</button>
+            </div>
+        </div>
     </div>
 
     <div class="theme-switch" id="theme-btn" onclick="toggleTheme()">
         <i class="fa-solid fa-moon"></i>
-    </div>
-
-    <div id="image-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeImagePopup()"></div>
-        <div class="relative bg-white rounded-[2rem] overflow-hidden max-w-lg w-full shadow-2xl transition-all">
-            <button onclick="closeImagePopup()" class="absolute top-4 right-4 z-10 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/70 transition-colors">
-                <i class="fa-solid fa-times"></i>
-            </button>
-            <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/636702196_3468023666708227_7872848278528065536_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=dd6889&_nc_eui2=AeHf8LnqorITo2wBokQiGjBkA8I0wh2y0fEDwjTCHbLR8TpUJpDg0dTTPZtlP2eHR_bYsgGv-52MF6CsqVQyUshH&_nc_ohc=mrsiGFZr6ZoQ7kNvwF6faWx&_nc_oc=AdlGqVx45ft6ZUvaj7tLvgU_JhM_a-lxHX1Z15OyIv19MeOKq_xVQ60d3Opf156-pjo&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=9P4BaObv_caxyRD4CR8XFg&oh=00_AftnMeYi-O_cnOoFFPRZ_mPX5weJixOX754gYNrByfGFvQ&oe=699BA2B6" 
-                 class="w-full h-auto block" alt="Technical College Info">
-        </div>
     </div>
 
     <div id="guide-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
@@ -273,12 +270,17 @@
     </footer>
 
     <script>
-        // ฟังก์ชันใหม่สำหรับเปิด-ปิด Pop-up รูปภาพ
-        function openImagePopup() {
-            document.getElementById('image-modal').classList.remove('hidden');
+        // [NEW] Welcome Modal Logic
+        function closeWelcomeModal() {
+            document.getElementById('welcome-modal').classList.add('hidden');
+            // เก็บสถานะไว้ใน Session เพื่อไม่ให้เด้งซ้ำเมื่อกดเปลี่ยนชั้นในเซสชั่นเดียวกัน
+            sessionStorage.setItem('stc_welcome_seen', 'true');
         }
-        function closeImagePopup() {
-            document.getElementById('image-modal').classList.add('hidden');
+
+        function showWelcomeModal() {
+            if (!sessionStorage.getItem('stc_welcome_seen')) {
+                document.getElementById('welcome-modal').classList.remove('hidden');
+            }
         }
 
         // Navbar Scroll Logic
@@ -364,6 +366,7 @@
         }
 
         function initApp() {
+            showWelcomeModal(); // เรียกใช้ Pop-up เมื่อโหลดหน้า
             const floor = new URLSearchParams(window.location.search).get('floor');
             if (floor === '3' || floor === '4') {
                 document.getElementById(`floor-${floor}`).classList.remove('hidden');
