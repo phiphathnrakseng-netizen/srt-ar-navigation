@@ -51,6 +51,7 @@
             font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .nav-link-active {
@@ -95,10 +96,9 @@
             box-shadow: 0 8px 15px rgba(0, 45, 87, 0.2);
         }
 
-        /* ปรับแต่งรูปภาพในป๊อปอัพให้ขยายพอดี */
         .modal-image-container {
             width: 100%;
-            height: 300px; /* ปรับความสูงตามต้องการ */
+            height: 300px;
             overflow: hidden;
             background: #eee;
         }
@@ -106,13 +106,30 @@
         .modal-image-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* ทำให้รูปขยายเต็มพื้นที่โดยไม่เสียสัดส่วน */
+            object-fit: cover;
             display: block;
         }
 
         .logo-img {
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
             border-radius: 50%;
+        }
+
+        /* สำหรับปุ่ม Social ใน Contact Modal */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 1.25rem;
+            background: #F1F5F9;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .contact-item:hover {
+            background: white;
+            border-color: var(--stc-blue-bright);
+            transform: translateX(5px);
         }
     </style>
 </head>
@@ -128,9 +145,74 @@
                 <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/636702196_3468023666708227_7872848278528065536_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=dd6889&_nc_eui2=AeHf8LnqorITo2wBokQiGjBkA8I0wh2y0fEDwjTCHbLR8TpUJpDg0dTTPZtlP2eHR_bYsgGv-52MF6CsqVQyUshH&_nc_ohc=mrsiGFZr6ZoQ7kNvwF6faWx&_nc_oc=AdlGqVx45ft6ZUvaj7tLvgU_JhM_a-lxHX1Z15OyIv19MeOKq_xVQ60d3Opf156-pjo&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=4TulDiBctWAfCB-8LhphoA&oh=00_AfsZkmhxcKEykKvN0vushv_mxuse88BHu2FtuZJQEcGmpQ&oe=699BA2B6" 
                      alt="Welcome SRTC" class="w-full h-auto block">
             </div>
-            <div class="p-6 bg-white">
-                <button onclick="closeWelcomeModal()" class="btn-official w-full">เข้าสู่ระบบนำทาง</button>
+            <div class="p-6 bg-white text-center">
+                <h3 class="font-bold text-xl mb-2">ยินดีต้อนรับสู่ SRTC NAV</h3>
+                <p class="text-slate-500 mb-4 text-sm">ระบบนำทางภายในอาคารเทคโนโลยีสารสนเทศ</p>
+                <button onclick="closeWelcomeModal()" class="btn-official w-full">เริ่มต้นใช้งาน</button>
             </div>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleContactModal()"></div>
+        <div class="relative max-w-md w-full bg-white rounded-[2.5rem] overflow-hidden shadow-2xl p-8">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                    <i class="fa-solid fa-address-book"></i>
+                </div>
+                <h2 class="text-2xl font-black text-slate-800">ติดต่อแผนก / วิทยาลัย</h2>
+                <p class="text-slate-500 text-sm">สอบถามข้อมูลเพิ่มเติมผ่านช่องทางต่างๆ</p>
+            </div>
+
+            <div class="space-y-3">
+                <a href="https://www.facebook.com/srtc.information" target="_blank" class="contact-item group">
+                    <div class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center text-xl shadow-lg shadow-blue-200">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-700 text-sm">เพจ สารสนเทศ</h4>
+                        <p class="text-xs text-slate-400">IT Department Page</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-blue-500"></i>
+                </a>
+
+                <a href="https://www.facebook.com/PR.SRTC" target="_blank" class="contact-item group">
+                    <div class="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center text-xl shadow-lg shadow-blue-100">
+                        <i class="fa-brands fa-facebook"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-700 text-sm">งานประชาสัมพันธ์</h4>
+                        <p class="text-xs text-slate-400">PR SRTC Official</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-blue-500"></i>
+                </a>
+
+                <a href="https://www.facebook.com/profile.php?id=100027214584009" target="_blank" class="contact-item group">
+                    <div class="w-12 h-12 bg-sky-600 text-white rounded-xl flex items-center justify-center text-xl shadow-lg shadow-sky-100">
+                        <i class="fa-brands fa-facebook-square"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-700 text-sm">วิทยาลัยเทคนิคสุราษฎร์ธานี</h4>
+                        <p class="text-xs text-slate-400">College Profile</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-sky-500"></i>
+                </a>
+
+                <a href="tel:077272168" class="contact-item group">
+                    <div class="w-12 h-12 bg-emerald-500 text-white rounded-xl flex items-center justify-center text-xl shadow-lg shadow-emerald-100">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-700 text-sm">077 272 168</h4>
+                        <p class="text-xs text-slate-400">โทรออกเบอร์วิทยาลัย</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-emerald-500"></i>
+                </a>
+            </div>
+
+            <button onclick="toggleContactModal()" class="mt-8 w-full py-4 text-slate-400 font-bold hover:text-slate-600 transition-colors">
+                ปิดหน้าต่าง
+            </button>
         </div>
     </div>
 
@@ -158,15 +240,18 @@
         <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
             <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=JcpuETUW83IQ7kNvwEav0UH&_nc_oc=AdnTjT3Kd5ozrWmkmsBLN1beORemaDieJ6YTqlBvnMWw-UJKbkRKAf_hO9Z5mzq1KRI&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=SAXiYWd59W4mtgtC6RlBag&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
                  class="h-12 w-12 object-cover logo-img">
-            <div class="leading-tight nav-text-logo">
-                <div class="font-black text-lg tracking-tighter">SRTC NAVIGATION</div>
+            <div class="leading-tight nav-text-logo hidden md:block">
+                <div class="font-black text-lg tracking-tighter uppercase">SRTC NAVIGATION</div>
                 <div class="text-[8px] font-bold opacity-60 uppercase tracking-widest">Surat Thani Technical College</div>
             </div>
         </div>
-        <div class="flex gap-1">
+        <div class="flex gap-1 items-center">
             <a href="index.html" class="nav-link text-slate-600" id="nav-home">หน้าหลัก</a>
-            <a href="?floor=3" class="nav-link text-slate-600" id="nav-f3">ชั้น 3</a>
-            <a href="?floor=4" class="nav-link text-slate-600" id="nav-f4">ชั้น 4</a>
+            <a href="?floor=3" class="nav-link text-slate-600 hidden sm:block" id="nav-f3">ชั้น 3</a>
+            <a href="?floor=4" class="nav-link text-slate-600 hidden sm:block" id="nav-f4">ชั้น 4</a>
+            <button onclick="toggleContactModal()" class="nav-link text-blue-600 bg-blue-50">
+                <i class="fa-solid fa-paper-plane mr-1"></i> ติดต่อแผนก
+            </button>
         </div>
     </nav>
 
@@ -175,8 +260,8 @@
             <span class="bg-blue-600/10 text-blue-600 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4 inline-block">
                 IT Building Navigation
             </span>
-            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">
-                ค้นหาห้องเรียน <br>อาคาร <span class="text-blue-600">เทคโนโลยีสารสนเทศ</span>
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight text-slate-900">
+                ค้นหาห้องเรียน <br>อาคาร <span class="text-blue-600 font-black">เทคโนโลยีสารสนเทศ</span>
             </h1>
             <p class="text-slate-500 text-lg max-w-xl">
                 วิทยาลัยเทคนิคสุราษฎร์ธานี - ยินดีต้อนรับสู่ระบบนำทางอัจฉริยะ (อาคาร 6)
@@ -199,8 +284,8 @@
                 <span class="w-2 h-8 bg-blue-600 rounded-full"></span> กรุณาเลือกจุดหมาย
             </h2>
             
-            <button onclick="directNavigate('TO_IT_BUILDING')" class="w-full p-8 mb-8 rounded-[2rem] bg-slate-900 text-white flex flex-col md:flex-row justify-between items-center transition-transform hover:scale-[1.01]">
-                <div class="text-left">
+            <button onclick="directNavigate('TO_IT_BUILDING')" class="w-full p-8 mb-8 rounded-[2rem] bg-slate-900 text-white flex flex-col md:flex-row justify-between items-center transition-transform hover:scale-[1.01] text-left">
+                <div>
                     <h3 class="text-2xl font-bold mb-2 italic">เส้นทางหลักเข้าสู่อาคารไอที</h3>
                     <p class="text-slate-400">เริ่มจากประตูทางเข้าวิทยาลัย (ป้อมยามหน้า)</p>
                 </div>
@@ -235,10 +320,10 @@
     </main>
 
     <footer class="border-t border-slate-100 py-12 px-8 mt-20 bg-slate-50">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
             <div class="flex items-center gap-3">
                 <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=JcpuETUW83IQ7kNvwEav0UH&_nc_oc=AdnTjT3Kd5ozrWmkmsBLN1beORemaDieJ6YTqlBvnMWw-UJKbkRKAf_hO9Z5mzq1KRI&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=SAXiYWd59W4mtgtC6RlBag&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
-                     class="h-10 w-10 grayscale opacity-70 object-cover rounded-full">
+                     class="h-10 w-10 grayscale opacity-70 object-cover rounded-full mx-auto">
                 <p class="text-xs text-slate-400 font-medium uppercase tracking-widest">Surat Thani Technical College</p>
             </div>
             <p class="text-xs text-slate-400">© 2026 IT Department. All Rights Reserved.</p>
@@ -246,9 +331,13 @@
     </footer>
 
     <script>
-        // Welcome Modal Logic
+        // Modal Control Functions
+        function toggleContactModal() {
+            const modal = document.getElementById('contact-modal');
+            modal.classList.toggle('hidden');
+        }
+
         function showWelcomeModal() {
-            // เช็คว่าเคยดูไปหรือยังใน Session นี้ (ถ้าปิดเบราว์เซอร์แล้วเปิดใหม่จะเด้งอีกครั้ง)
             if (!sessionStorage.getItem('welcome_viewed')) {
                 document.getElementById('welcome-modal').classList.remove('hidden');
             }
@@ -342,8 +431,7 @@
         }
 
         function initApp() {
-            showWelcomeModal(); // เรียกใช้ฟังก์ชันโชว์ป๊อปอัพยินดีต้อนรับ
-            
+            showWelcomeModal();
             const floor = new URLSearchParams(window.location.search).get('floor');
             if (floor === '3' || floor === '4') {
                 document.getElementById(`floor-${floor}`).classList.remove('hidden');
