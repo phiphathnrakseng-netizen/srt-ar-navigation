@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <title>SRTC NAVIGATION | ระบบนำทาง AR</title>
+    <title>ระบบนำทาง AR | วิทยาลัยเทคนิคสุราษฎร์ธานี</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -52,19 +52,16 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        /* ลบขอบแดง (::after) ออกตามที่สั่ง */
         .official-header::after {
-            display: none;
-        }
-
-        /* ปรับปรุง Logo ให้เนียนขึ้น */
-        .logo-clean {
-            mix-blend-mode: multiply; /* ซ่อนขอบขาวของภาพ */
-            filter: contrast(1.1);
-        }
-        [data-theme="dark"] .logo-clean {
-            mix-blend-mode: normal;
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--stc-crimson);
+            border-radius: 2px 2px 0 0;
         }
 
         .btn-official {
@@ -156,6 +153,7 @@
             outline: none;
         }
 
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
@@ -211,10 +209,10 @@
 
     <nav class="nav-official sticky top-0 z-50 flex justify-between items-center px-6 md:px-12">
         <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='index.html'">
-            <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
-                 class="h-14 w-14 object-contain logo-clean">
+            <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeHYdDp67RfF6Yo008Da8znibSDAaVG9sWptIMBpUb2xaskuSs8Dg-GqxsRQzyU0pPy_Mf3g1YP_1vszniK1R7r4&_nc_ohc=JcpuETUW83IQ7kNvwEav0UH&_nc_oc=AdnTjT3Kd5ozrWmkmsBLN1beORemaDieJ6YTqlBvnMWw-UJKbkRKAf_hO9Z5mzq1KRI&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=SAXiYWd59W4mtgtC6RlBag&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
+                 class="h-14 w-14 object-contain">
             <div class="leading-tight hidden sm:block">
-                <div class="font-black text-sm tracking-tighter text-[var(--stc-navy)]">SRTC NAVIGATION</div>
+                <div class="font-black text-sm tracking-tighter text-[var(--stc-navy)]">STC NAVIGATION</div>
                 <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Surat Thani Technical College</div>
             </div>
         </div>
@@ -318,7 +316,7 @@
             <div class="text-center md:text-left">
                 <div class="flex items-center gap-4 mb-4 justify-center md:justify-start">
                     <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/223303958_665537047696775_5725965526684764441_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=53a332&oh=00_Afv_l1FrENj6XNMWUg6EfRRmWekz_CYrkAgBdtcNoG8Ptw&oe=699BA5FA" 
-                         class="h-10 logo-clean opacity-60">
+                         class="h-10 grayscale opacity-40 hover:opacity-100 transition-opacity">
                     <span class="font-bold text-slate-400 text-sm uppercase tracking-widest">IT Department</span>
                 </div>
                 <p class="text-[13px] font-medium text-slate-400">© 2026 Surat Thani Technical College. Version 2.1.0 Stable</p>
@@ -330,7 +328,6 @@
     </footer>
 
     <script>
-        // ... (Script ส่วนเดิมทั้งหมด) ...
         let audioCtx = null;
 
         function playArrivalBeep() {
@@ -434,6 +431,7 @@
             container.innerHTML = '';
             const deptId = (floor === 3) ? "DEPT_LABEL_3" : "DEPT_LABEL_4";
             
+            // Current Location Card
             container.innerHTML += `
                 <button onclick="directNavigate('${deptId}')" class="room-card text-left bg-blue-50/40 border-dashed border-2 border-blue-200">
                     <div class="flex items-center gap-3 mb-4">
