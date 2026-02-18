@@ -95,63 +95,61 @@
             box-shadow: 0 8px 15px rgba(0, 45, 87, 0.2);
         }
 
-        .logo-img {
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-            border-radius: 50%;
-        }
-
-        /* แก้ไขส่วนรูปภาพใน Modal ให้ขยายพอดี */
+        /* ปรับแต่งรูปภาพในป๊อปอัพให้ขยายพอดี */
         .modal-image-container {
-            position: relative;
             width: 100%;
-            padding-top: 65%; /* กำหนดสัดส่วนภาพเป็นประมาณ 16:10 */
+            height: 300px; /* ปรับความสูงตามต้องการ */
             overflow: hidden;
+            background: #eee;
         }
 
-        #modal-room-image {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .modal-image-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* ขยายภาพให้เต็มพื้นที่โดยไม่เสียสัดส่วน */
+            object-fit: cover; /* ทำให้รูปขยายเต็มพื้นที่โดยไม่เสียสัดส่วน */
             display: block;
         }
 
-        .modal-image-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 2rem 1.5rem 1rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        .logo-img {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
 
+    <div id="welcome-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeWelcomeModal()"></div>
+        <div class="relative max-w-lg w-full bg-white rounded-[2rem] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+            <button onclick="closeWelcomeModal()" class="absolute top-4 right-4 z-10 bg-black/20 hover:bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+            <div class="w-full">
+                <img src="https://scontent.furt2-1.fna.fbcdn.net/v/t39.30808-6/636702196_3468023666708227_7872848278528065536_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=dd6889&_nc_eui2=AeHf8LnqorITo2wBokQiGjBkA8I0wh2y0fEDwjTCHbLR8TpUJpDg0dTTPZtlP2eHR_bYsgGv-52MF6CsqVQyUshH&_nc_ohc=mrsiGFZr6ZoQ7kNvwF6faWx&_nc_oc=AdlGqVx45ft6ZUvaj7tLvgU_JhM_a-lxHX1Z15OyIv19MeOKq_xVQ60d3Opf156-pjo&_nc_zt=23&_nc_ht=scontent.furt2-1.fna&_nc_gid=4TulDiBctWAfCB-8LhphoA&oh=00_AfsZkmhxcKEykKvN0vushv_mxuse88BHu2FtuZJQEcGmpQ&oe=699BA2B6" 
+                     alt="Welcome SRTC" class="w-full h-auto block">
+            </div>
+            <div class="p-6 bg-white">
+                <button onclick="closeWelcomeModal()" class="btn-official w-full">เข้าสู่ระบบนำทาง</button>
+            </div>
+        </div>
+    </div>
+
     <div id="room-detail-modal" class="fixed inset-0 z-[150] flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="closeRoomDetail()"></div>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-md" onclick="closeRoomDetail()"></div>
         <div class="relative bg-white w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh] rounded-[2rem] overflow-hidden">
-            
-            <div class="modal-image-container">
+            <div class="relative modal-image-container">
                 <img id="modal-room-image" src="" alt="Room Image">
-                
-                <button onclick="closeRoomDetail()" class="absolute top-4 right-4 bg-black/30 hover:bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all">
+                <button onclick="closeRoomDetail()" class="absolute top-4 right-4 bg-black/20 text-white w-8 h-8 rounded-full flex items-center justify-center">
                     <i class="fa-solid fa-times"></i>
                 </button>
-
-                <div class="modal-image-overlay">
+                <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
                     <span id="modal-room-id" class="text-blue-300 text-[10px] font-bold tracking-widest uppercase">ID</span>
-                    <h3 id="modal-room-name" class="text-white text-2xl font-bold leading-tight">ชื่อห้องเรียน</h3>
+                    <h3 id="modal-room-name" class="text-white text-2xl font-bold">ชื่อห้องเรียน</h3>
                 </div>
             </div>
-
-            <div class="p-6 bg-white">
-                <p id="modal-room-guide" class="text-slate-600 mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 text-sm leading-relaxed"></p>
-                <button id="btn-start-nav" class="w-full btn-official text-lg py-4">
-                    <i class="fa-solid fa-location-arrow"></i> เริ่มนำทาง
-                </button>
+            <div class="p-6">
+                <p id="modal-room-guide" class="text-slate-600 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100"></p>
+                <button id="btn-start-nav" class="w-full btn-official">เริ่มนำทาง</button>
             </div>
         </div>
     </div>
@@ -248,6 +246,19 @@
     </footer>
 
     <script>
+        // Welcome Modal Logic
+        function showWelcomeModal() {
+            // เช็คว่าเคยดูไปหรือยังใน Session นี้ (ถ้าปิดเบราว์เซอร์แล้วเปิดใหม่จะเด้งอีกครั้ง)
+            if (!sessionStorage.getItem('welcome_viewed')) {
+                document.getElementById('welcome-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeWelcomeModal() {
+            document.getElementById('welcome-modal').classList.add('hidden');
+            sessionStorage.setItem('welcome_viewed', 'true');
+        }
+
         // Navbar Scroll Logic
         window.onscroll = function() {
             const nav = document.getElementById('navbar');
@@ -331,6 +342,8 @@
         }
 
         function initApp() {
+            showWelcomeModal(); // เรียกใช้ฟังก์ชันโชว์ป๊อปอัพยินดีต้อนรับ
+            
             const floor = new URLSearchParams(window.location.search).get('floor');
             if (floor === '3' || floor === '4') {
                 document.getElementById(`floor-${floor}`).classList.remove('hidden');
